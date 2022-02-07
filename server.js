@@ -3,8 +3,8 @@ const dotenv=require('dotenv');
 dotenv.config();
 const https = require("https");
 const qs = require("querystring");
-const checksum_lib=require('./checksum.js');
-const config=require('./config.js');
+const checksum_lib=require('./paytm/checksum.js');
+const config=require('./paytm/config.js');
 const app = express();
 
 const parseUrl = express.urlencoded({ extended: false });
@@ -13,7 +13,8 @@ const parseJson = express.json({ extended: false });
 const PORT = process.env.PORT || 4000;
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+  // res.sendFile(__dirname + "/index.html");
+  res.send("This is an API");
 });
 
 app.post("/paynow", [parseUrl, parseJson], (req, res) => {
