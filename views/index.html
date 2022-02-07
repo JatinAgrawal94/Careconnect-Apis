@@ -1,0 +1,78 @@
+<html>
+    <style>
+        div{
+            display: flex;
+            flex-direction: column ;
+            width: 100%;
+            align-items: center;
+        }
+        
+        #submitbutton{
+            background-color:blue;
+            height: 35px;
+            width: 150px;
+            font-size: 20px;
+            border: none;
+            color: white;
+            border-radius: 10px;
+            margin: auto;
+            
+            text-align: center;
+        }
+        span{
+            text-align: center;
+        }
+        
+    </style>
+    <div>
+        <span>
+            <h1>Make payment</h1>
+            <h1>To</h1>
+            <h1>CareConnect</h1>
+        </span>
+        <form action="/paynow" method="POST">
+            <input type="hidden" name="amount" placeholder="amount" id="amount">
+            <!-- <input type="text" name="name" placeholder="name" id="name">
+            <input type="text" name="email" placeholder="email" id="email">
+            <input type="text" name="phone" placeholder="phone" id="phone"> -->
+            <button type="submit" id="submitButton">Make Payment</button>
+        </form>
+    </div>
+    <script>
+        var amount=document.getElementById("amount");
+        var url=window.location.search;
+        const urlParams = new URLSearchParams(url);
+        amount.value=urlParams.get('amount');
+        // var merchantname=document.getElementById("name");
+        // var email=document.getElementById("email");
+        // var phone=document.getElementById("phone");
+        var submitButton=document.getElementById("submitButton");
+
+        submitButton.addEventListener('click',()=>{
+            formsubmition();
+        });
+
+    function formsubmition(){
+        // var url=window.location.search;
+        // const urlParams = new URLSearchParams(url);
+        // var a=urlParams.get('amount');
+        console.log(amount.value);
+        var xhttp=new XMLHttpRequest();
+        xhttp.open("POST",`/paynow`,true);
+        xhttp.setRequestHeader('Content-type',"x-www-form-urlencoded");
+        xhttp.onreadystatechange = function() {
+
+            if (this.readyState == 4 && this.status == 200) {
+                    console.log('200');
+                    console.log(this.response);
+                }
+            if(this.status==404){
+                console.log("404");
+            }
+            
+          };
+          
+          xhttp.send({amount:amount.value}); 
+    }
+    </script>
+</html>

@@ -6,26 +6,45 @@ const qs = require("querystring");
 const checksum_lib=require('./paytm/checksum.js');
 const config=require('./paytm/config.js');
 const app = express();
-
+const bodyParser=require('body-parser')
 const parseUrl = express.urlencoded({ extended: false });
 const parseJson = express.json({ extended: false });
 
 const PORT = process.env.PORT || 4000;
+// app.use(bodyParser.urlencoded({ extended: false }));
+
+// app.set('view engine','ejs');
+
 
 app.get("/", (req, res) => {
   // res.sendFile(__dirname + "/index.html");
   res.send("This is an API");
 });
 
+app.get(`/pay`,(req,res)=>{
+  // console.log(req.query.amount);
+  // res.send("Hello")
+  if(parseInt(req.query.amount) !== NaN){
+    res.sendFile(__dirname + "/views/index.html");
+  }else{
+    res.send('404 error');
+  }
+});
+
+app.get('/callback',(req,res)=>{
+  res.send("Return back to CareConnect Application");
+})
+
 app.post("/paynow", [parseUrl, parseJson], (req, res) => {
     // Route for making payment
-  
     var paymentDetails = {
       amount: req.body.amount,
       customerId: req.body.name || process.env.PAYTM_NAME,
       customerEmail: req.body.email || process.env.PAYTM_EMAIL,
       customerPhone: req.body.phone || process.env.PAYTM_PHONE
   }
+
+
   if(!paymentDetails.amount || !paymentDetails.customerId || !paymentDetails.customerEmail || !paymentDetails.customerPhone) {
       res.status(400).send('Payment failed')
   } else {
