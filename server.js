@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv=require('dotenv');
 dotenv.config();
 const https = require("https");
+const cors = require('cors');
 const qs = require("querystring");
 const checksum_lib=require('./paytm/checksum.js');
 const config=require('./paytm/config.js');
@@ -9,21 +10,36 @@ const app = express();
 const bodyParser=require('body-parser')
 const parseUrl = express.urlencoded({ extended: false });
 const parseJson = express.json({ extended: false });
-
 const PORT = process.env.PORT || 4000;
-// app.use(bodyParser.urlencoded({ extended: false }));
 
-// app.set('view engine','ejs');
+app.use(express.json());
+app.use(cors());
+app.use(bodyParser.json());
 
+const firebase=require('firebase/app');
+const {getFirestore,collection,getDocs}=require('firebase/firestore');
+
+const firebaseConfig = {
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  databaseURL: process.env.DATABASE_URL,
+  projectId:process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID
+};
+const firebaseApp=firebase.initializeApp(firebaseConfig);
+const db=getFirestore(firebaseApp);
+const getUserId=require('./db.js');
+var userId;
 
 app.get("/", (req, res) => {
-  // res.sendFile(__dirname + "/index.html");
   res.send("This is an API");
 });
 
-app.get(`/pay`,(req,res)=>{
-  // console.log(req.query.amount);
-  // res.send("Hello")
+app.get(`/pay`,async(req,res)=>{
+  userId=await getUserId(db,req.query.email,req.query.role);
   if(parseInt(req.query.amount) !== NaN){
     res.sendFile(__dirname + "/views/index.html");
   }else{
@@ -39,7 +55,7 @@ app.post("/paynow", [parseUrl, parseJson], (req, res) => {
     // Route for making payment
     var paymentDetails = {
       amount: req.body.amount,
-      customerId: req.body.name || process.env.PAYTM_NAME,
+      customerId: userId,
       customerEmail: req.body.email || process.env.PAYTM_EMAIL,
       customerPhone: req.body.phone || process.env.PAYTM_PHONE
   }
