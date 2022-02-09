@@ -31,24 +31,37 @@
             <h1>CareConnect</h1>
         </span>
         <form action="/paynow" method="POST">
+            <input type="hidden" name="customerid" placeholder="customerid" id="customerid">
+            <input type="hidden" name="patientemail" placeholder="patientemail" id="patientemail">
+            <input type="hidden" name="doctoremail" placeholder="doctoremail" id="doctoremail">
+            <input type="hidden" name="phone" placeholder="phone" id="phone">
+            <input type="hidden" name="date" placeholder="date" id="date">
+            <input type="hidden" name="timing" placeholder="timing" id="timing">
             <input type="hidden" name="amount" placeholder="amount" id="amount">
-             <input type="hidden" name="customerid" placeholder="customerid" id="customerid">
-            <!--<input type="text" name="email" placeholder="email" id="email">
-            <input type="text" name="phone" placeholder="phone" id="phone"> -->
             <button type="submit" id="submitButton">Make Payment</button>
         </form>
     </div>
     <script>
+        // initialisation
+        var customerid=document.getElementById("customerid");
+        var patientemail=document.getElementById("patientemail");
+        var doctoremail=document.getElementById("doctoremail");
+        var phone=document.getElementById("phone");
+        var date=document.getElementById("date");
+        var timing=document.getElementById("timing");
         var amount=document.getElementById("amount");
-        var customerId=document.getElementById("customerid");
+
         var url=window.location.search;
+        // url parameters values
         const urlParams = new URLSearchParams(url);
+        customerid.value=urlParams.get('customerid');
+        patientemail.value=urlParams.get('patientemail');
+        doctoremail.value=urlParams.get('doctoremail');
+        phone.value=urlParams.get('phone');
+        date.value=urlParams.get('date');
+        timing.value=urlParams.get('timing');
         amount.value=urlParams.get('amount');
-        customerId.value=urlParams.get('customerId');
-        console.log(customerId.value);
-        // var merchantname=document.getElementById("name");
-        // var email=document.getElementById("email");
-        // var phone=document.getElementById("phone");
+        
         var submitButton=document.getElementById("submitButton");
 
         
@@ -68,7 +81,15 @@
             
         };
         
-        xhttp.send({amount:amount.value,customerId:customerId.value}); 
+        xhttp.send({
+            customerid:customerid.value,
+            patientemail:patientemail.value,
+            doctoremail:doctoremail.value,
+            phone:phone.value,
+            date:date.value,
+            timing:timing.value,
+            amount:amount.value
+        });
     }
     submitButton.addEventListener('click',()=>{
         formsubmition();
