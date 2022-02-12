@@ -24,6 +24,8 @@ const db = getFirestore();
 
 // functions for firebase queries
 const {verifyUser,getUserId,changePaymentStatus}=require('./db.js');
+const { response } = require("express");
+const { default: axios } = require("axios");
 var patientInfo={};
 
 
@@ -102,6 +104,23 @@ app.post("/paynow", [parseUrl, parseJson], (req, res) => {
           res.end();
       });
   }
+  });
+
+  app.get('/distance',(req,response)=>{
+    try{  
+      const r=axios.get('https://router.hereapi.com/v8/routes?destination=22.30078276005401,73.16911778189652&origin=22.307685199442744,73.17754902422645&return=polyline&transportMode=car&spans=names&apiKey=oLAxfbZmh-iBySmF7LH_b85ZYH-ZQli_ogvzwVvqIZg')
+      .then(res=>{
+        // console.log(res.data.routes[0].sections);
+        gettimeDiff()
+        response.send(res.data.routes[0].sections);
+      }).catch(res=>{
+        console.log(res);
+      })
+    }catch(err){
+      console.log("This is error");
+      // console.log(err);
+      // response.send('');
+    }
   });
 
 app.listen(PORT, () => {
