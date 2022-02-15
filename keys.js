@@ -1,4 +1,4 @@
-const private= (process.env.ACCOUNT_PRIVATE_KEY).replace('/\\n/g','\n');
+
 
 module.exports={
     data:{
