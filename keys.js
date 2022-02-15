@@ -1,11 +1,9 @@
-
-
 module.exports={
     data:{
         "type": process.env.ACCOUNT_TYPE,
         "project_id": process.env.ACCOUNT_PROJECT_ID,
         "private_key_id": process.env.ACCOUNT_PRIVATE_KEY_ID,
-        "private_key" : private,
+        "private_key" : process.env.ACCOUNT_PRIVATE_KEY,
         "client_email": process.env.ACCOUNT_CLIENT_EMAIL,
         "client_id": process.env.ACCOUNT_CLIENT_ID,
         "auth_uri": process.env.ACCOUNT_AUTH_URI,
