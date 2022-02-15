@@ -23,7 +23,7 @@ initializeApp({
 const db = getFirestore();
 
 // functions for firebase queries
-const {verifyUser,getUserId,changePaymentStatus}=require('./db.js');
+const {verifyUser,getUserId,changePaymentStatus,getDistance,getLocation}=require('./db.js');
 const { response } = require("express");
 const { default: axios } = require("axios");
 var patientInfo={};
@@ -35,6 +35,7 @@ app.get("/", (req, res) => {
 
 app.get(`/pay`,async(req,res)=>{  
   var status=await verifyUser(db,req.query.patientemail,req.query.doctoremail,req.query.date,req.query.timing,req.query.amount,req.query.customerid,req.query.phone);
+  console.log(status);
   if(status){
     patientInfo={
       'cid':req.query.customerid,
@@ -106,23 +107,22 @@ app.post("/paynow", [parseUrl, parseJson], (req, res) => {
   }
   });
 
-  app.get('/distance',(req,response)=>{
-    try{  
-      const r=axios.get('https://router.hereapi.com/v8/routes?destination=22.30078276005401,73.16911778189652&origin=22.307685199442744,73.17754902422645&return=polyline&transportMode=car&spans=names&apiKey=oLAxfbZmh-iBySmF7LH_b85ZYH-ZQli_ogvzwVvqIZg')
-      .then(res=>{
-        // console.log(res.data.routes[0].sections);
-        gettimeDiff()
-        response.send(res.data.routes[0].sections);
-      }).catch(res=>{
-        console.log(res);
-      })
-    }catch(err){
-      console.log("This is error");
-      // console.log(err);
-      // response.send('');
-    }
+  app.get('/distance',async(req,res)=>{
+    getLocation()
+    var origin={
+      lat:"22.307685199442744",
+      lon:"73.17754902422645"
+    };
+
+    var destination={
+      lat:"22.30078276005401",
+      lon:"73.16911778189652"
+  };
+    var time=await getDistance(origin,destination);
+    res.send(time);
   });
 
 app.listen(PORT, () => {
   console.log(`App is listening on Port ${PORT}`);
 });
+
