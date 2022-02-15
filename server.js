@@ -1,6 +1,6 @@
-const express = require("express");
 const dotenv=require('dotenv');
 dotenv.config();
+const express = require("express");
 const cors = require('cors');
 const checksum_lib=require('./paytm/checksum.js');
 const config=require('./paytm/config.js');
@@ -35,7 +35,6 @@ app.get("/", (req, res) => {
 
 app.get(`/pay`,async(req,res)=>{  
   var status=await verifyUser(db,req.query.patientemail,req.query.doctoremail,req.query.date,req.query.timing,req.query.amount,req.query.customerid,req.query.phone);
-  console.log(status);
   if(status){
     patientInfo={
       'cid':req.query.customerid,
