@@ -13,12 +13,12 @@ const key=require('./keys');
 app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
-
+const CREDENTIALS=JSON.parse(process.env.CRENDENTIALS);
 // firebase initialize
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
 initializeApp({
-  credential: cert(key.data)
+  credential: cert(CREDENTIALS)
 });
 const db = getFirestore();
 
