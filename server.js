@@ -9,11 +9,11 @@ const bodyParser=require('body-parser')
 const parseUrl = express.urlencoded({ extended: false });
 const parseJson = express.json({ extended: false });
 const PORT = process.env.PORT || 4000;
-const key=require('./keys');
+// const key=require('./keys');
 app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
-const CREDENTIALS=JSON.parse(process.env.CRENDENTIALS);
+const CREDENTIALS=JSON.parse(process.env.CREDENTIALS);
 // firebase initialize
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
