@@ -5,15 +5,16 @@ const cors = require('cors');
 const checksum_lib=require('./paytm/checksum.js');
 const config=require('./paytm/config.js');
 const app = express();
-const bodyParser=require('body-parser')
+const bodyParser=require('body-parser');
+const cookieParser=require('cookie-parser');
 const parseUrl = express.urlencoded({ extended: false });
 const parseJson = express.json({ extended: false });
-const PORT = process.env.PORT || 4000;
-// const key=require('./keys');
-app.use(express.json());
-app.use(cors());
-app.use(bodyParser.json());
+const zoomRouter=require('./zoom.js');
+const calendarRouter=require('./google-calender.js');
+// environement variables
 const CREDENTIALS=JSON.parse(process.env.CREDENTIALS);
+const PORT = process.env.PORT || 4000;
+
 // firebase initialize
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
@@ -28,11 +29,15 @@ const { response } = require("express");
 const { default: axios } = require("axios");
 var patientInfo={};
 
-
+app.use(express.json());
+app.use(cors());
+app.use(bodyParser.json());
+app.use(cookieParser());
 app.get("/", (req, res) => {
   res.send("This is an API");
 });
 
+// home page for payment
 app.get(`/pay`,async(req,res)=>{  
   var status=await verifyUser(db,req.query.patientemail,req.query.doctoremail,req.query.date,req.query.timing,req.query.amount,req.query.customerid,req.query.phone);
   if(status){
@@ -120,6 +125,10 @@ app.post("/paynow", [parseUrl, parseJson], (req, res) => {
     var time=await getDistance(origin,destination);
     res.send(time);
   });
+
+  app.use('/zoom',zoomRouter);
+  app.use('/calender',calendarRouter);
+  
 
 app.listen(PORT, () => {
   console.log(`App is listening on Port ${PORT}`);
