@@ -11,21 +11,24 @@ const parseUrl = express.urlencoded({ extended: false });
 const parseJson = express.json({ extended: false });
 const zoomRouter=require('./zoom.js');
 const calendarRouter=require('./google-calender.js');
+const webRouter=require('./web.js');
 // environement variables
 const CREDENTIALS=JSON.parse(process.env.CREDENTIALS);
 const PORT = process.env.PORT || 4000;
 
 // firebase initialize
-const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
-const { getFirestore, Timestamp, FieldValue } = require('firebase-admin/firestore');
+const { initializeApp, cert } = require('firebase-admin/app');
+const { getFirestore} = require('firebase-admin/firestore');
+const {sendMessage}=require('./map.js');
+
 initializeApp({
   credential: cert(CREDENTIALS)
 });
+
 const db = getFirestore();
 
 // functions for firebase queries
-const {verifyUser,getUserId,changePaymentStatus,getDistance,getLocation}=require('./db.js');
-const { response } = require("express");
+const {verifyUser,getUserId,changePaymentStatus,getDistance,getLocation,getPatientData,getDoctorData,getAppointments}=require('./db.js');
 const { default: axios } = require("axios");
 var patientInfo={};
 
@@ -33,6 +36,13 @@ app.use(express.json());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+
+app.get('/message',(req,res)=>{
+  sendMessage();
+  res.send('Successfull');
+});
+
 app.get("/", (req, res) => {
   res.send("This is an API");
 });
@@ -126,9 +136,23 @@ app.post("/paynow", [parseUrl, parseJson], (req, res) => {
     res.send(time);
   });
 
+  app.get('/web/patientdata',async(req,res)=>{
+    const data=await getPatientData(db);
+    res.send(data);
+  });
+
+  app.get('/web/doctordata',async(req,res)=>{
+    const data=await getDoctorData(db);
+    res.send(data);
+  });
+
+  app.get('/web/appointments',async(req,res)=>{
+    const data=await getAppointments(db);
+    res.send(data);
+  });
+
   app.use('/zoom',zoomRouter);
   app.use('/calender',calendarRouter);
-  
 
 app.listen(PORT, () => {
   console.log(`App is listening on Port ${PORT}`);

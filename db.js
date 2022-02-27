@@ -116,11 +116,58 @@ function getLocation() {
     } else {
       x.innerHTML = "Geolocation is not supported by this browser.";
     }
-  }
+}
   
-  function showPosition(position) {
+function showPosition(position) {
     x.innerHTML = "Latitude: " + position.coords.latitude +
     "<br>Longitude: " + position.coords.longitude;
-  }
+}
 
-module.exports={getUserId,verifyUser,changePaymentStatus,getDistance,getLocation}
+async function getPatientData(db){
+    try {
+        var data=[];
+        const docRef=await db.collection('Patient');
+        const snapshot=await docRef.get();
+        snapshot.docs.forEach((item)=>{
+            data.push(item.data());
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+async function getDoctorData(db){
+    try {
+        var data=[];
+        const docRef=await db.collection('Doctor');
+        const snapshot=await docRef.get();
+        // console.log(snapshot);
+        snapshot.docs.forEach((item)=>{
+            data.push(item.data());
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+async function getAppointments(db){
+    try {
+        var data=[];
+        const docRef=await db.collection('Doctor');
+        const snapshot=await docRef.get();
+        // console.log(snapshot);
+        snapshot.docs.forEach((item)=>{
+            data.push(item.data());
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+module.exports={getUserId,verifyUser,changePaymentStatus,getDistance,getLocation,getPatientData,getDoctorData,getAppointments};
