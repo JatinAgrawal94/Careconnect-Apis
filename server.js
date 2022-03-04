@@ -32,6 +32,10 @@ app.get('/home',(req,res)=>{
   res.render('index');
 })
 
+app.get('/login',(req,res)=>{
+  res.render('login_page');
+})
+
 app.get('/web/patientdata',async(req,res)=>{
   const data=await getPatientData(db);
   res.send(data);
