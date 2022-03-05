@@ -25,12 +25,12 @@ app.set('view engine','ejs');
 app.use(express.static('public'));
 
 app.get("/", (req, res) => {
-  res.send("This is an API");
+  res.render('index');
 });
 
-app.get('/home',(req,res)=>{
-  res.render('index');
-})
+// app.get('/home',(req,res)=>{
+//   res.render('index');
+// })
 
 app.get('/login',(req,res)=>{
   res.render('login_page');
