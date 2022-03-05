@@ -2,7 +2,7 @@ const express=require('express');
 const appointmentRouter= express();
 const {getAppointments}=require('../../Queryfunctions/medical/appointment');
 
-appointmentRouter.get('/allappointments',async(req,res)=>{
+appointmentRouter.get('/allappointment',async(req,res)=>{
     const data=await getAppointments();
     if(data){
         res.send(data);
