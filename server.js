@@ -21,9 +21,7 @@ const prescriptionRouter=require('./routes/medical/patient/prescriptionRouter');
 const PORT = process.env.PORT || 4000;
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(cors());
-// app.use(bodyParser.json());
+app.use(cors());
 app.use(cookieParser());
 app.set('view engine','ejs');
 app.use(express.static('public'));
@@ -31,7 +29,11 @@ app.use(express.static('public'));
 app.get("/", (req, res) => {
   res.render('index');
 });
-
+// var data={
+//   patientId: 'w2JaKHi5arruPDIyx5Fv',
+//   data: '{type: new allergy, date: 09/03/22}'
+// }
+// console.log(data.data);
 // app.get('/home',(req,res)=>{
 //   res.render('index');
 // })
