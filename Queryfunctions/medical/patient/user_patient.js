@@ -35,4 +35,19 @@ async function getUserId(email,collection){
     }
 }
 
-module.exports={getUserId,getPatientData};
+async function getPatientInfo(documentId){
+    try {
+       
+        const ref=db.collection('Patient').doc(documentId);
+         const data=await ref.get();
+         if (!data.exists) {
+            return null
+          } else {
+            return data.data();
+          }
+    } catch (error) {
+        return null;
+    }
+}
+
+module.exports={getUserId,getPatientData,getPatientInfo};

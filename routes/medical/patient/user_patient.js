@@ -1,6 +1,6 @@
 const express=require('express');
 const patientRouter=express();
-const {getPatientData,getUserId}=require('../../../Queryfunctions/medical/patient/user_patient');
+const {getPatientData,getUserId,getPatientInfo}=require('../../../Queryfunctions/medical/patient/user_patient');
 const preRouter=require('./prescriptionRouter');
 const {db}=require('../../../Queryfunctions/db');
 
@@ -12,6 +12,20 @@ patientRouter.get("/allpatient",async(req,res)=>{
       res.status(404).send("Error getting data");
   }
 });
+
+patientRouter.get('/info',async(req,res)=>{
+  const documentid=req.query.documentid;
+  try {
+    const data=await getPatientInfo(documentid);
+    if(data){
+      res.send(data);
+    }else{
+      throw error;
+    }
+  } catch (error) {
+    res.status(404).send("Error");
+  }
+})
 
 patientRouter.get('/getdocsid',async(req,res)=>{
   try {
