@@ -1,9 +1,10 @@
 const express=require('express');
 const patientRouter=express();
-const {getPatientData,getUserId,getPatientInfo}=require('../../../Queryfunctions/medical/patient/user_patient');
+const {getPatientData,getUserId,getPatientInfo, getCategoryData}=require('../../../Queryfunctions/medical/patient/user_patient');
 const preRouter=require('./prescriptionRouter');
 const {db}=require('../../../Queryfunctions/db');
 
+// get list of all patients
 patientRouter.get("/allpatient",async(req,res)=>{
   const data=await getPatientData();
   if(data){
@@ -13,6 +14,7 @@ patientRouter.get("/allpatient",async(req,res)=>{
   }
 });
 
+// get all document data of a specific patient
 patientRouter.get('/info',async(req,res)=>{
   const documentid=req.query.documentid;
   try {
@@ -27,6 +29,7 @@ patientRouter.get('/info',async(req,res)=>{
   }
 })
 
+// get patient document id
 patientRouter.get('/getdocsid',async(req,res)=>{
   try {
     const email=req.query.email;
@@ -55,6 +58,22 @@ patientRouter.post('/:category/create',async(req,res)=>{
     res.send("Fail");
   }
 });
+
+// route to get all documents of a patient's particular medical field eg:allergy,medicalvisits etc.
+patientRouter.get('/:category/all',async(req,res)=>{
+  try{
+    let category=req.params.category;
+    let documentid=req.query.documentid;
+    let data=await getCategoryData(category,documentid);
+    if(data){
+      res.send(data);
+    }else{
+      throw error;
+    }
+  }catch(error){
+    res.status(404).send("Error");
+  }
+})
 
 
 // about,allergy,blood-glucose,examination,family-history,labtest,medical-visit,notes,pathology,prescription

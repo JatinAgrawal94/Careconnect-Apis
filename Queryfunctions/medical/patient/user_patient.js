@@ -37,7 +37,6 @@ async function getUserId(email,collection){
 
 async function getPatientInfo(documentId){
     try {
-       
         const ref=db.collection('Patient').doc(documentId);
          const data=await ref.get();
          if (!data.exists) {
@@ -50,4 +49,19 @@ async function getPatientInfo(documentId){
     }
 }
 
-module.exports={getUserId,getPatientData,getPatientInfo};
+async function getCategoryData(category,documentId){
+    try {
+        var data=[];
+        const ref=db.collection(`Patient/${documentId}/${category}`);
+        const snapshot=await ref.get();
+        snapshot.docs.forEach((item)=>{
+            data.push(item.data());
+        })
+        
+        return data;
+    } catch (error) {
+        return null;
+    }
+}
+
+module.exports={getUserId,getPatientData,getPatientInfo,getCategoryData};
