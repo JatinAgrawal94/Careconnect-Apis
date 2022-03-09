@@ -15,23 +15,23 @@ async function getPatientData(){
     }
 }
 
-async function getUserId(email){
+async function getUserId(email,collection){
     try{
         var data=[];
-        const docRef=db.collection('Patient');
+        const docRef=db.collection(collection);
         const snapshot=await docRef.where('email','==',email).get();
         snapshot.docs.forEach((item)=>{
             data.push({
                 'email':item.data()['email'],
                 'phone':item.data()['phoneno'],
-                'userid':item.data()['email'],
+                'userid':item.data()['userid'],
+                'documentid':item.id
         });
         })
-        const appointmentRef=db.collection('Appointment');
-        // doctoremail,patientemail,date,timing
-        const appSnapshot=await appointmentRef.where('')
+        return data;
     }catch(err){
         console.log(err);
+        return null;
     }
 }
 
