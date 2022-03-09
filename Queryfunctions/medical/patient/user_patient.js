@@ -23,7 +23,7 @@ async function getUserId(email,collection){
         snapshot.docs.forEach((item)=>{
             data.push({
                 'email':item.data()['email'],
-                'phone':item.data()['phoneno'],
+                'phoneno':item.data()['phoneno'],
                 'userid':item.data()['userid'],
                 'documentid':item.id
         });
