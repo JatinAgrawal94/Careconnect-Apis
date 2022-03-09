@@ -19,7 +19,7 @@ patientRouter.post('/:category/create',async(req,res)=>{
     const category=req.params.category;
     const data=req.body;
     // console.log(req.body);
-    const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
+    const ref=await db.collection(`Patient/${data.patientId}/${category}`).doc().set(data.data);
     res.status(200).send(1);
   } catch (error) {
     res.status(404).send(0);
