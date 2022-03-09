@@ -19,7 +19,7 @@ patientRouter.post('/:category/create',async(req,res)=>{
     const category=req.params.category;
     const patientId=req.body.patientId;
     const data=JSON.parse(req.body.data);
-    data.delete='0';
+    data.delete=0;
     const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
     res.send("Sucess");
   } catch (error) {
