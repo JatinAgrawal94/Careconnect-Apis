@@ -6,4 +6,10 @@ messagingRouter.get('/message',(req,res)=>{
     res.send('Successfull');
 });
 
+messagingRouter.post('/setreminder',(req,res)=>{
+    try{
+        
+    }catch(err){}
+});
+
 module.exports=messagingRouter;
