@@ -18,14 +18,15 @@ patientRouter.post('/:category/create',async(req,res)=>{
   try {
     const category=req.params.category;
     const patientId=req.body.patientId;
-    data.delete=0;
+    const data=JSON.parse(req.body.data);
+    data.delete='0';
     const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
     res.send("Sucess");
   } catch (error) {
     console.log(error);
     res.send("Fail");
   }
-})
+});
 
 
 // about,allergy,blood-glucose,examination,family-history,labtest,medical-visit,notes,pathology,prescription
