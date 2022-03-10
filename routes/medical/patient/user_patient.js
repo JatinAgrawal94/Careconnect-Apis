@@ -1,6 +1,6 @@
 const express=require('express');
 const patientRouter=express();
-const {getDocsId,getUserInfo}=require("../../../Queryfunctions/medical/general");
+const {getDocsId,getUserInfo, updateUserData}=require("../../../Queryfunctions/medical/general");
 const {getPatientData,getPatientInfo, getCategoryData,updatePatientData}=require('../../../Queryfunctions/medical/patient/user_patient');
 const preRouter=require('./prescriptionRouter');
 const {db}=require('../../../Queryfunctions/db');
@@ -82,8 +82,10 @@ patientRouter.get('/:category/all',async(req,res)=>{
 patientRouter.post('/update',async(req,res)=>{
   try {
     let documentid=req.body.documentid;
+    let collection=req.body.collection;
     let data=JSON.parse(req.body.data);
-    await updatePatientData(documentid,data);
+    await updateUserData(documentid,data,collection);
+    // await updatePatientData(documentid,data);
     res.send("Sucess");
   } catch (error) {
     res.status(404).send("Error");

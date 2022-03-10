@@ -1,7 +1,7 @@
 const express=require('express');
 const doctorRouter=express();
 const {getDoctorData}=require('../../../Queryfunctions/medical/doctor/user_doctor');
-const {getDocsId,getUserInfo}=require("../../../Queryfunctions/medical/general");
+const {getDocsId,getUserInfo,updateUserData}=require("../../../Queryfunctions/medical/general");
 
 doctorRouter.get('/alldoctor',async(req,res)=>{
     const data=await getDoctorData();
@@ -40,6 +40,18 @@ doctorRouter.get('/info',async(req,res)=>{
     } catch (error) {
       res.status(404).send("Error");
     }
-})
+});
+
+doctorRouter.post('/update',async(req,res)=>{
+  try {
+    let documentid=req.body.documentid;
+    let collection=req.body.collection;
+    let data=JSON.parse(req.body.data);
+    await updateUserData(documentid,data,collection);
+    res.send("Sucess");
+  } catch (error) {
+    res.status(404).send("Error");
+  }
+});
 
 module.exports=doctorRouter;

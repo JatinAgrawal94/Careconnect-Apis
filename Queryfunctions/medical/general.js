@@ -34,4 +34,22 @@ async function getUserInfo(documentId,collection){
     }
 }
 
-module.exports={getDocsId,getUserInfo};
+// async function addUser(collection){
+//     try {
+//         const ref=db.collection(collection).add()
+//     } catch (error) {
+        
+//     }
+// }
+
+async function updateUserData(documentId,data,collection){
+    try {
+        const ref=await db.collection(collection).doc(documentId).update(data);
+        return 1;
+    } catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
+module.exports={getDocsId,getUserInfo,updateUserData};

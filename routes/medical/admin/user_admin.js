@@ -1,6 +1,6 @@
 const express=require('express');
 const adminRouter=express();
-const {getDocsId,getUserInfo}=require("../../../Queryfunctions/medical/general");
+const {getDocsId,getUserInfo,updateUserData}=require("../../../Queryfunctions/medical/general");
 
 adminRouter.get('/getdocsid',async(req,res)=>{
     try {
@@ -31,5 +31,17 @@ adminRouter.get('/info',async(req,res)=>{
       res.status(404).send("Error");
     }
 })
+
+adminRouter.post('/update',async(req,res)=>{
+  try {
+    let documentid=req.body.documentid;
+    let collection=req.body.collection;
+    let data=JSON.parse(req.body.data);
+    await updateUserData(documentid,data,collection);
+    res.send("Sucess");
+  } catch (error) {
+    res.status(404).send("Error");
+  }
+});
 
 module.exports=adminRouter;
