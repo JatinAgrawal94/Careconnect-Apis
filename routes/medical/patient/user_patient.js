@@ -1,7 +1,7 @@
 const express=require('express');
 const patientRouter=express();
-const {getDocsId,getUserInfo, updateUserData}=require("../../../Queryfunctions/medical/general");
-const {getPatientData,getPatientInfo, getCategoryData,updatePatientData}=require('../../../Queryfunctions/medical/patient/user_patient');
+const {getDocsId,getUserInfo, updateUserData, addUser}=require("../../../Queryfunctions/medical/general");
+const {getPatientData, getCategoryData}=require('../../../Queryfunctions/medical/patient/user_patient');
 const preRouter=require('./prescriptionRouter');
 const {db}=require('../../../Queryfunctions/db');
 
@@ -78,6 +78,18 @@ patientRouter.get('/:category/all',async(req,res)=>{
   }
 })
 
+
+patientRouter.post('/add',async(req,res)=>{
+  try {;
+    let collection=req.body.collection;
+    let data=JSON.parse(req.body.data);
+    await addUser(collection,data);
+    res.send("Sucess");
+  } catch (error) {
+    res.status(404).send("Error");
+  }
+});
+
 // route to update patient data
 patientRouter.post('/update',async(req,res)=>{
   try {
@@ -92,6 +104,16 @@ patientRouter.post('/update',async(req,res)=>{
   }
 });
 
+patientRouter.post('/increement',async(req,res)=>{
+  try {
+    let documentid=req.body.documentid;
+    let number=req.body.numberOfUser;
+    let userRole=req.body.role;
+    res.send('Success');
+  } catch (error) {
+    
+  }
+})
 // addappointment,
 
 module.exports=patientRouter;

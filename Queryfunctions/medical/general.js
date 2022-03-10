@@ -34,13 +34,33 @@ async function getUserInfo(documentId,collection){
     }
 }
 
-// async function addUser(collection){
-//     try {
-//         const ref=db.collection(collection).add()
-//     } catch (error) {
-        
-//     }
-// }
+async function addUser(collection,data){
+    try {
+        var numbers=[];
+        db.collection(collection).doc().set(data);
+        const ref=db.collection('stats');
+        let snapshot=await ref.get();
+        snapshot.docs.forEach((item)=>{
+            numbers.push({
+                'noofpatients':item.data()['noofpatients'],
+                'noofdoctors':item.data()['noofdoctors'],
+                'noofadmin':item.data()['noofadmin'],
+                'documentid':item.id
+            });
+        });
+        var value;
+        if(collection === 'Patient'){
+            value=parseInt(numbers[0]['noofpatients'])+1;
+            await db.collection('stats').doc(numbers[0]['documentid']).update({'noofpatients':value.toString()});
+        }else if(collection === 'Doctor'){
+            value=parseInt(numbers[0]['noofdoctors'])+1;
+            await db.collection('stats').doc(numbers[0]['documentid']).update({'noofdoctors':value.toString()});
+        }
+        return 1;
+    } catch (error) {
+        return null;
+    }
+}
 
 async function updateUserData(documentId,data,collection){
     try {
@@ -52,4 +72,16 @@ async function updateUserData(documentId,data,collection){
     }
 }
 
-module.exports={getDocsId,getUserInfo,updateUserData};
+async function increementNoOfUsers(documentid,number,userRole){
+    try {
+        var role='noOf'+userRole+'s';
+        let data={};
+        data[role]=number.toString();
+        db.collection('stats').doc(documentid).update(data);
+        return 1;
+    } catch (error) {
+        return 0;
+    }
+}
+
+module.exports={getDocsId,getUserInfo,updateUserData,addUser};
