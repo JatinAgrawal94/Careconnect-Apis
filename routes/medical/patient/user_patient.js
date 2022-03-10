@@ -1,6 +1,7 @@
 const express=require('express');
 const patientRouter=express();
-const {getPatientData,getUserId,getPatientInfo, getCategoryData,updatePatientData}=require('../../../Queryfunctions/medical/patient/user_patient');
+const {getDocsId}=require("../../../Queryfunctions/medical/general");
+const {getPatientData,getPatientInfo, getCategoryData,updatePatientData}=require('../../../Queryfunctions/medical/patient/user_patient');
 const preRouter=require('./prescriptionRouter');
 const {db}=require('../../../Queryfunctions/db');
 
@@ -33,7 +34,8 @@ patientRouter.get('/info',async(req,res)=>{
 patientRouter.get('/getdocsid',async(req,res)=>{
   try {
     const email=req.query.email;
-    const data=await getUserId(email,'Patient');
+    const role=req.query.role;
+    const data=await getDocsId(email,role);
     if(data){
       res.send(data);
     }else{

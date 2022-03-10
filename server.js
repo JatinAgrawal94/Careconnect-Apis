@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 require('ejs');
 const cookieParser=require('cookie-parser');
-const axios=require('axios');
+const adminRouter=require('./routes/medical/admin/user_admin');
 const doctorRouter=require('./routes/medical/doctor/user_doctor');
 const patientRouter=require('./routes/medical/patient/user_patient');
 const appointmentRouter=require('./routes/medical/appointment.js');
@@ -14,7 +14,7 @@ const zoomRouter=require('./routes/zoom.js');
 const calendarRouter=require('./routes/google-calender.js');
 const paymentRouter=require('./routes/paymentRouter');
 const mapRouter=require('./routes/map');
-const prescriptionRouter=require('./routes/medical/patient/prescriptionRouter');
+
 // var date=new Date();
 // var currentTime=`${date.getHours()}:${date.getMinutes()}`;
 
@@ -69,6 +69,7 @@ app.use('/messaging',messagingRouter);
 app.use('/map',mapRouter);
 app.use('/patient',patientRouter);
 app.use('/doctor',doctorRouter);
+app.use('/admin',adminRouter);
 app.use('/appointment',appointmentRouter);
 
 app.listen(PORT, () => {
