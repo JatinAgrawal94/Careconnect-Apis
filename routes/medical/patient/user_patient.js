@@ -1,6 +1,6 @@
 const express=require('express');
 const patientRouter=express();
-const {getDocsId}=require("../../../Queryfunctions/medical/general");
+const {getDocsId,getUserInfo}=require("../../../Queryfunctions/medical/general");
 const {getPatientData,getPatientInfo, getCategoryData,updatePatientData}=require('../../../Queryfunctions/medical/patient/user_patient');
 const preRouter=require('./prescriptionRouter');
 const {db}=require('../../../Queryfunctions/db');
@@ -18,8 +18,9 @@ patientRouter.get("/allpatient",async(req,res)=>{
 // get all document data of a specific patient
 patientRouter.get('/info',async(req,res)=>{
   const documentid=req.query.documentid;
+  const role=req.query.role;
   try {
-    const data=await getPatientInfo(documentid);
+    const data=await getUserInfo(documentid,role);
     if(data){
       res.send(data);
     }else{
@@ -89,6 +90,6 @@ patientRouter.post('/update',async(req,res)=>{
   }
 });
 
-// about,allergy,blood-glucose,examination,family-history,labtest,medical-visit,notes,pathology,prescription
-// radiology, surgery, vaccine, book appointment
+// addappointment,
+
 module.exports=patientRouter;
