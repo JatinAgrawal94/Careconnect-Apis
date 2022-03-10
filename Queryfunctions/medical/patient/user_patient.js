@@ -66,7 +66,7 @@ async function getCategoryData(category,documentId){
 
 async function updatePatientData(documentId,data){
     try {
-        const ref=await db.collection('Patient').doc(documentId).set(data);
+        const ref=await db.collection('Patient').doc(documentId).update(data);
         return 1;
     } catch (error) {
         console.log(error);
