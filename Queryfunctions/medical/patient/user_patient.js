@@ -64,4 +64,14 @@ async function getCategoryData(category,documentId){
     }
 }
 
-module.exports={getUserId,getPatientData,getPatientInfo,getCategoryData};
+async function updatePatientData(documentId,data){
+    try {
+        const ref=await db.collection('Patient').doc(documentId).set(data);
+        return 1;
+    } catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
+module.exports={getUserId,getPatientData,getPatientInfo,getCategoryData,updatePatientData};

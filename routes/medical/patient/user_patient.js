@@ -1,6 +1,6 @@
 const express=require('express');
 const patientRouter=express();
-const {getPatientData,getUserId,getPatientInfo, getCategoryData}=require('../../../Queryfunctions/medical/patient/user_patient');
+const {getPatientData,getUserId,getPatientInfo, getCategoryData,updatePatientData}=require('../../../Queryfunctions/medical/patient/user_patient');
 const preRouter=require('./prescriptionRouter');
 const {db}=require('../../../Queryfunctions/db');
 
@@ -75,8 +75,18 @@ patientRouter.get('/:category/all',async(req,res)=>{
   }
 })
 
+// route to update patient data
+patientRouter.post('/update',async(req,res)=>{
+  try {
+    let documentid=req.body.documentid;
+    let data=JSON.parse(req.body.data);
+    await updatePatientData(documentid,data);
+    res.send("Sucess");
+  } catch (error) {
+    res.status(404).send("Error");
+  }
+});
 
 // about,allergy,blood-glucose,examination,family-history,labtest,medical-visit,notes,pathology,prescription
 // radiology, surgery, vaccine, book appointment
-
 module.exports=patientRouter;
