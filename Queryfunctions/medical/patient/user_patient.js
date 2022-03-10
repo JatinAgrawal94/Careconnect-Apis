@@ -74,4 +74,4 @@ async function updatePatientData(documentId,data){
     }
 }
 
-module.exports={getUserId,getPatientData,getPatientInfo,getCategoryData,updatePatientData};
+module.exports={getPatientData,getCategoryData,updatePatientData};
