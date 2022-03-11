@@ -34,4 +34,15 @@ async function getCategoryData(category,documentId){
     }
 }
 
-module.exports={getPatientData,getCategoryData};
+async function deleteAnyPatientRecord(patientdocumentId,recordId,category){
+    try {
+        let ref=db.collection(`Patient/${patientdocumentId}/${category}`);
+        await ref.doc(recordId).delete();
+        return 1;
+    } catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
+module.exports={getPatientData,getCategoryData,deleteAnyPatientRecord};

@@ -1,7 +1,7 @@
 const express=require('express');
 const patientRouter=express();
 const {getDocsId,getUserInfo, updateUserData, addUser, createNewUser, getStatsAndIncreement}=require("../../../Queryfunctions/medical/general");
-const {getPatientData, getCategoryData}=require('../../../Queryfunctions/medical/patient/user_patient');
+const {getPatientData, getCategoryData, deleteAnyPatientRecord}=require('../../../Queryfunctions/medical/patient/user_patient');
 const preRouter=require('./prescriptionRouter');
 const {db}=require('../../../Queryfunctions/db');
 
@@ -118,6 +118,23 @@ patientRouter.post('/createuser',async(req,res)=>{
     }
 });
 
-// addappointment
+patientRouter.post('/record/delete',async(req,res)=>{
+  try {
+    const patientdocumentId=req.body.patientid;
+    const recordId=req.body.recordid;
+    const category=req.body.category;
+    let response=await deleteAnyPatientRecord(patientdocumentId,recordId,category);
+    if(response){
+      res.send('Success');
+    }else{
+      throw Error;
+    }
+  } catch (error) {
+    res.send('Error');
+  }
+})
+
+
+
 // delete any patient record
 module.exports=patientRouter;
