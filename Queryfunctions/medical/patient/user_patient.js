@@ -7,7 +7,9 @@ async function getPatientData(){
         const docRef=await db.collection('Patient');
         const snapshot=await docRef.get();
         snapshot.docs.forEach((item)=>{
-            data.push(item.data());
+            let temp=item.data();
+            temp['documentid']=item.id;
+            data.push(temp);
         });
         return data;
     } catch (error) {
