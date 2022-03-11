@@ -1,7 +1,7 @@
 const express=require('express');
 const doctorRouter=express();
 const {getDoctorData}=require('../../../Queryfunctions/medical/doctor/user_doctor');
-const {getDocsId,getUserInfo,updateUserData,addUser}=require("../../../Queryfunctions/medical/general");
+const {getDocsId,getUserInfo,updateUserData,addUser,createNewUser,getStatsAndIncreement}=require("../../../Queryfunctions/medical/general");
 
 doctorRouter.get('/alldoctor',async(req,res)=>{
     const data=await getDoctorData();
@@ -62,6 +62,20 @@ doctorRouter.post('/add',async(req,res)=>{
     res.send("Sucess");
   } catch (error) {
     res.status(404).send("Error");
+  }
+});
+
+
+doctorRouter.post('/createuser',async(req,res)=>{
+  let email=req.body.email;
+  let password=req.body.password;
+  let bool=await createNewUser(email,password);
+  if(bool.message == "User created"){
+    var userid=await getStatsAndIncreement('doctor');
+    bool['userid']=userid;
+    res.send(bool);
+  }else{
+    res.send(bool);
   }
 });
 
