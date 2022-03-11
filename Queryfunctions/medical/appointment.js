@@ -77,6 +77,28 @@ async function getPatientsBasedOnDateAndDoctor(doctoremail,date){
   }
 }
 
+// function to check if user can add an appointment it can have only 1 appointment in a day for a particular doctor.
+async function checkUserValidity(doctoremail,patientemail,date){
+    try {
+        var data=[];
+        let ref=db.collection('Appointment');
+        let snapshot=await ref.where('doctoremail','==',doctoremail).where('patientemail','==',patientemail).where('date','==',date).get();
+        snapshot.docs.forEach((item)=>{
+            if(item!==null){
+                data.push(item.data()['patientemail']);
+            }
+        });
+        if(data.length === 1){
+            return 0;
+        }else{
+            return 1;
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 async function createAppointment(data){
     try {
         data['delete']=0;
@@ -99,4 +121,4 @@ async function createAppointment(data){
     }
 }
 
-module.exports={getAppointments,getAppointmentDates,getPatientsBasedOnDateAndDoctor,createAppointment};
+module.exports={getAppointments,getAppointmentDates,getPatientsBasedOnDateAndDoctor,createAppointment,checkUserValidity};

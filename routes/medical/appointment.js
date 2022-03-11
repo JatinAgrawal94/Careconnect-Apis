@@ -1,6 +1,6 @@
 const express=require('express');
 const appointmentRouter= express();
-const {getAppointments,getAppointmentDates, getPatientsBasedOnDateAndDoctor, createAppointment}=require('../../Queryfunctions/medical/appointment');
+const {getAppointments,getAppointmentDates, getPatientsBasedOnDateAndDoctor, createAppointment, checkUserValidity}=require('../../Queryfunctions/medical/appointment');
 
 appointmentRouter.get('/allappointment',async(req,res)=>{
     try {
@@ -43,6 +43,22 @@ appointmentRouter.get('/appointmentdates',async(req,res)=>{
         res.send("Error")
     }
 });
+
+appointmentRouter.post('/check',async(req,res)=>{
+    try {
+        let data=req.body;
+        var status=await checkUserValidity(data['doctoremail'],data['patientemail'],data['date']);
+        if(status === 1){
+            res.send(status.toString());
+        }else if(status == 0){
+            res.send(status.toString());
+        }else{
+            throw Error;
+        }
+    } catch (error) {
+        res.send("Error");
+    }
+})
 
 // appointments based on date and doctor.
 appointmentRouter.get('/specific',async(req,res)=>{
