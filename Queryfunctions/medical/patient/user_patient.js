@@ -24,9 +24,10 @@ async function getCategoryData(category,documentId){
         const ref=db.collection(`Patient/${documentId}/${category}`);
         const snapshot=await ref.get();
         snapshot.docs.forEach((item)=>{
-            data.push(item.data());
+            let temp=item.data();
+            temp['documentid']=item.id;
+            data.push(temp);
         })
-        
         return data;
     } catch (error) {
         return null;

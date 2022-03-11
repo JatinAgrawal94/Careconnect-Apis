@@ -14,7 +14,7 @@ const zoomRouter=require('./routes/zoom.js');
 const calendarRouter=require('./routes/google-calender.js');
 const paymentRouter=require('./routes/paymentRouter');
 const mapRouter=require('./routes/map');
-
+const authRouter=require('./routes/medical/auth');
 // var date=new Date();
 // var currentTime=`${date.getHours()}:${date.getMinutes()}`;
 
@@ -29,14 +29,7 @@ app.use(express.static('public'));
 app.get("/", (req, res) => {
   res.render('index');
 });
-// var data={
-//   patientId: 'w2JaKHi5arruPDIyx5Fv',
-//   data: '{type: new allergy, date: 09/03/22}'
-// }
-// console.log(data.data);
-// app.get('/home',(req,res)=>{
-//   res.render('index');
-// })
+
 
 app.get('/callback',(req,res)=>{
   res.send("Hello ji");
@@ -71,6 +64,7 @@ app.use('/patient',patientRouter);
 app.use('/doctor',doctorRouter);
 app.use('/admin',adminRouter);
 app.use('/appointment',appointmentRouter);
+app.use('/auth',authRouter);
 
 app.listen(PORT, () => {
   console.log(`App is listening on Port ${PORT}`);

@@ -119,4 +119,5 @@ patientRouter.post('/createuser',async(req,res)=>{
 });
 
 // addappointment
+// delete any patient record
 module.exports=patientRouter;

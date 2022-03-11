@@ -107,4 +107,19 @@ async function createNewUser(email,password){
     return result;
 }
 
-module.exports={getDocsId,getUserInfo,updateUserData,addUser,createNewUser,getStatsAndIncreement};
+async function getRole(email){
+    try{
+        var data=[];
+        var ref= db.collection('users');
+        const snapshot=await ref.where('email','==',email).get();
+        snapshot.docs.forEach((item)=>{
+            data.push(item.data());
+        });
+        return data;
+    }catch(err){
+        return null;
+    }
+
+}
+
+module.exports={getDocsId,getUserInfo,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};
