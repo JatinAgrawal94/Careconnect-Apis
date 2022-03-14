@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <style>
+    table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  max-width: 1500px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+      </style>
+
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="/images/heart.png" type="image/x-icon">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body>
+  <%-include('../partials/navbar_doctor',{email:email})%>
+  <br>
+  <br>
+  <br>
+  <br>
+  <table>
+    <tr>
+      <th>PatientName</th>
+      <th>PatientEmail</th>
+      <th>Visit-Type</th>
+      <th>Date</th>
+      <th>Appointment-Type</th>
+      <th>Reason</th>
+    </tr>
+    <%appointment.forEach((item)=>{%>
+      <tr>
+        <td><%=item['patientname']%></td>
+        <td><%=item['patientemail']%></td>
+        <td><%=item['visittype']%></td>
+        <td><%=item['date']%></td>
+        <td><%=item['appointmenttype']%></td>
+        <td><%=item['reason']%></td>
+        <!-- <td><a href="">Details</a></td> -->
+      </tr>
+    <%})%>
+
+  </table>
+</body>
+
+</html>
+
+

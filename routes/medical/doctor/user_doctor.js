@@ -1,8 +1,72 @@
 const express=require('express');
 const doctorRouter=express();
+const {checkLoginStatus}=require('../../../Queryfunctions/medical/auth');
+const {getPatientData}=require('../../../Queryfunctions/medical/patient/user_patient')
 const {getDoctorData}=require('../../../Queryfunctions/medical/doctor/user_doctor');
-const {getDocsId,getUserInfo,updateUserData,addUser,createNewUser,getStatsAndIncreement}=require("../../../Queryfunctions/medical/general");
+const {getDoctorAppointments}=require('../../../Queryfunctions/medical/appointment');
+const {getDocsId,getUserInfo,updateUserData,addUser,createNewUser,getStatsAndIncreement,getUserProfile}=require("../../../Queryfunctions/medical/general");
 
+doctorRouter.get('/:email',async(req,res)=>{
+  const email=req.params.email;
+  var result=await checkLoginStatus();
+  // console.log(result.email);
+  // here we need to check if the email is of doctor or not we need to verify that too before rendering the page.
+  // we need to make a common function for user role verification and loginstatus checker.
+  if(result!==null && email==result.email){
+    const patients=await getPatientData();
+    const appointments=await getDoctorAppointments(email);
+    res.render('doctor/doctor_dashboard',{patient:patients,appointment:appointments,email:email});
+  }else{
+    res.redirect(302,'/login');
+  }
+});
+
+doctorRouter.get('/:email/profile',async(req,res)=>{
+  const email=req.params.email;
+  var result=await checkLoginStatus();
+  if(result!==null && email==result.email){
+    const data=await getUserProfile(email,'Doctor');
+    res.render('doctor/doctor_profile',{data:data,isAdmin:undefined});
+  }else{
+    res.redirect(302,'/login');
+  }
+});
+
+doctorRouter.get('/:email/patientlist',async(req,res)=>{
+  var result=await checkLoginStatus();
+  const email=req.params.email;
+  if(result!==null && email==result.email){
+    const patients=await getPatientData();
+    res.render('doctor/patients_list',{patient:patients,email:email});
+  }else{
+    res.redirect(302,'/login');
+  }
+});
+
+doctorRouter.get('/:email/patientlist/:patientemail/profile',async(req,res)=>{
+  var result=await checkLoginStatus();
+  const email=req.params.email;
+  if(result!==null && email==result.email){
+    const patientemail=req.params.patientemail;
+    const data=await getUserProfile(patientemail,'Patient');
+    res.render('patient/profile_page',{patient:data,isAdmin:undefined});
+  }else{
+    res.redirect(302,'/login');
+  }
+});
+
+doctorRouter.get('/:email/appointment',async(req,res)=>{
+  var result=await checkLoginStatus();
+  const email=req.params.email;
+  if(result!==null && email==result.email){
+    const appointments=await getDoctorAppointments(email);
+    res.render('appointments/appointment_list',{appointment:appointments,email:email});
+  }else{
+    res.redirect(302,'/login');
+  }
+});
+
+// api for mobile app.
 doctorRouter.get('/alldoctor',async(req,res)=>{
     const data=await getDoctorData();
     if(data){

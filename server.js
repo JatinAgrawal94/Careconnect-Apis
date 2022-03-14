@@ -26,13 +26,20 @@ app.use(cookieParser());
 app.set('view engine','ejs');
 app.use(express.static('public'));
 
-app.get("/", (req, res) => {
-  res.render('index');
+app.get('/',(req,res)=>{
+  res.redirect('/login');
+})
+
+app.get("/about", (req, res) => {
+  res.render('about');
 });
 
+app.get('/login',(req,res)=>{
+  res.render('login');
+});
 
 app.get('/callback',(req,res)=>{
-  res.send("Hello ji");
+  res.send("Callback");
 });
 
 // app.post('/reminder/create',async(req,res)=>{
@@ -51,10 +58,6 @@ app.get('/callback',(req,res)=>{
 //   res.send("OK")
 // })
 
-app.get('/login',(req,res)=>{
-  res.render('login_page');
-});
-
 app.use('/zoom',zoomRouter);
 app.use('/calender',calendarRouter);
 app.use('/payment',paymentRouter);
@@ -69,4 +72,3 @@ app.use('/auth',authRouter);
 app.listen(PORT, () => {
   console.log(`App is listening on Port ${PORT}`);
 });
-

@@ -1,0 +1,23 @@
+
+<nav class="navbar navbar-expand-lg" style="background-color: purple;">
+  <a href="/admin/<%=email%>">
+    <img src="/images/heart.png" class="navbar-item" width="50px"> 
+  </a>  
+  <ul class="navbar-nav me-auto">
+      <li>
+        <h4><a class="nav-link" href="/admin/<%=email%>/doctorlist" style="color: white;">Doctors</a></h4>
+      </li>
+      <li>
+        <h4><a class="nav-link" href="/admin/<%=email%>/patientlist" style="color: white;">Patients</a></h4>
+      </li>
+      <li>
+        <h4><a class="nav-link" href="/admin/<%=email%>/profile" style="color: white;">Profile</a></h4>
+      </li>
+      <li>
+        <form action="/auth/logout" method="POST">
+          <button type="submit">Logout</button>
+        </form> 
+      </li>
+    </ul>
+  </div>
+</nav>

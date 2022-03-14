@@ -1,9 +1,15 @@
 const {db}=require('../db.js');
 
-async function getAppointments(email){
+// get all appointment for a doctor.
+async function getDoctorAppointments(email,date=null){
     try {
         var data=[];
-        const docRef=await db.collection('Appointment').where('patientemail','==',email);
+        var docRef;
+        if(date==null){
+            docRef=await db.collection('Appointment').where('doctoremail','==',email);
+        }else{
+            docRef=await db.collection('Appointment').where('doctoremail','==',email).where('date','==',date);
+        }
         const snapshot=await docRef.get();
         snapshot.docs.forEach((item)=>{
             let temp=item.data();
@@ -12,21 +18,31 @@ async function getAppointments(email){
         });
         return data;
     } catch (error) {
-        console.log(error);   
+        return null;
     }
 }
 
-// function count(elements) {
-//     var map = Map();
-//     elements.forEach((element) {
-//       if (!map.containsKey(element)) {
-//         map[element] = 1;
-//       } else {
-//         map[element] += 1;
-//       }
-//     });
-//     return map;
-//   }
+async function getPatientAppointments(email,date=null){
+    try {
+        var data=[];
+        var docRef;
+        if(date==null){
+            docRef=await db.collection('Appointment').where('patientemail','==',email);
+        }else{
+            docRef=await db.collection('Appointment').where('patientemail','==',email).where('date','==',date);
+        }
+        const snapshot=await docRef.get();
+        snapshot.docs.forEach((item)=>{
+            let temp=item.data();
+            temp['documentid']=item.id;
+            data.push(temp);
+        });
+        return data;
+    } catch (error) {
+        return null;
+    }
+}
+
 
  function count(elements){
     var map=new Map();
@@ -55,7 +71,6 @@ async function getAppointmentDates(doctoremail){
         
         return [date,dateOccurence,data];
     } catch (error) {
-        console.log(error);
         return null;   
     }
 }
@@ -94,7 +109,6 @@ async function checkUserValidity(doctoremail,patientemail,date){
             return 1;
         }
     } catch (error) {
-        console.log(error);
         return null;
     }
 }
@@ -116,9 +130,8 @@ async function createAppointment(data){
         }
         return 1;
     } catch (error) {
-        console.log(error);
         return 0;
     }
 }
 
-module.exports={getAppointments,getAppointmentDates,getPatientsBasedOnDateAndDoctor,createAppointment,checkUserValidity};
+module.exports={getDoctorAppointments,getPatientAppointments,getAppointmentDates,getPatientsBasedOnDateAndDoctor,createAppointment,checkUserValidity};

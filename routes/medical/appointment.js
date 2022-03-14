@@ -1,11 +1,27 @@
 const express=require('express');
 const appointmentRouter= express();
-const {getAppointments,getAppointmentDates, getPatientsBasedOnDateAndDoctor, createAppointment, checkUserValidity}=require('../../Queryfunctions/medical/appointment');
+const {getDoctorAppointments,getPatientAppointments,getAppointmentDates, getPatientsBasedOnDateAndDoctor, createAppointment, checkUserValidity}=require('../../Queryfunctions/medical/appointment');
 
-appointmentRouter.get('/allappointment',async(req,res)=>{
+// get all doctor appointments
+appointmentRouter.get('/doctor',async(req,res)=>{
     try {
         const email=req.query.email;
-        const data=await getAppointments(email);
+        const data=await getDoctorAppointments(email);
+        if(data){
+            res.send(data);
+        }else{
+            throw Error;
+        }
+    } catch (error) {
+        res.status(404).send("Error in getting data");
+    }
+});
+
+// get all doctor appointments
+appointmentRouter.get('/patient',async(req,res)=>{
+    try {
+        const email=req.query.email;
+        const data=await getPatientAppointments(email);
         if(data){
             res.send(data);
         }else{
@@ -28,7 +44,7 @@ appointmentRouter.post('/create',async(req,res)=>{
     } catch (error) {
         res.send('Error');
     }
-})
+});
 
 appointmentRouter.get('/appointmentdates',async(req,res)=>{
     try {

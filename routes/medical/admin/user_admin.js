@@ -1,7 +1,87 @@
 const express=require('express');
 const adminRouter=express();
-const {getDocsId,getUserInfo,updateUserData}=require("../../../Queryfunctions/medical/general");
+const {getDocsId,getUserInfo,updateUserData,getUserProfile}=require("../../../Queryfunctions/medical/general");
+const {checkLoginStatus}=require('../../../Queryfunctions/medical/auth');
+const {getPatientData}=require('../../../Queryfunctions/medical/patient/user_patient')
+const {getDoctorData}=require('../../../Queryfunctions/medical/doctor/user_doctor');
 
+// website routes
+adminRouter.get('/:email',async(req,res)=>{
+    // show no of doctors and patients in card format
+    const email=req.params.email;
+    var result=await checkLoginStatus();
+    if(result!==null && email==result.email){
+      const patients=await getPatientData();
+      const doctor=await getDoctorData();
+      res.render('admin/admin_dashboard',{patient:patients,doctor:doctor,email:email,admin:"1"});
+    }else{
+      res.redirect(302,'/login');
+    } 
+});
+
+// admin profile
+adminRouter.get('/:email/profile',async(req,res)=>{
+  const email=req.params.email;
+  var result=await checkLoginStatus();
+  if(result!==null && email==result.email){
+    const data=await getUserProfile(email,'Admin');
+    res.render('admin/admin_profile',{data:data});
+  }else{
+    res.redirect(302,'/login');
+  }
+});
+
+// patientlist
+adminRouter.get('/:email/patientlist',async(req,res)=>{
+  var result=await checkLoginStatus();
+  const email=req.params.email;
+  if(result!==null && email==result.email){
+    const patients=await getPatientData();
+    res.render('admin/patients_list',{patient:patients,email:email});
+  }else{
+    res.redirect(302,'/login');
+  }
+});
+
+// doctorlist
+adminRouter.get('/:email/doctorlist',async(req,res)=>{
+  var result=await checkLoginStatus();
+  const email=req.params.email;
+  if(result!==null && email==result.email){
+    const doctors=await getDoctorData();
+    res.render('admin/doctor_list',{doctor:doctors,email:email});
+  }else{
+    res.redirect(302,'/login');
+  }
+});
+
+// patient profile
+adminRouter.get('/:email/patientlist/:patientemail/profile',async(req,res)=>{
+  var result=await checkLoginStatus();
+  const email=req.params.email;
+  if(result!==null && email==result.email){
+    const patientemail=req.params.patientemail;
+    const data=await getUserProfile(patientemail,'Patient');
+    res.render('patient/profile_page',{patient:data,email:email,isAdmin:true});
+  }else{
+    res.redirect(302,'/login');
+  }
+});
+// doctor profile
+adminRouter.get('/:email/doctorlist/:doctoremail/profile',async(req,res)=>{
+  var result=await checkLoginStatus();
+  const email=req.params.email;
+  if(result!==null && email==result.email){
+    const doctoremail=req.params.doctoremail;
+    const data=await getUserProfile(doctoremail,'Doctor');
+    res.render('doctor/doctor_profile',{data:data,isAdmin:true,email:email});
+  }else{
+    res.redirect(302,'/login');
+  }
+});
+
+
+// api for mobile apps
 adminRouter.get('/getdocsid',async(req,res)=>{
     try {
         const email=req.query.email;

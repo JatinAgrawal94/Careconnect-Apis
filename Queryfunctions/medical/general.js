@@ -15,11 +15,11 @@ async function getDocsId(email,collection){
         })
         return data;
     }catch(err){
-        console.log(err);
         return null;
     }
 }
 
+// user info by documentid
 async function getUserInfo(documentId,collection){
     try {
         const ref=db.collection(collection).doc(documentId);
@@ -29,6 +29,22 @@ async function getUserInfo(documentId,collection){
           } else {
             return data.data();
           }
+    } catch (error) {
+        return null;
+    }
+}
+
+// profile by email id
+// for webapp
+async function getUserProfile(email,collection){
+    try {
+        var data=[];
+        const ref=db.collection(collection);
+        const snapshot=await ref.where("email",'==',email).get();
+        snapshot.docs.forEach((item)=>{
+            data.push(item.data());
+        });
+        return data;
     } catch (error) {
         return null;
     }
@@ -83,7 +99,6 @@ async function updateUserData(documentId,data,collection){
         await db.collection(collection).doc(documentId).update(data);
         return 1;
     } catch (error) {
-        console.log(error);
         return 0;
     }
 }
@@ -99,7 +114,6 @@ async function createNewUser(email,password){
         disabled:false,
         emailVerified: false,
     }).then((userRecord)=>{
-        // console.log('Successfully created new user:', userRecord.uid);
         return {code:'auth/created-new-user',message:'User created'};
     }).catch((error)=>{
         return error.errorInfo;
@@ -122,4 +136,4 @@ async function getRole(email){
 
 }
 
-module.exports={getDocsId,getUserInfo,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};
+module.exports={getDocsId,getUserInfo,getUserProfile,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};
