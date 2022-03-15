@@ -1,4 +1,6 @@
 const {db,getAuth}=require('../db');
+var LocalStorage=require('node-localstorage').LocalStorage;
+localStorage = new LocalStorage('./scratch');
 
 async function getDocsId(email,collection){
     try{
@@ -12,7 +14,7 @@ async function getDocsId(email,collection){
                 'userid':item.data()['userid'],
                 'documentid':item.id
         });
-        })
+        });
         return data;
     }catch(err){
         return null;
@@ -133,7 +135,23 @@ async function getRole(email){
     }catch(err){
         return null;
     }
-
 }
 
-module.exports={getDocsId,getUserInfo,getUserProfile,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};
+ function authMiddleware(request,response,next){
+    const email=request.params.email;
+    const token=request.cookies[email];
+    // const token=localStorage.getItem(email);
+    if (!token) {
+        response.redirect(302,'/login');
+        //  response.send({ message: "No token provided" }).status(401);
+    }
+    getAuth().verifyIdToken(token).then((decodedToken)=>{
+        const decodedtoken=decodedToken.uid;
+        next();
+    }).catch((error)=>{
+        response.redirect(302,'/login');
+        // response.status(403).send({message:"Could not authorize"})
+    });
+}
+
+module.exports={authMiddleware,getDocsId,getUserInfo,getUserProfile,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};

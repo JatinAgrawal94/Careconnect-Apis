@@ -1,6 +1,6 @@
 const express=require('express');
 const authRouter=express();
-const {signIn,signOutUser}=require('../../Queryfunctions/medical/auth');
+const {signIn,signOutUser, checkLoginStatus}=require('../../Queryfunctions/medical/auth');
 const {getRole}=require('../../Queryfunctions/medical/general');
 
 authRouter.get('/getrole',async(req,res)=>{
@@ -20,13 +20,15 @@ authRouter.get('/getrole',async(req,res)=>{
 authRouter.post('/login',async(req,res)=>{
     const email=req.body.email.toString();
     const password=req.body.password.toString();
-    var result=await signIn(email,password);
+    var result= await signIn(email,password);
+    // localStorage.setItem(email,result.token);
     if(result.status === 1){
         const data=await getRole(email);
         if(data[0]['role'] == 'doctor') {
-            authRouter.locals.authenticated=true;
+            res.cookie(email,result.token);
             res.redirect(302,`/doctor/${email}`);
         }else if(data[0]['role'] == 'admin'){
+            res.cookie(email,result.token);
             res.redirect(302,`/admin/${email}`);
         }else{
             res.status(404).send("User Not Found")
@@ -38,7 +40,9 @@ authRouter.post('/login',async(req,res)=>{
 
 authRouter.post('/logout',async(req,res)=>{
     var result=await signOutUser();
+    const email=req.query.email;
     if(result.status===1){
+        res.clearCookie(email);
         res.redirect(302,'/login');
     }else{
         res.status(404);

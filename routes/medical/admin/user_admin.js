@@ -1,12 +1,12 @@
 const express=require('express');
 const adminRouter=express();
-const {getDocsId,getUserInfo,updateUserData,getUserProfile}=require("../../../Queryfunctions/medical/general");
+const {getDocsId,getUserInfo,updateUserData,getUserProfile,authMiddleware}=require("../../../Queryfunctions/medical/general");
 const {checkLoginStatus}=require('../../../Queryfunctions/medical/auth');
 const {getPatientData}=require('../../../Queryfunctions/medical/patient/user_patient')
 const {getDoctorData}=require('../../../Queryfunctions/medical/doctor/user_doctor');
 
 // website routes
-adminRouter.get('/:email',async(req,res)=>{
+adminRouter.get('/:email',authMiddleware,async(req,res)=>{
     // show no of doctors and patients in card format
     const email=req.params.email;
     var result=await checkLoginStatus();
@@ -20,7 +20,7 @@ adminRouter.get('/:email',async(req,res)=>{
 });
 
 // admin profile
-adminRouter.get('/:email/profile',async(req,res)=>{
+adminRouter.get('/:email/profile',authMiddleware,async(req,res)=>{
   const email=req.params.email;
   var result=await checkLoginStatus();
   if(result!==null && email==result.email){
@@ -32,7 +32,7 @@ adminRouter.get('/:email/profile',async(req,res)=>{
 });
 
 // patientlist
-adminRouter.get('/:email/patientlist',async(req,res)=>{
+adminRouter.get('/:email/patientlist',authMiddleware,async(req,res)=>{
   var result=await checkLoginStatus();
   const email=req.params.email;
   if(result!==null && email==result.email){
@@ -44,7 +44,7 @@ adminRouter.get('/:email/patientlist',async(req,res)=>{
 });
 
 // doctorlist
-adminRouter.get('/:email/doctorlist',async(req,res)=>{
+adminRouter.get('/:email/doctorlist',authMiddleware,async(req,res)=>{
   var result=await checkLoginStatus();
   const email=req.params.email;
   if(result!==null && email==result.email){
@@ -56,7 +56,7 @@ adminRouter.get('/:email/doctorlist',async(req,res)=>{
 });
 
 // patient profile
-adminRouter.get('/:email/patientlist/:patientemail/profile',async(req,res)=>{
+adminRouter.get('/:email/patientlist/:patientemail/profile',authMiddleware,async(req,res)=>{
   var result=await checkLoginStatus();
   const email=req.params.email;
   if(result!==null && email==result.email){
@@ -68,7 +68,7 @@ adminRouter.get('/:email/patientlist/:patientemail/profile',async(req,res)=>{
   }
 });
 // doctor profile
-adminRouter.get('/:email/doctorlist/:doctoremail/profile',async(req,res)=>{
+adminRouter.get('/:email/doctorlist/:doctoremail/profile',authMiddleware,async(req,res)=>{
   var result=await checkLoginStatus();
   const email=req.params.email;
   if(result!==null && email==result.email){

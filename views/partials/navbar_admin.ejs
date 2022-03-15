@@ -14,7 +14,7 @@
         <h4><a class="nav-link" href="/admin/<%=email%>/profile" style="color: white;">Profile</a></h4>
       </li>
       <li>
-        <form action="/auth/logout" method="POST">
+        <form action="/auth/logout?email=<%=email%>" method="POST">
           <button type="submit">Logout</button>
         </form> 
       </li>

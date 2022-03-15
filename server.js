@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require('cors');
 const app = express();
 require('ejs');
+const {authMiddleware}=require('./Queryfunctions/medical/general');
 const cookieParser=require('cookie-parser');
 const adminRouter=require('./routes/medical/admin/user_admin');
 const doctorRouter=require('./routes/medical/doctor/user_doctor');
@@ -57,15 +58,14 @@ app.get('/callback',(req,res)=>{
 //   console.log(response);
 //   res.send("OK")
 // })
-
 app.use('/zoom',zoomRouter);
 app.use('/calender',calendarRouter);
 app.use('/payment',paymentRouter);
 app.use('/messaging',messagingRouter);
 app.use('/map',mapRouter);
 app.use('/patient',patientRouter);
-app.use('/doctor',doctorRouter);
-app.use('/admin',adminRouter);
+app.use('/doctor' ,doctorRouter);
+app.use('/admin' ,adminRouter);
 app.use('/appointment',appointmentRouter);
 app.use('/auth',authRouter);
 

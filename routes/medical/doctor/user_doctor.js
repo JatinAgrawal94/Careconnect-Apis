@@ -1,27 +1,24 @@
 const express=require('express');
 const doctorRouter=express();
 const {checkLoginStatus}=require('../../../Queryfunctions/medical/auth');
-const {getPatientData}=require('../../../Queryfunctions/medical/patient/user_patient')
+const {getPatientData}=require('../../../Queryfunctions/medical/patient/user_patient');
 const {getDoctorData}=require('../../../Queryfunctions/medical/doctor/user_doctor');
 const {getDoctorAppointments}=require('../../../Queryfunctions/medical/appointment');
-const {getDocsId,getUserInfo,updateUserData,addUser,createNewUser,getStatsAndIncreement,getUserProfile}=require("../../../Queryfunctions/medical/general");
+const {getDocsId,getUserInfo,updateUserData,addUser,createNewUser,getStatsAndIncreement,getUserProfile, authMiddleware}=require("../../../Queryfunctions/medical/general");
 
-doctorRouter.get('/:email',async(req,res)=>{
+doctorRouter.get('/:email',authMiddleware,async(req,res)=>{
   const email=req.params.email;
-  var result=await checkLoginStatus();
-  // console.log(result.email);
-  // here we need to check if the email is of doctor or not we need to verify that too before rendering the page.
-  // we need to make a common function for user role verification and loginstatus checker.
-  if(result!==null && email==result.email){
+  // if(result!==null && email==result.email){
+    // const cookies=req.cookies[email];
     const patients=await getPatientData();
     const appointments=await getDoctorAppointments(email);
     res.render('doctor/doctor_dashboard',{patient:patients,appointment:appointments,email:email});
-  }else{
-    res.redirect(302,'/login');
-  }
+  // }else{
+  //   res.redirect(302,'/login');
+  // }
 });
 
-doctorRouter.get('/:email/profile',async(req,res)=>{
+doctorRouter.get('/:email/profile',authMiddleware,async(req,res)=>{
   const email=req.params.email;
   var result=await checkLoginStatus();
   if(result!==null && email==result.email){
@@ -32,7 +29,7 @@ doctorRouter.get('/:email/profile',async(req,res)=>{
   }
 });
 
-doctorRouter.get('/:email/patientlist',async(req,res)=>{
+doctorRouter.get('/:email/patientlist',authMiddleware,async(req,res)=>{
   var result=await checkLoginStatus();
   const email=req.params.email;
   if(result!==null && email==result.email){
@@ -43,7 +40,7 @@ doctorRouter.get('/:email/patientlist',async(req,res)=>{
   }
 });
 
-doctorRouter.get('/:email/patientlist/:patientemail/profile',async(req,res)=>{
+doctorRouter.get('/:email/patientlist/:patientemail/profile',authMiddleware,async(req,res)=>{
   var result=await checkLoginStatus();
   const email=req.params.email;
   if(result!==null && email==result.email){
@@ -55,7 +52,7 @@ doctorRouter.get('/:email/patientlist/:patientemail/profile',async(req,res)=>{
   }
 });
 
-doctorRouter.get('/:email/appointment',async(req,res)=>{
+doctorRouter.get('/:email/appointment',authMiddleware,async(req,res)=>{
   var result=await checkLoginStatus();
   const email=req.params.email;
   if(result!==null && email==result.email){
