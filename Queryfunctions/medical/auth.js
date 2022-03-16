@@ -52,4 +52,4 @@ async function checkLoginStatus(){
     return auth.currentUser;
 }
 
-module.exports={signIn,signOutUser,checkLoginStatus};
+module.exports={signIn,signOutUser};

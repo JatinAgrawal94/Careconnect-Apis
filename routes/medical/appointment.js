@@ -3,7 +3,7 @@ const appointmentRouter= express();
 const {getDoctorAppointments,getPatientAppointments,getAppointmentDates, getPatientsBasedOnDateAndDoctor, createAppointment, checkUserValidity}=require('../../Queryfunctions/medical/appointment');
 
 // get all doctor appointments
-appointmentRouter.get('/doctor',async(req,res)=>{
+appointmentRouter.get('/doctor',async(req,res)=>{ 
     try {
         const email=req.query.email;
         const data=await getDoctorAppointments(email);
