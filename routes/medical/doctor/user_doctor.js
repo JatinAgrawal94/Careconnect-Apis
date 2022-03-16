@@ -5,38 +5,6 @@ const {getDoctorData}=require('../../../Queryfunctions/medical/doctor/user_docto
 const {getDoctorAppointments}=require('../../../Queryfunctions/medical/appointment');
 const {getDocsId,getUserInfo,updateUserData,addUser,createNewUser,getStatsAndIncreement,getUserProfile, authMiddleware}=require("../../../Queryfunctions/medical/general");
 
-doctorRouter.get('/:email',authMiddleware,async(req,res)=>{
-  const email=req.params.email;
-    const patients=await getPatientData();
-    const appointments=await getDoctorAppointments(email);
-    res.render('doctor/doctor_dashboard',{patient:patients,appointment:appointments,email:email});
-});
-
-doctorRouter.get('/:email/profile',authMiddleware,async(req,res)=>{
-    const email=req.params.email;
-    const data=await getUserProfile(email,'Doctor');
-    res.render('doctor/doctor_profile',{data:data,isAdmin:undefined});
-});
-
-doctorRouter.get('/:email/patientlist',authMiddleware,async(req,res)=>{
-    const email=req.params.email;
-    const patients=await getPatientData();
-    res.render('doctor/patients_list',{patient:patients,email:email});
-});
-
-doctorRouter.get('/:email/patientlist/:patientemail/profile',authMiddleware,async(req,res)=>{
-    const email=req.params.email;
-    const patientemail=req.params.patientemail;
-    const data=await getUserProfile(patientemail,'Patient');
-    res.render('patient/profile_page',{patient:data,isAdmin:undefined});
-});
-
-doctorRouter.get('/:email/appointment',authMiddleware,async(req,res)=>{
-  const email=req.params.email;
-    const appointments=await getDoctorAppointments(email);
-    res.render('appointments/appointment_list',{appointment:appointments,email:email});
-});
-
 // api for mobile app.
 doctorRouter.get('/alldoctor',async(req,res)=>{
     const data=await getDoctorData();
@@ -113,5 +81,38 @@ doctorRouter.post('/createuser',async(req,res)=>{
     res.send(bool);
   }
 });
+
+doctorRouter.get('/:email',authMiddleware,async(req,res)=>{
+  const email=req.params.email;
+    const patients=await getPatientData();
+    const appointments=await getDoctorAppointments(email);
+    res.render('doctor/doctor_dashboard',{patient:patients,appointment:appointments,email:email});
+});
+
+doctorRouter.get('/:email/profile',authMiddleware,async(req,res)=>{
+    const email=req.params.email;
+    const data=await getUserProfile(email,'Doctor');
+    res.render('doctor/doctor_profile',{data:data,isAdmin:undefined});
+});
+
+doctorRouter.get('/:email/patientlist',authMiddleware,async(req,res)=>{
+    const email=req.params.email;
+    const patients=await getPatientData();
+    res.render('doctor/patients_list',{patient:patients,email:email});
+});
+
+doctorRouter.get('/:email/patientlist/:patientemail/profile',authMiddleware,async(req,res)=>{
+    const email=req.params.email;
+    const patientemail=req.params.patientemail;
+    const data=await getUserProfile(patientemail,'Patient');
+    res.render('patient/profile_page',{patient:data,isAdmin:undefined});
+});
+
+doctorRouter.get('/:email/appointment',authMiddleware,async(req,res)=>{
+  const email=req.params.email;
+    const appointments=await getDoctorAppointments(email);
+    res.render('appointments/appointment_list',{appointment:appointments,email:email});
+});
+
 
 module.exports=doctorRouter;
