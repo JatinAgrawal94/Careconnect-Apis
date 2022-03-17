@@ -134,4 +134,19 @@ async function createAppointment(data){
     }
 }
 
-module.exports={getDoctorAppointments,getPatientAppointments,getAppointmentDates,getPatientsBasedOnDateAndDoctor,createAppointment,checkUserValidity};
+async function updatepaymentamount(doctoremail,patientemail,date,paymentamount,paymentstatus){
+    try {
+        var documentId;
+        const ref=db.collection('Appointment');
+       var snapshot=await ref.where('doctoremail','==',doctoremail).where('paymentstatus','==',paymentstatus).where('patientemail','==',patientemail).where('date','==',date).get();
+        snapshot.docs.forEach((item)=>{
+            documentId=item.id;
+        });
+        await ref.doc(documentId).update({'paymentamount':paymentamount});
+        return 1;
+    } catch (error) {
+        return null;
+    }
+}
+
+module.exports={updatepaymentamount,getDoctorAppointments,getPatientAppointments,getAppointmentDates,getPatientsBasedOnDateAndDoctor,createAppointment,checkUserValidity};
