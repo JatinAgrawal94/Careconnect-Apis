@@ -1,6 +1,6 @@
 const express=require('express');
 const appointmentRouter= express();
-const {getDoctorAppointments,getPatientAppointments,getAppointmentDates, getPatientsBasedOnDateAndDoctor, createAppointment, checkUserValidity, updatepaymentamount}=require('../../Queryfunctions/medical/appointment');
+const {getDoctorAppointments,getPatientAppointments,getAppointmentDates, getPatientsBasedOnDateAndDoctor, createAppointment, checkUserValidity, updatepaymentamount, deleteAppointment}=require('../../Queryfunctions/medical/appointment');
 
 // get all doctor appointments
 appointmentRouter.get('/doctor',async(req,res)=>{ 
@@ -104,7 +104,22 @@ appointmentRouter.post('/updatepaymentamount',async(req,res)=>{
     }catch(error){
         res.send("Failed");
     }
-})
+});
+
+
+appointmentRouter.post('/delete',async(req,res)=>{
+    try {
+        const documentid=req.body.documentid;
+        let result=await deleteAppointment(documentid);
+        if(result){
+            res.send("Success");
+        }else{
+            throw Error;
+        }
+    } catch (error) {
+        res.send("Failed");
+    }
+});
 
 // take all appointment data giving doctoremail as input.
 // store dates in a set in order to get unique dates

@@ -149,4 +149,14 @@ async function updatepaymentamount(doctoremail,patientemail,date,paymentamount,p
     }
 }
 
-module.exports={updatepaymentamount,getDoctorAppointments,getPatientAppointments,getAppointmentDates,getPatientsBasedOnDateAndDoctor,createAppointment,checkUserValidity};
+async function deleteAppointment(documentId){
+    try {
+        const ref=db.collection('Appointment');
+        await ref.doc(documentId).delete();
+        return 1;
+    } catch (error) {
+        return 0;
+    }
+}
+
+module.exports={deleteAppointment,updatepaymentamount,getDoctorAppointments,getPatientAppointments,getAppointmentDates,getPatientsBasedOnDateAndDoctor,createAppointment,checkUserValidity};
