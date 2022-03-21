@@ -145,11 +145,9 @@ async function getRole(email){
             }
         });
         let device=request.rawHeaders[index+1].toString();
-        console.log(device);
-        let deviceType= ua.parse(device);
+        // let deviceType= ua.parse(device);
         var token;
         var type=0;
-        console.log(deviceType.isMobile)
      if(device.search('Dart') !== -1){
         let temp=request.headers.authorization;
         token=temp.split(" ")[1];

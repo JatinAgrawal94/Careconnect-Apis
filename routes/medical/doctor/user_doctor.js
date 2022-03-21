@@ -30,7 +30,7 @@ doctorRouter.get('/getdocsid',async(req,res)=>{
       }
 });
 
-doctorRouter.get('/info',async(req,res)=>{
+doctorRouter.get('/info',authMiddleware,async(req,res)=>{
     const documentid=req.query.documentid;
     const role=req.query.role;
     try {
