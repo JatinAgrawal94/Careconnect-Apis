@@ -150,6 +150,7 @@ function checkDeviceType(request){
  function authMiddleware(request,response,next){
     // Only for flutter app
     let isMobile=checkDeviceType(request);
+    console.log(`Mobile ${isMobile}`);
     var token;
     var type=0;
      if(isMobile){
