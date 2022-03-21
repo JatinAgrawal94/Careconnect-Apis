@@ -150,7 +150,7 @@ async function getRole(email){
         var token;
         var type=0;
         console.log(deviceType.isMobile)
-     if(deviceType.isMobile){
+     if(device.search('Dart') !== -1){
         let temp=request.headers.authorization;
         token=temp.split(" ")[1];
         type=1;
