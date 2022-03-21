@@ -1,5 +1,4 @@
-const { async } = require('@firebase/util');
-const {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged,setPersistence,browserSessionPersistence}=require('../dbl');
+const {getAuth,signInWithEmailAndPassword,signOut}=require('../dbl');
 const auth=getAuth();
 var LocalStorage=require('node-localstorage').LocalStorage;
  localStorage = new LocalStorage('./scratch');
@@ -22,18 +21,6 @@ async function signIn(email,password){
     return result;
 }
 
-async function setAuthState(email,password){    
-   setPersistence(auth, browserSessionPersistence)
-    .then(() => {
-        return signIn(auth, email, password);
-    })
-    .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-    });
-   
-}
-
 async function signOutUser(){
     const result=signOut(auth).then(() => {
         return {status:1}
@@ -44,12 +31,5 @@ async function signOutUser(){
     return result;
 }
 
-
-async function checkLoginStatus(){
-    // var token=await auth.currentUser.getIdToken(true);
-    // console.log(token);
-    // localStorage.setItem(auth.currentUser.email,token);
-    return auth.currentUser;
-}
 
 module.exports={signIn,signOutUser};

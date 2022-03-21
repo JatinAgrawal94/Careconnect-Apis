@@ -1,12 +1,11 @@
 const express=require('express');
 const authRouter=express();
-const {signIn,signOutUser, checkLoginStatus}=require('../../Queryfunctions/medical/auth');
+const {signIn,signOutUser}=require('../../Queryfunctions/medical/auth');
 const {getRole,authMiddleware}=require('../../Queryfunctions/medical/general');
 
 authRouter.get('/getrole',async(req,res)=>{
     try {
         const email=req.query.email;
-        console.log(email);
         const data=await getRole(email);
         if(data){
             res.send(data);

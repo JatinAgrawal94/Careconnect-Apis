@@ -138,50 +138,45 @@ async function getRole(email){
 }
 
  function authMiddleware(request,response,next){
-    const email=request.params.email;
-    let index;
-    request.rawHeaders.map((item,i)=>{
-        if(item=='User-Agent'){
-            index=i;
-        }
-    });
-    let device=request.rawHeaders[index+1].toString();
-    var token;
-    var type=0;
-    // Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36
+     let index;
+     request.rawHeaders.map((item,i)=>{
+         if(item=='User-Agent'){
+             index=i;
+            }
+        });
+        let device=request.rawHeaders[index+1].toString();
+        var token;
+        var type=0;
+        
     if(device.search('Mozilla'|| 'Chrome' || 'Edge')!== -1){
+        const email=request.params.email;
          token=request.cookies[email];
     }else if(device.search('Android' || 'iOS') !== -1){
-        let authorization=req.headers.Authorization;
-        token=authorization.split(" ")[1];
+        let temp=request.headers.authorization;
+        token=temp.split(" ")[1];
         type=1;
     }
-    // const token=localStorage.getItem(email);
+    
     if (!token) {
         if(type){
-            response.send({ message: "No token provided" }).status(401);
+            response.status(401).send({ message: "No token provided" });
+        }else{
+
+            response.redirect(302,'/login');
         }
-        response.redirect(302,'/login');
     }
     getAuth().verifyIdToken(token).then((decodedToken)=>{
         const decodedtoken=decodedToken.uid;
         next();
     }).catch((error)=>{
         if(type){
-            response.status(403).send({message:"Could not authorize"});
+            response.status(403).send({message:error.errorInfo.code});
+        }else{
+
+            response.redirect(302,'/login');
         }
-        response.redirect(302,'/login');
     });
 }
 
-// function authorizationMiddleware(req,res,next){
-//     var token=req.headers.authorization;
-//     token=token.split(" ")[1];
-//     if(token == process.env.PRIVATE_TOKEN){
-//         next();
-//     }else{
-//         res.status(401).send("Unauthorized");
-//     }
-// }
 
 module.exports={authMiddleware,getDocsId,getUserInfo,getUserProfile,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};
