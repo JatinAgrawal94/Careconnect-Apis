@@ -153,7 +153,7 @@ async function getRole(email){
          token=request.cookies[email];
     }else if(device.search('Android' || 'iOS') !== -1){
         let authorization=req.headers.Authorization;
-        token=authorization.split(" ")[2];
+        token=authorization.split(" ")[1];
         type=1;
     }
     // const token=localStorage.getItem(email);
