@@ -1,7 +1,7 @@
 const {db,getAuth}=require('../db');
 var LocalStorage=require('node-localstorage').LocalStorage;
 localStorage = new LocalStorage('./scratch');
-
+const ua=require('express-useragent');
 async function getDocsId(email,collection){
     try{
         var data=[];
@@ -145,23 +145,22 @@ async function getRole(email){
             }
         });
         let device=request.rawHeaders[index+1].toString();
+        let deviceType= ua.parse(device);
         var token;
         var type=0;
         
-    if(device.search('Mozilla'|| 'Chrome' || 'Edge')!== -1){
-        const email=request.params.email;
-         token=request.cookies[email];
-    }else if(device.search('Android' || 'iOS') !== -1){
+     if(deviceType.isMobile){
         let temp=request.headers.authorization;
         token=temp.split(" ")[1];
         type=1;
+    }else{
+        const email=request.params.email;
+         token=request.cookies[email];
     }
-    
     if (!token) {
         if(type){
             response.status(401).send({ message: "No token provided" });
         }else{
-
             response.redirect(302,'/login');
         }
     }
@@ -172,7 +171,6 @@ async function getRole(email){
         if(type){
             response.status(403).send({message:error.errorInfo.code});
         }else{
-
             response.redirect(302,'/login');
         }
     });
