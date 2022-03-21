@@ -82,6 +82,8 @@ doctorRouter.post('/createuser',async(req,res)=>{
   }
 });
 
+// web apis
+
 doctorRouter.get('/:email',authMiddleware,async(req,res)=>{
   const email=req.params.email;
     const patients=await getPatientData();
@@ -113,6 +115,5 @@ doctorRouter.get('/:email/appointment',authMiddleware,async(req,res)=>{
     const appointments=await getDoctorAppointments(email);
     res.render('appointments/appointment_list',{appointment:appointments,email:email});
 });
-
 
 module.exports=doctorRouter;

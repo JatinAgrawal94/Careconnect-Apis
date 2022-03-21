@@ -1,10 +1,10 @@
 const express=require('express');
 const patientRouter=express();
-const {getDocsId,getUserInfo, updateUserData, addUser, createNewUser, getStatsAndIncreement}=require("../../../Queryfunctions/medical/general");
+const {getDocsId,getUserInfo, updateUserData, addUser, createNewUser, getStatsAndIncreement, authMiddleware}=require("../../../Queryfunctions/medical/general");
 const {getPatientData, getCategoryData, deleteAnyPatientRecord}=require('../../../Queryfunctions/medical/patient/user_patient');
-const preRouter=require('./prescriptionRouter');
 const {db}=require('../../../Queryfunctions/db');
 
+// mobile apis
 // get list of all patients
 patientRouter.get("/allpatient",async(req,res)=>{
   const data=await getPatientData();
@@ -16,7 +16,7 @@ patientRouter.get("/allpatient",async(req,res)=>{
 });
 
 // get all document data of a specific patient
-patientRouter.get('/info',async(req,res)=>{
+patientRouter.get('/info',authMiddleware,async(req,res)=>{
   const documentid=req.query.documentid;
   const role=req.query.role;
   try {

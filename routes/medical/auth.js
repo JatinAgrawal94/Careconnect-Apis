@@ -1,11 +1,12 @@
 const express=require('express');
 const authRouter=express();
 const {signIn,signOutUser, checkLoginStatus}=require('../../Queryfunctions/medical/auth');
-const {getRole}=require('../../Queryfunctions/medical/general');
+const {getRole,authMiddleware}=require('../../Queryfunctions/medical/general');
 
 authRouter.get('/getrole',async(req,res)=>{
     try {
         const email=req.query.email;
+        console.log(email);
         const data=await getRole(email);
         if(data){
             res.send(data);
@@ -30,6 +31,9 @@ authRouter.post('/login',async(req,res)=>{
         }else if(data[0]['role'] == 'admin'){
             res.cookie(email,result.token);
             res.redirect(302,`/admin/${email}`);
+        }else if(data[0]['role'] == 'patient'){
+            // res.cookie(email,result.token);
+            // res.redirect(302,'/')
         }else{
             res.status(404).send("User Not Found")
         }

@@ -139,19 +139,49 @@ async function getRole(email){
 
  function authMiddleware(request,response,next){
     const email=request.params.email;
-    const token=request.cookies[email];
+    let index;
+    request.rawHeaders.map((item,i)=>{
+        if(item=='User-Agent'){
+            index=i;
+        }
+    });
+    let device=request.rawHeaders[index+1].toString();
+    var token;
+    var type=0;
+    // Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36
+    if(device.search('Mozilla'|| 'Chrome' || 'Edge')!== -1){
+         token=request.cookies[email];
+    }else if(device.search('Android' || 'iOS') !== -1){
+        let authorization=req.headers.Authorization;
+        token=authorization.split(" ")[2];
+        type=1;
+    }
     // const token=localStorage.getItem(email);
     if (!token) {
+        if(type){
+            response.send({ message: "No token provided" }).status(401);
+        }
         response.redirect(302,'/login');
-        //  response.send({ message: "No token provided" }).status(401);
     }
     getAuth().verifyIdToken(token).then((decodedToken)=>{
         const decodedtoken=decodedToken.uid;
         next();
     }).catch((error)=>{
+        if(type){
+            response.status(403).send({message:"Could not authorize"});
+        }
         response.redirect(302,'/login');
-        // response.status(403).send({message:"Could not authorize"})
     });
 }
+
+// function authorizationMiddleware(req,res,next){
+//     var token=req.headers.authorization;
+//     token=token.split(" ")[1];
+//     if(token == process.env.PRIVATE_TOKEN){
+//         next();
+//     }else{
+//         res.status(401).send("Unauthorized");
+//     }
+// }
 
 module.exports={authMiddleware,getDocsId,getUserInfo,getUserProfile,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};
