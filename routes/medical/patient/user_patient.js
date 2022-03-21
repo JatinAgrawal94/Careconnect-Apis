@@ -32,7 +32,7 @@ patientRouter.get('/info',authMiddleware,async(req,res)=>{
 })
 
 // get patient document id
-patientRouter.get('/getdocsid',async(req,res)=>{
+patientRouter.get('/getdocsid',authMiddleware,async(req,res)=>{
   try {
     const email=req.query.email;
     const role=req.query.role;
@@ -43,37 +43,6 @@ patientRouter.get('/getdocsid',async(req,res)=>{
       throw error;
     }
   } catch (error) {
-    res.status(404).send("Error");
-  }
-})
-
-// add patient record data.
-patientRouter.post('/:category/create',async(req,res)=>{
-  try {
-    const category=req.params.category;
-    const patientId=req.body.patientId;
-    const data=JSON.parse(req.body.data);
-    data.delete=0;
-    const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
-    res.send("Sucess");
-  } catch (error) {
-    console.log(error);
-    res.send("Fail");
-  }
-});
-
-// route to get all documents of a patient's particular medical field eg:allergy,medicalvisits etc.
-patientRouter.get('/:category/all',async(req,res)=>{
-  try{
-    let category=req.params.category;
-    let documentid=req.query.documentid;
-    let data=await getCategoryData(category,documentid);
-    if(data){
-      res.send(data);
-    }else{
-      throw error;
-    }
-  }catch(error){
     res.status(404).send("Error");
   }
 })
@@ -91,7 +60,7 @@ patientRouter.post('/add',async(req,res)=>{
 });
 
 // route to update patient data
-patientRouter.post('/update',async(req,res)=>{
+patientRouter.post('/update',authMiddleware,async(req,res)=>{
   try {
     let documentid=req.body.documentid;
     let collection=req.body.collection;
@@ -106,35 +75,64 @@ patientRouter.post('/update',async(req,res)=>{
 
 patientRouter.post('/createuser',async(req,res)=>{
   
-    let email=req.body.email;
-    let password=req.body.password;
-    let bool=await createNewUser(email,password);
-    if(bool.message == "User created"){
+  let email=req.body.email;
+  let password=req.body.password;
+  let bool=await createNewUser(email,password);
+  if(bool.message == "User created"){
       var userid=await getStatsAndIncreement('patient');
       bool['userid']=userid;
       res.send(bool);
     }else{
       res.send(bool);
     }
-});
-
-patientRouter.post('/record/delete',async(req,res)=>{
-  try {
-    const patientdocumentId=req.body.patientid;
-    const recordId=req.body.recordid;
-    const category=req.body.category;
-    let response=await deleteAnyPatientRecord(patientdocumentId,recordId,category);
-    if(response){
-      res.send('Success');
-    }else{
-      throw Error;
+  });
+  
+  // delete any patient record
+  patientRouter.post('/record/delete',async(req,res)=>{
+    try {
+      const patientdocumentId=req.body.patientid;
+      const recordId=req.body.recordid;
+      const category=req.body.category;
+      let response=await deleteAnyPatientRecord(patientdocumentId,recordId,category);
+      if(response){
+        res.send('Success');
+      }else{
+        throw Error;
+      }
+    } catch (error) {
+      res.send('Error');
     }
-  } catch (error) {
-    res.send('Error');
-  }
-})
+  })
 
+  // add patient record data.
+  patientRouter.post('/:category/create',async(req,res)=>{
+    try {
+      const category=req.params.category;
+      const patientId=req.body.patientId;
+      const data=JSON.parse(req.body.data);
+      data.delete=0;
+      const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
+      res.send("Sucess");
+    } catch (error) {
+      console.log(error);
+      res.send("Fail");
+    }
+  });
+  
+  // route to get all documents of a patient's particular medical field eg:allergy,medicalvisits etc.
+  patientRouter.get('/:category/all',async(req,res)=>{
+    try{
+      let category=req.params.category;
+      let documentid=req.query.documentid;
+      let data=await getCategoryData(category,documentid);
+      if(data){
+        res.send(data);
+      }else{
+        throw error;
+      }
+    }catch(error){
+      res.status(404).send("Error");
+    }
+  });
 
-
-// delete any patient record
 module.exports=patientRouter;

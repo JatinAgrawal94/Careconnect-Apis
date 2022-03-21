@@ -15,7 +15,7 @@ doctorRouter.get('/alldoctor',async(req,res)=>{
     }
 });
 
-doctorRouter.get('/getdocsid',async(req,res)=>{
+doctorRouter.get('/getdocsid',authMiddleware,async(req,res)=>{
     try {
         const email=req.query.email;
         const role=req.query.role;
@@ -45,7 +45,7 @@ doctorRouter.get('/info',authMiddleware,async(req,res)=>{
     }
 });
 
-doctorRouter.post('/update',async(req,res)=>{
+doctorRouter.post('/update',authMiddleware,async(req,res)=>{
   try {
     let documentid=req.body.documentid;
     let collection=req.body.collection;
