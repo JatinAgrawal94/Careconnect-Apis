@@ -6,7 +6,7 @@ const {db}=require('../../../Queryfunctions/db');
 
 // mobile apis
 // get list of all patients
-patientRouter.get("/allpatient",async(req,res)=>{
+patientRouter.get("/allpatient",authMiddleware,async(req,res)=>{
   const data=await getPatientData();
   if(data){
       res.send(data);

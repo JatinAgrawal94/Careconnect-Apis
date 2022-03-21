@@ -6,7 +6,7 @@ const {getDoctorAppointments}=require('../../../Queryfunctions/medical/appointme
 const {getDocsId,getUserInfo,updateUserData,addUser,createNewUser,getStatsAndIncreement,getUserProfile, authMiddleware}=require("../../../Queryfunctions/medical/general");
 
 // api for mobile app.
-doctorRouter.get('/alldoctor',async(req,res)=>{
+doctorRouter.get('/alldoctor',authMiddleware,async(req,res)=>{
     const data=await getDoctorData();
     if(data){
         res.send(data);

@@ -1,7 +1,6 @@
 const {db,getAuth}=require('../db');
-var LocalStorage=require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('./scratch');
-const ua=require('express-useragent');
+// var LocalStorage=require('node-localstorage').LocalStorage;
+// localStorage = new LocalStorage('./scratch');
 async function getDocsId(email,collection){
     try{
         var data=[];
@@ -137,18 +136,23 @@ async function getRole(email){
     }
 }
 
- function authMiddleware(request,response,next){
-     let index;
+function checkDeviceType(request){
+    let index;
      request.rawHeaders.map((item,i)=>{
          if(item=='User-Agent'){
              index=i;
             }
         });
-        let device=request.rawHeaders[index+1].toString();
-        // let deviceType= ua.parse(device);
-        var token;
-        var type=0;
-     if(device.search('Dart') !== -1){
+    let device=request.rawHeaders[index+1].toString();  
+    return device.search('Dart') !== -1;
+}
+
+ function authMiddleware(request,response,next){
+    // Only for flutter app
+    let isMobile=checkDeviceType(request);
+    var token;
+    var type=0;
+     if(isMobile){
         let temp=request.headers.authorization;
         token=temp.split(" ")[1];
         type=1;
@@ -176,4 +180,4 @@ async function getRole(email){
 }
 
 
-module.exports={authMiddleware,getDocsId,getUserInfo,getUserProfile,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};
+module.exports={checkDeviceType,authMiddleware,getDocsId,getUserInfo,getUserProfile,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};

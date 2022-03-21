@@ -1,7 +1,7 @@
 const express=require('express');
 const authRouter=express();
 const {signIn,signOutUser}=require('../../Queryfunctions/medical/auth');
-const {getRole,authMiddleware}=require('../../Queryfunctions/medical/general');
+const {getRole,authMiddleware,checkDeviceType}=require('../../Queryfunctions/medical/general');
 
 authRouter.get('/getrole',async(req,res)=>{
     try {
@@ -25,11 +25,15 @@ authRouter.post('/login',async(req,res)=>{
     if(result.status === 1){
         const data=await getRole(email);
         if(data[0]['role'] == 'doctor') {
-            res.cookie(email,result.token);
-            res.redirect(302,`/doctor/${email}`);
+            if(!checkDeviceType(req)){
+                res.cookie(email,result.token);
+                res.redirect(302,`/doctor/${email}`);
+            }
         }else if(data[0]['role'] == 'admin'){
-            res.cookie(email,result.token);
-            res.redirect(302,`/admin/${email}`);
+            if(!checkDeviceType(req)){
+                res.cookie(email,result.token);
+                res.redirect(302,`/admin/${email}`);
+            }
         }else if(data[0]['role'] == 'patient'){
             // res.cookie(email,result.token);
             // res.redirect(302,'/')
