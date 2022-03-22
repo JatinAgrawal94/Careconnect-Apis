@@ -35,12 +35,14 @@ doctorRouter.get('/info',authMiddleware,async(req,res)=>{
     const role=req.query.role;
     try {
       const data=await getUserInfo(documentid,role);
+      console.log(data);
       if(data){
         res.send(data);
       }else{
         throw error;
       }
     } catch (error) {
+      console.log(error);
       res.status(404).send("Error");
     }
 });

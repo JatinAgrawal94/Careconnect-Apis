@@ -169,6 +169,11 @@ function checkDeviceType(request){
     }
     getAuth().verifyIdToken(token).then((decodedToken)=>{
         const decodedtoken=decodedToken.uid;
+        if(!type){
+            if(decodedToken.email !== email){
+                throw Error("Invalid Email");
+            }
+        }
         next();
     }).catch((error)=>{
         if(type){
