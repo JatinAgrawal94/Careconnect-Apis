@@ -9,7 +9,7 @@ async function getDocsId(email,collection){
         snapshot.docs.forEach((item)=>{
             data.push({
                 'email':item.data()['email'],
-                'phoneno':item.data()['phoneno'],
+                'contact':item.data()['contact'],
                 'userid':item.data()['userid'],
                 'documentid':item.id
         });
