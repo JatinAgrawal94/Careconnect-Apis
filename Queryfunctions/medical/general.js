@@ -173,7 +173,6 @@ function checkDeviceType(request){
         const decodedtoken=decodedToken.uid;
         if(!type){
             if(decodedToken.email !== email){
-                console.log("Invalid");
                 throw Error("Invalid Email");
             }
         }
