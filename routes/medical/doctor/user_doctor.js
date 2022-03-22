@@ -31,10 +31,10 @@ doctorRouter.get('/getdocsid',authMiddleware,async(req,res)=>{
 });
 
 doctorRouter.get('/info',authMiddleware,async(req,res)=>{
-    const email=req.query.email;
+    const documentid=req.query.documentid;
     const collection=req.query.collection;
     try {
-      const data=await getUserProfile(email,collection);
+      const data=await getUserInfo(documentid,collection);
       if(data){
         res.send(data);
       }else{

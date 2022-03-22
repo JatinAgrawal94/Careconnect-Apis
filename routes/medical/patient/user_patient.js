@@ -18,9 +18,9 @@ patientRouter.get("/allpatient",authMiddleware,async(req,res)=>{
 // get all document data of a specific patient
 patientRouter.get('/info',authMiddleware,async(req,res)=>{
   const documentid=req.query.documentid;
-  const role=req.query.role;
+  const collection=req.query.collection;
   try {
-    const data=await getUserInfo(documentid,role);
+    const data=await getUserInfo(documentid,collection);
     if(data){
       res.send(data);
     }else{

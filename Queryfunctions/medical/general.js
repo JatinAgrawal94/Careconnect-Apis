@@ -28,7 +28,7 @@ async function getUserInfo(documentId,collection){
          if (!data.exists) {
             return null;
           } else {
-              
+            console.log(data.data());
             return data.data();
           }
     } catch (error) {
