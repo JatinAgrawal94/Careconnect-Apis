@@ -14,7 +14,7 @@ async function getDocsId(email,collection){
                 'documentid':item.id
         });
         });
-        return data;
+        return data[0];
     }catch(err){
         return null;
     }
