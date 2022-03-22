@@ -74,7 +74,6 @@ patientRouter.post('/update',authMiddleware,async(req,res)=>{
 });
 
 patientRouter.post('/createuser',async(req,res)=>{
-  
   let email=req.body.email;
   let password=req.body.password;
   let bool=await createNewUser(email,password);
