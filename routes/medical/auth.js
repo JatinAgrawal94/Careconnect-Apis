@@ -21,7 +21,7 @@ authRouter.post('/login',async(req,res)=>{
     const email=req.body.email.toString();
     const password=req.body.password.toString();
     var result= await signIn(email,password);
-    // localStorage.setItem(email,result.token);
+    
     if(result.status === 1){
         const data=await getRole(email);
         if(data[0]['role'] == 'doctor') {

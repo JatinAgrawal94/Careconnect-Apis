@@ -25,10 +25,10 @@ async function getUserInfo(documentId,collection){
     try {
         const ref=db.collection(collection).doc(documentId);
          const data=await ref.get();
-         console.log(`data is ${data}`);
          if (!data.exists) {
-            return null
+            return null;
           } else {
+              
             return data.data();
           }
     } catch (error) {
@@ -150,6 +150,7 @@ function checkDeviceType(request){
 
  function authMiddleware(request,response,next){
     // Only for flutter app
+    var email;
     let isMobile=checkDeviceType(request);
     var token;
     var type=0;
@@ -158,7 +159,7 @@ function checkDeviceType(request){
         token=temp.split(" ")[1];
         type=1;
     }else{
-        const email=request.params.email;
+         email=request.params.email;
          token=request.cookies[email];
     }
     if (!token) {
@@ -172,6 +173,7 @@ function checkDeviceType(request){
         const decodedtoken=decodedToken.uid;
         if(!type){
             if(decodedToken.email !== email){
+                console.log("Invalid");
                 throw Error("Invalid Email");
             }
         }
@@ -180,6 +182,7 @@ function checkDeviceType(request){
         if(type){
             response.status(403).send({message:error.errorInfo.code});
         }else{
+            console.log(error);
             response.redirect(302,'/login');
         }
     });
