@@ -5,7 +5,7 @@ const {getPatientData}=require('../../../Queryfunctions/medical/patient/user_pat
 const {getDoctorData}=require('../../../Queryfunctions/medical/doctor/user_doctor');
 
 // api for mobile apps
-adminRouter.get('/getdocsid',async(req,res)=>{
+adminRouter.get('/getdocsid',authMiddleware,async(req,res)=>{
     try {
         const email=req.query.email;
         const role=req.query.role;
@@ -20,7 +20,7 @@ adminRouter.get('/getdocsid',async(req,res)=>{
       }
 });
 
-adminRouter.get('/info',async(req,res)=>{
+adminRouter.get('/info',authMiddleware,async(req,res)=>{
     const documentid=req.query.documentid;
     const role=req.query.role;
     try {
@@ -35,7 +35,7 @@ adminRouter.get('/info',async(req,res)=>{
     }
 })
 
-adminRouter.post('/update',async(req,res)=>{
+adminRouter.post('/update',authMiddleware,async(req,res)=>{
   try {
     let documentid=req.body.documentid;
     let collection=req.body.collection;
