@@ -3,7 +3,7 @@ const authRouter=express();
 const {signIn,signOutUser}=require('../../Queryfunctions/medical/auth');
 const {getRole,authMiddleware,checkDeviceType}=require('../../Queryfunctions/medical/general');
 
-authRouter.get('/getrole',async(req,res)=>{
+authRouter.get('/getrole',authMiddleware,async(req,res)=>{
     try {
         const email=req.query.email;
         const data=await getRole(email);

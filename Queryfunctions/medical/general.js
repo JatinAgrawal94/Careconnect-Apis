@@ -28,7 +28,6 @@ async function getUserInfo(documentId,collection){
          if (!data.exists) {
             return null;
           } else {
-            console.log(data.data());
             return data.data();
           }
     } catch (error) {
@@ -181,7 +180,6 @@ function checkDeviceType(request){
         if(type){
             response.status(403).send({message:error.errorInfo.code});
         }else{
-            console.log(error);
             response.redirect(302,'/login');
         }
     });

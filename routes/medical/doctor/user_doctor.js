@@ -41,7 +41,6 @@ doctorRouter.get('/info',authMiddleware,async(req,res)=>{
         throw Error();
       }
     } catch (error) {
-      console.log(error);
       res.status(404).send("Error");
     }
 });
