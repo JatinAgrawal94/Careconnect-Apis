@@ -26,7 +26,7 @@ async function getUserInfo(documentId,collection){
         const ref=db.collection(collection).doc(documentId);
          const data=await ref.get();
          console.log(`data is ${data}`);
-         if (data.exists) {
+         if (!data.exists) {
             return null
           } else {
             return data.data();
