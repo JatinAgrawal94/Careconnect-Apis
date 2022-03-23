@@ -48,7 +48,7 @@ patientRouter.get('/getdocsid',authMiddleware,async(req,res)=>{
 })
 
 
-patientRouter.post('/add',async(req,res)=>{
+patientRouter.post('/add',authMiddleware,async(req,res)=>{
   try {
     let collection=req.body.collection;
     let data=JSON.parse(req.body.data);
@@ -73,7 +73,7 @@ patientRouter.post('/update',authMiddleware,async(req,res)=>{
   }
 });
 
-patientRouter.post('/createuser',async(req,res)=>{
+patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
   let email=req.body.email;
   let password=req.body.password;
   let bool=await createNewUser(email,password);
@@ -87,7 +87,7 @@ patientRouter.post('/createuser',async(req,res)=>{
   });
   
   // delete any patient record
-  patientRouter.post('/record/delete',async(req,res)=>{
+  patientRouter.post('/record/delete',authMiddleware,async(req,res)=>{
     try {
       const patientdocumentId=req.body.patientid;
       const recordId=req.body.recordid;
@@ -104,7 +104,7 @@ patientRouter.post('/createuser',async(req,res)=>{
   })
 
   // add patient record data.
-  patientRouter.post('/:category/create',async(req,res)=>{
+  patientRouter.post('/:category/create',authMiddleware,async(req,res)=>{
     try {
       const category=req.params.category;
       const patientId=req.body.patientId;
@@ -119,7 +119,7 @@ patientRouter.post('/createuser',async(req,res)=>{
   });
   
   // route to get all documents of a patient's particular medical field eg:allergy,medicalvisits etc.
-  patientRouter.get('/:category/all',async(req,res)=>{
+  patientRouter.get('/:category/all',authMiddleware,async(req,res)=>{
     try{
       let category=req.params.category;
       let documentid=req.query.documentid;
