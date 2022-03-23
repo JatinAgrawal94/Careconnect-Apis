@@ -66,10 +66,13 @@ appointmentRouter.post('/check',authMiddleware,async(req,res)=>{
     try {
         let data=req.body;
         var status=await checkUserValidity(data['doctoremail'],data['patientemail'],data['date']);
+        let result={
+            'status':status
+        }
         if(status === 1){
-            res.send(status.toString());
+            res.send(result);
         }else if(status == 0){
-            res.send(status.toString());
+            res.send(result);
         }else{
             throw Error;
         }
