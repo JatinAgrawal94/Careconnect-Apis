@@ -1,9 +1,11 @@
 const express=require('express');
+const { auth } = require('google-auth-library');
 const appointmentRouter= express();
 const {getDoctorAppointments,getPatientAppointments,getAppointmentDates, getPatientsBasedOnDateAndDoctor, createAppointment, checkUserValidity, updatepaymentamount, deleteAppointment}=require('../../Queryfunctions/medical/appointment');
+const { authMiddleware } = require('../../Queryfunctions/medical/general');
 
 // get all doctor appointments
-appointmentRouter.get('/doctor',async(req,res)=>{ 
+appointmentRouter.get('/doctor',authMiddleware,async(req,res)=>{ 
     try {
         const email=req.query.email;
         const data=await getDoctorAppointments(email);
@@ -18,7 +20,7 @@ appointmentRouter.get('/doctor',async(req,res)=>{
 });
 
 // get all patient appointments
-appointmentRouter.get('/patient',async(req,res)=>{
+appointmentRouter.get('/patient',authMiddleware,async(req,res)=>{
     try {
         const email=req.query.email;
         const data=await getPatientAppointments(email);
@@ -32,7 +34,7 @@ appointmentRouter.get('/patient',async(req,res)=>{
     }
 });
 
-appointmentRouter.post('/create',async(req,res)=>{
+appointmentRouter.post('/create',authMiddleware,async(req,res)=>{
     try {
         const data=req.body;
         let response=await createAppointment(data);
@@ -46,7 +48,7 @@ appointmentRouter.post('/create',async(req,res)=>{
     }
 });
 
-appointmentRouter.get('/appointmentdates',async(req,res)=>{
+appointmentRouter.get('/appointmentdates',authMiddleware,async(req,res)=>{
     try {
             const email=req.query.email;
             const data=await getAppointmentDates(email);
@@ -60,7 +62,7 @@ appointmentRouter.get('/appointmentdates',async(req,res)=>{
     }
 });
 
-appointmentRouter.post('/check',async(req,res)=>{
+appointmentRouter.post('/check',authMiddleware,async(req,res)=>{
     try {
         let data=req.body;
         var status=await checkUserValidity(data['doctoremail'],data['patientemail'],data['date']);
@@ -77,7 +79,7 @@ appointmentRouter.post('/check',async(req,res)=>{
 })
 
 // appointments based on date and doctor.
-appointmentRouter.get('/specific',async(req,res)=>{
+appointmentRouter.get('/specific',authMiddleware,async(req,res)=>{
     try {
         let email=req.query.email;
         let date=req.query.date;
@@ -92,7 +94,7 @@ appointmentRouter.get('/specific',async(req,res)=>{
     }
 });
 
-appointmentRouter.post('/updatepaymentamount',async(req,res)=>{
+appointmentRouter.post('/updatepaymentamount',authMiddleware,async(req,res)=>{
     try{
         const doctoremail=req.body.doctoremail;
         const patientemail=req.body.patientemail;
@@ -106,8 +108,8 @@ appointmentRouter.post('/updatepaymentamount',async(req,res)=>{
     }
 });
 
-
-appointmentRouter.post('/delete',async(req,res)=>{
+// delete appointments
+appointmentRouter.post('/delete',authMiddleware,async(req,res)=>{
     try {
         const documentid=req.body.documentid;
         let result=await deleteAppointment(documentid);

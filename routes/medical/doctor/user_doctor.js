@@ -57,7 +57,7 @@ doctorRouter.post('/update',authMiddleware,async(req,res)=>{
   }
 });
 
-doctorRouter.post('/add',async(req,res)=>{
+doctorRouter.post('/add',authMiddleware,async(req,res)=>{
   try {;
     let collection=req.body.collection;
     let data=JSON.parse(req.body.data);
@@ -69,7 +69,7 @@ doctorRouter.post('/add',async(req,res)=>{
 });
 
 
-doctorRouter.post('/createuser',async(req,res)=>{
+doctorRouter.post('/createuser',authMiddleware,async(req,res)=>{
   let email=req.body.email;
   let password=req.body.password;
   let bool=await createNewUser(email,password);
