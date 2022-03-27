@@ -1,7 +1,7 @@
 const express=require('express');
 const patientRouter=express();
 const {getDocsId,getUserInfo, updateUserData, addUser, createNewUser, getStatsAndIncreement, authMiddleware}=require("../../../Queryfunctions/medical/general");
-const {getPatientData, getCategoryData, deleteAnyPatientRecord}=require('../../../Queryfunctions/medical/patient/user_patient');
+const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval}=require('../../../Queryfunctions/medical/patient/user_patient');
 const {db}=require('../../../Queryfunctions/db');
 
 // mobile apis
@@ -72,6 +72,13 @@ patientRouter.post('/update',authMiddleware,async(req,res)=>{
     res.status(404).send("Error");
   }
 });
+
+patientRouter.put('/approval',authMiddleware,async(req,res)=>{
+  let body=JSON.parse(req.body);
+  let result=await updateApproval(body.documentid,body.recordid,body.category,body.value);
+  res.send({status:result});
+});
+
 
 patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
   let email=req.body.email;

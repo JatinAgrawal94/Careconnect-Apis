@@ -17,4 +17,13 @@ async function getDoctorData(){
     }
 }
 
+// async function createDoctorAppointments(){
+//     try {
+//         let ref=await db.collection('Appointment');
+//         await ref.doc().add();
+//     } catch (error) {
+        
+//     }
+// }
+
 module.exports={getDoctorData};

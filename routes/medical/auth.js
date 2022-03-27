@@ -24,17 +24,17 @@ authRouter.post('/login',async(req,res)=>{
     
     if(result.status === 1){
         const data=await getRole(email);
-        if(data[0]['role'] == 'doctor') {
+        if(data['role'] == 'doctor'){
             if(!checkDeviceType(req)){
                 res.cookie(email,result.token);
                 res.redirect(302,`/doctor/${email}`);
             }
-        }else if(data[0]['role'] == 'admin'){
+        }else if(data['role'] == 'admin'){
             if(!checkDeviceType(req)){
                 res.cookie(email,result.token);
                 res.redirect(302,`/admin/${email}`);
             }
-        }else if(data[0]['role'] == 'patient'){
+        }else if(data['role'] == 'patient'){
             // res.cookie(email,result.token);
             // res.redirect(302,'/')
         }else{
