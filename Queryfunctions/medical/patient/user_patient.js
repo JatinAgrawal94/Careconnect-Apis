@@ -47,8 +47,14 @@ async function deleteAnyPatientRecord(patientdocumentId,recordId,category){
 
 async function updateApproval(documentId,recordId,category,value){
     try {
+        var newValue;
+        if(value=='false'){
+            newValue='true';
+        }else{
+            newValue='false';
+        }
         let ref=db.collection(`Patient/${documentId}/${category}`);
-        await ref.doc(recordId).update({approved:!value});
+        await ref.doc(recordId).update({approved:newValue});
         return 1;
     } catch (error) {
         // console.log(error);

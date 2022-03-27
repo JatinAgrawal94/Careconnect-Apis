@@ -74,8 +74,7 @@ patientRouter.post('/update',authMiddleware,async(req,res)=>{
 });
 
 patientRouter.put('/approval',authMiddleware,async(req,res)=>{
-  let body=JSON.parse(req.body);
-  let result=await updateApproval(body.documentid,body.recordid,body.category,body.value);
+  let result=await updateApproval(req.body.documentid,req.body.recordid,req.body.category,req.body.value);
   res.send({status:result});
 });
 
