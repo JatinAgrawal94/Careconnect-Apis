@@ -11,7 +11,7 @@ patientRouter.get("/allpatient",authMiddleware,async(req,res)=>{
   if(data){
       res.send(data);
   }else{
-      res.status(404).send("Error getting data");
+      res.status(404).send({status:'0'});
   }
 });
 
@@ -27,7 +27,7 @@ patientRouter.get('/info',authMiddleware,async(req,res)=>{
       throw error;
     }
   } catch (error) {
-    res.status(404).send("Error");
+    res.status(404).send({status:'0'});
   }
 })
 
@@ -43,7 +43,7 @@ patientRouter.get('/getdocsid',authMiddleware,async(req,res)=>{
       throw error;
     }
   } catch (error) {
-    res.status(404).send("Error");
+    res.status(404).send({status:'0'});
   }
 })
 
@@ -53,9 +53,9 @@ patientRouter.post('/add',authMiddleware,async(req,res)=>{
     let collection=req.body.collection;
     let data=JSON.parse(req.body.data);
     await addUser(collection,data);
-    res.send("Success");
+    res.send({status:'1'});
   } catch (error) {
-    res.status(404).send("Error");
+    res.status(404).send({status:'0'});
   }
 });
 
@@ -67,9 +67,9 @@ patientRouter.post('/update',authMiddleware,async(req,res)=>{
     let data=JSON.parse(req.body.data);
     await updateUserData(documentid,data,collection);
     // await updatePatientData(documentid,data);
-    res.send("Sucess");
+    res.send({status:'1'});
   } catch (error) {
-    res.status(404).send("Error");
+    res.status(404).send({status:'0'});
   }
 });
 
@@ -98,14 +98,16 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
       const patientdocumentId=req.body.patientid;
       const recordId=req.body.recordid;
       const category=req.body.category;
-      let response=await deleteAnyPatientRecord(patientdocumentId,recordId,category);
+      const media=JSON.parse(req.body.media);
+      const userid=req.body.userid;
+      let response=await deleteAnyPatientRecord(patientdocumentId,recordId,category,{media:media,userid:userid});
       if(response){
-        res.send('Success');
+        res.send({status:'1'});
       }else{
         throw Error;
       }
     } catch (error) {
-      res.send('Error');
+      res.send({status:'0'});
     }
   })
 

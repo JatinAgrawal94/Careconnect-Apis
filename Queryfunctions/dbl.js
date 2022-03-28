@@ -1,5 +1,7 @@
 const {initializeApp}=require('firebase/app');
-const {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged,setPersistence,browserSessionPersistence}=require('firebase/auth');
+const {getStorage,ref,deleteObject}=require('firebase/storage');
+const {getAuth,signInWithEmailAndPassword,signOut}=require('firebase/auth');
+
 
 const firebaseConfig = {
     apiKey: process.env.FIREBASE_WEB_API_KEY,
@@ -12,4 +14,5 @@ const firebaseConfig = {
     measurementId:process.env.FIREBASE_WEB_MEASUREMENTID  
 };
 const app=initializeApp(firebaseConfig);
-module.exports={getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged,setPersistence,browserSessionPersistence};
+const storage=getStorage(app);
+module.exports={getAuth,signInWithEmailAndPassword,signOut, storage ,ref,deleteObject};
