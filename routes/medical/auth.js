@@ -3,7 +3,7 @@ const authRouter=express();
 const {signIn,signOutUser}=require('../../Queryfunctions/medical/auth');
 const {getRole,authMiddleware,checkDeviceType}=require('../../Queryfunctions/medical/general');
 
-authRouter.get('/getrole',authMiddleware,async(req,res)=>{
+authRouter.get('/getrole',async(req,res)=>{
     try {
         const email=req.query.email;
         const data=await getRole(email);
@@ -21,7 +21,6 @@ authRouter.post('/login',async(req,res)=>{
     const email=req.body.email.toString();
     const password=req.body.password.toString();
     var result= await signIn(email,password);
-    
     if(result.status === 1){
         const data=await getRole(email);
         if(data['role'] == 'doctor'){
@@ -36,7 +35,7 @@ authRouter.post('/login',async(req,res)=>{
             }
         }else if(data['role'] == 'patient'){
             // res.cookie(email,result.token);
-            // res.redirect(302,'/')
+            res.redirect(302,'/');
         }else{
             res.status(404).send("User Not Found")
         }
