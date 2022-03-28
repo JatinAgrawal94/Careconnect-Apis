@@ -130,7 +130,6 @@ async function getRole(email){
         snapshot.docs.forEach((item)=>{
             data.push(item.data());
         });
-        console.log(data);
         return data[0];
     }catch(err){
         return null;

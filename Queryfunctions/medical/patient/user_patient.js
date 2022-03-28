@@ -62,4 +62,6 @@ async function updateApproval(documentId,recordId,category,value){
     }
 }
 
+
+
 module.exports={getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};
