@@ -122,7 +122,7 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
       const media=JSON.parse(req.body.media);
       const userid=req.body.userid;
       data.delete=0;
-
+       console.log(media);
       if(media!=null){
         var mediaURL=await uploadMediaAndDownLoadURL(media,userid,category);
         if(mediaURL!==0){

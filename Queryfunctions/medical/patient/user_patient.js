@@ -75,7 +75,7 @@ async function uploadMediaAndDownLoadURL(media,userId,category){
         let images=media.data.images;
         let videos=media.data.videos;
         let files=media.data.files;
-
+        console.log(`images are ${images}`);
         for(let i=0;i<images.length;i++){
             let storageRef=ref(storage,`Patient/${userId}/${category}/images/${images[i]['name']}`);
             await uploadBytes(storageRef,images[i]['filename']);
