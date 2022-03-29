@@ -1,7 +1,7 @@
 const express=require('express');
 const patientRouter=express();
 const {getDocsId,getUserInfo, updateUserData, addUser, createNewUser, getStatsAndIncreement, authMiddleware}=require("../../../Queryfunctions/medical/general");
-const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval}=require('../../../Queryfunctions/medical/patient/user_patient');
+const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval, uploadMediaAndDownLoadURL}=require('../../../Queryfunctions/medical/patient/user_patient');
 const {db}=require('../../../Queryfunctions/db');
 
 // mobile apis
@@ -49,6 +49,7 @@ patientRouter.get('/getdocsid',authMiddleware,async(req,res)=>{
 
 
 patientRouter.post('/add',authMiddleware,async(req,res)=>{
+  // add feature to upload profile image of user to storage and save its link in database.
   try {
     let collection=req.body.collection;
     let data=JSON.parse(req.body.data);
@@ -61,6 +62,7 @@ patientRouter.post('/add',authMiddleware,async(req,res)=>{
 
 // route to update patient data
 patientRouter.post('/update',authMiddleware,async(req,res)=>{
+  // add feature to update profile photo of the user.
   try {
     let documentid=req.body.documentid;
     let collection=req.body.collection;
@@ -117,12 +119,22 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
       const category=req.params.category;
       const patientId=req.body.patientId;
       const data=JSON.parse(req.body.data);
+      const media=JSON.parse(req.body.media);
+      const userid=req.body.userid;
       data.delete=0;
+
+      if(media!=null){
+        var mediaURL=await uploadMediaAndDownLoadURL(media,userid,category);
+        if(mediaURL!==0){
+          data.media=mediaURL;
+          console.log(mediaURL);
+        }
+      }
       const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
-      res.send("Sucess");
+      res.send({'status':"1"});
     } catch (error) {
-      console.log(error);
-      res.send("Fail");
+      // console.log(error);
+      res.send({'status':'0'});
     }
   });
   

@@ -1,5 +1,7 @@
+const { getDownloadURL } = require('firebase/storage');
 const {db}=require('../../db.js');
-const {storage,ref,deleteObject}=require('../../dbl');
+const {storage,ref,deleteObject,uploadBytes}=require('../../dbl');
+
 // add documentid to the all patient data.
 async function getPatientData(){
     try {
@@ -45,7 +47,6 @@ async function deleteAnyPatientRecord(patientdocumentId,recordId,category,mediaI
         await ref.doc(recordId).delete();
         return 1;
     } catch (error) {
-        console.log("Error in delete function");
         console.log(error);
         return 0;
     }
@@ -68,10 +69,71 @@ async function updateApproval(documentId,recordId,category,value){
     }
 }
 
+// function to upload record media and receive its url.
+async function uploadMediaAndDownLoadURL(media,userId,category){
+    try {
+        let images=media.data.images;
+        let videos=media.data.videos;
+        let files=media.data.files;
+
+        for(let i=0;i<images.length;i++){
+            let storageRef=ref(storage,`Patient/${userId}/${category}/images/${images[i]['name']}`);
+            await uploadBytes(storageRef,images[i]['filename']);
+        }
+        for(let i=0;i<videos.length;i++){
+            let storageRef=ref(storage,`Patient/${userId}/${category}/videos/${videos[i]['name']}`);
+            await uploadBytes(storageRef,videos[i]['filename']);
+        }
+        for(let i=0;i<files.length;i++){
+            let storageRef=ref(storage,`Patient/${userId}/${category}/files/${files[i]['name']}`);
+            await uploadBytes(storageRef,files[i]['filename']);
+        }
+        var data=await getMediaURL(media,category,userId);
+        return data;
+    } catch (error) {
+        console.log("Error in upload function");
+        console.log(error);
+        return 0;
+    }
+}
+
+// sub function to get mediaURL of uploaded data.
+async function getMediaURL(media,category,userId){
+    try {
+        const images=media.images;
+        const videos=media.videos;
+        const files=media.files;
+        var data={
+            'images':[],
+            'videos':[],
+            'files':[]
+        };
+
+        for(let i=0;i<images.length;i++){
+            let storageRef=ref(storage,`Patient/${userId}/${category}/images/${images[i]['name']}`);
+            let url=await getDownloadURL(storageRef);
+            data.images.push(url);
+        }
+        for(let i=0;i<videos.length;i++){
+            let storageRef=ref(storage,`Patient/${userId}/${category}/videos/${videos[i]['name']}`);
+            let url=await getDownloadURL(storageRef);
+            data.videos.push(url);
+        }
+        for(let i=0;i<files.length;i++){
+            let storageRef=ref(storage,`Patient/${userId}/${category}/files/${files[i]['name']}`);
+            let url=await getDownloadURL(storageRef);
+            data.files.push(url);
+        }
+        return data;
+    } catch (error) {
+        console.log("Error in download function");
+        console.log(erorr);
+        return 0;         
+    }
+}
+
 async function deleteMedia(media,category,patientUserId){
     try {
-        console.log(patientUserId);
-        console.log(category);
         const images=media['images'];
         const videos=media['videos'];
         const files=media['files'];
@@ -99,5 +161,16 @@ async function deleteMedia(media,category,patientUserId){
     }
 }
 
+async function uploadProfileImage(media,userId){
+    // object media={file:File()}
+    try {
+        let storageRef=ref(storage,`profile_images/${userId}`);
+        await uploadBytes(storageRef,media.file);
+        var url=await getDownloadURL(storageRef);
+        return url;
+    } catch (error) {
+        return 0;
+    }
+}
 
-module.exports={getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};
+module.exports={uploadMediaAndDownLoadURL,getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};

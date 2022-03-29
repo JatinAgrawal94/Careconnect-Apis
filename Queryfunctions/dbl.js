@@ -1,5 +1,5 @@
 const {initializeApp}=require('firebase/app');
-const {getStorage,ref,deleteObject}=require('firebase/storage');
+const {getStorage,ref,deleteObject,uploadBytes,getDownloadURL}=require('firebase/storage');
 const {getAuth,signInWithEmailAndPassword,signOut}=require('firebase/auth');
 
 
@@ -15,4 +15,4 @@ const firebaseConfig = {
 };
 const app=initializeApp(firebaseConfig);
 const storage=getStorage(app);
-module.exports={getAuth,signInWithEmailAndPassword,signOut, storage ,ref,deleteObject};
+module.exports={getAuth,signInWithEmailAndPassword,signOut, storage ,ref,deleteObject,uploadBytes,getDownloadURL};

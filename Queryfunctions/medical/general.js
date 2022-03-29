@@ -1,4 +1,5 @@
 const {db,getAuth}=require('../db');
+const {storage,ref,getDownloadURL,uploadBytes}=require('../dbl');
 // var LocalStorage=require('node-localstorage').LocalStorage;
 // localStorage = new LocalStorage('./scratch');
 async function getDocsId(email,collection){
@@ -76,12 +77,14 @@ async function getStatsAndIncreement(role){
 
 async function addUser(collection,data){
     try {
+        // adding data to specific user type collection Eg: Patient/Doctor/Admin
+        // await uploadProfileImage(media ,data['userid']);
        await db.collection(collection).doc().set(data);
     const user={
         email:data['email'],
         userid:data['userid'],
     };
-
+    // Adding data to users Collection.
     if(collection == 'Patient'){
         user.role='patient';
             await db.collection('users').doc().set(user);
@@ -185,5 +188,16 @@ function checkDeviceType(request){
     });
 }
 
+async function uploadProfileImage(media,userId){
+    // object media={file:File()}
+    try {
+        let storageRef=ref(storage,`profile_images/${userId}`);
+        await uploadBytes(storageRef,media.file);
+        var url=await getDownloadURL(storageRef);
+        return url;
+    } catch (error) {
+        return 0;
+    }
+}
 
 module.exports={checkDeviceType,authMiddleware,getDocsId,getUserInfo,getUserProfile,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};
