@@ -146,7 +146,7 @@ function checkDeviceType(request){
              index=i;
             }
         });
-    let device=request.rawHeaders[index+1].toString();  
+    let device=(request.rawHeaders[index+1]).toString();  
     return device.search('Dart') !== -1;
 }
 

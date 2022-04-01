@@ -117,15 +117,22 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
   // add patient record data.
   patientRouter.post('/:category/create',authMiddleware,async(req,res)=>{
     try {
-    
       const category=req.params.category;
       const patientId=req.body.patientId;
       const data=JSON.parse(req.body.data);
+      let index;
+      req.rawHeaders.map((item,i)=>{
+          if(item=='User-Agent'){
+              index=i;
+             }
+         });
+         console.log(index);
+     let device=(req.rawHeaders[index+1]).toString();
+     console.log(device);
       data.delete=0;
       const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
       res.send({'status':"1"});
     } catch (error) {
-      // console.log(error);
       res.send({'status':'0'});
     }
   });
