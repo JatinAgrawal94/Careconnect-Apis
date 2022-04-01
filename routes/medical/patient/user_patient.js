@@ -102,8 +102,7 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
       const category=req.body.category;
       const media=JSON.parse(req.body.media);
       const userid=req.body.userid;
-      let response=1;
-      // let response=await deleteAnyPatientRecord(patientdocumentId,recordId,category,{media:media,userid:userid});
+      let response = await deleteAnyPatientRecord(patientdocumentId,recordId,category,{media:media,userid:userid});
       if(response){
         res.send({status:'1'});
       }else{
@@ -120,15 +119,6 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
       const category=req.params.category;
       const patientId=req.body.patientId;
       const data=JSON.parse(req.body.data);
-      let index;
-      req.rawHeaders.map((item,i)=>{
-          if(item=='User-Agent'){
-              index=i;
-             }
-         });
-         console.log(index);
-     let device=(req.rawHeaders[index+1]).toString();
-     console.log(device);
       data.delete=0;
       const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
       res.send({'status':"1"});
