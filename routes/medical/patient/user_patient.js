@@ -102,7 +102,8 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
       const category=req.body.category;
       const media=JSON.parse(req.body.media);
       const userid=req.body.userid;
-      let response=await deleteAnyPatientRecord(patientdocumentId,recordId,category,{media:media,userid:userid});
+      let response=1;
+      // let response=await deleteAnyPatientRecord(patientdocumentId,recordId,category,{media:media,userid:userid});
       if(response){
         res.send({status:'1'});
       }else{
@@ -116,20 +117,11 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
   // add patient record data.
   patientRouter.post('/:category/create',authMiddleware,async(req,res)=>{
     try {
+    
       const category=req.params.category;
       const patientId=req.body.patientId;
       const data=JSON.parse(req.body.data);
-      const media=JSON.parse(req.body.media);
-      const userid=req.body.userid;
       data.delete=0;
-       console.log(media);
-      if(media!=null){
-        var mediaURL=await uploadMediaAndDownLoadURL(media,userid,category);
-        if(mediaURL!==0){
-          data.media=mediaURL;
-          console.log(mediaURL);
-        }
-      }
       const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
       res.send({'status':"1"});
     } catch (error) {

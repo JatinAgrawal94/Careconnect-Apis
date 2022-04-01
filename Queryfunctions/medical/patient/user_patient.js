@@ -40,9 +40,9 @@ async function getCategoryData(category,documentId){
 async function deleteAnyPatientRecord(patientdocumentId,recordId,category,mediaInfo=null){
     try {
         // create mediaInfo as an optional parameter.
-        if(mediaInfo!==null){
-            await deleteMedia(mediaInfo['media'],category,mediaInfo['userid']);
-        }
+        // if(mediaInfo!==null){
+        //     await deleteMedia(mediaInfo['media'],category,mediaInfo['userid']);
+        // }
         let ref=db.collection(`Patient/${patientdocumentId}/${category}`);
         await ref.doc(recordId).delete();
         return 1;
