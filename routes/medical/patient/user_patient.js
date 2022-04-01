@@ -100,9 +100,7 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
       const patientdocumentId=req.body.patientid;
       const recordId=req.body.recordid;
       const category=req.body.category;
-      const media=JSON.parse(req.body.media);
-      const userid=req.body.userid;
-      let response = await deleteAnyPatientRecord(patientdocumentId,recordId,category,{media:media,userid:userid});
+      let response = await deleteAnyPatientRecord(patientdocumentId,recordId,category);
       if(response){
         res.send({status:'1'});
       }else{
