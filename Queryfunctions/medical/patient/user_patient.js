@@ -37,10 +37,13 @@ async function getCategoryData(category,documentId){
 }
 
 // here we need patient user id also for the same to delete the media of the data.
-async function deleteAnyPatientRecord(patientdocumentId,recordId,category,mediaInfo=null){
+async function deleteAnyPatientRecord(patientdocumentId,recordId,category,media,userid){
     try {
         let ref=db.collection(`Patient/${patientdocumentId}/${category}`);
         await ref.doc(recordId).delete();
+        if(userid!=null){
+            await deleteMedia(media,category,userid);
+        }
         return 1;
     } catch (error) {
         console.log(error);
@@ -153,12 +156,16 @@ async function deleteMedia(media,category,patientUserId){
         }
         return 1;
     } catch (error) {
+        console.log("Error in delete record function");
+        console.log(error);
         return 0;
     }
 }
+// Terminal Problems Output Debug Console
+// Go Live Redmi Note 5 Pro (android-arm64)
+// Prettier
 
 async function uploadProfileImage(media,userId){
-    // object media={file:File()}
     try {
         let storageRef=ref(storage,`profile_images/${userId}`);
         await uploadBytes(storageRef,media.file);
