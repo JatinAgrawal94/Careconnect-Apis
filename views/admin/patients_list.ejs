@@ -55,7 +55,7 @@ tr:nth-child(even) {
           <td><%=element['dateofbirth']%></td>
           <td><%=element['bloodgroup']%></td>
           <td><%=element['phoneno']%></td>
-          <td><a href="/admin/<%=email%>/patientlist/<%=element['email']%>/profile">Details</a></td>
+          <td><a href="/admin/<%=email%>/patientlist/<%=element['documentid']%>?patientemail=<%=element['email']%>">Details</a></td>
         </tr>
       <%})%>
       

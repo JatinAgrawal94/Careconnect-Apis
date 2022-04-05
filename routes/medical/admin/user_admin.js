@@ -1,8 +1,9 @@
 const express=require('express');
 const adminRouter=express();
 const {getDocsId,getUserInfo,updateUserData,getUserProfile,authMiddleware}=require("../../../Queryfunctions/medical/general");
-const {getPatientData}=require('../../../Queryfunctions/medical/patient/user_patient')
+const {getPatientData, getCategoryData}=require('../../../Queryfunctions/medical/patient/user_patient')
 const {getDoctorData}=require('../../../Queryfunctions/medical/doctor/user_doctor');
+const { getPatientAppointments } = require('../../../Queryfunctions/medical/appointment');
 
 // api for mobile apps
 adminRouter.get('/getdocsid',authMiddleware,async(req,res)=>{
@@ -76,17 +77,39 @@ adminRouter.get('/:email/doctorlist',authMiddleware,async(req,res)=>{
   res.render('admin/doctor_list',{doctor:doctors,email:email});
 });
 
+adminRouter.get('/:email/patientlist/:documentid/:category',async(req,res)=>{
+  let category=req.params.category.toLowerCase().replace(/\s/g, '');
+  let patientemail=req.query.patientemail;
+  if(category=='about'){
+    const data=await getUserProfile(patientemail,'Patient');
+    res.render('admin/admin_profile',{data:data});
+  }else if(category=='appointment'){
+    let email=req.params.email;
+    const appointments=await getPatientAppointments(patientemail);
+    res.render('appointments/appointment_list',{appointment:appointments,email:email});
+  }
+  else{ 
+    const data=await getCategoryData(category,req.params.documentid);
+    res.render(`patient/category/${category}`,{data:data});
+  }
+});
+
+
+
 // patient profile
-adminRouter.get('/:email/patientlist/:patientemail/profile',authMiddleware,async(req,res)=>{
-  const email=req.params.email;
-  const patientemail=req.params.patientemail;
-  const data=await getUserProfile(patientemail,'Patient');
-  res.render('patient/profile_page',{patient:data,email:email,isAdmin:true});
+adminRouter.get('/:email/patientlist/:documentid',authMiddleware,async(req,res)=>{
+  let url =`admin/${req.params.email}/patientlist/${req.params.documentid}`;
+  let patientemail=req.query.patientemail;
+  const menuList=[
+    'About','Allergy','BloodGlucose','BloodPressure',
+    'Examination','Family History','Labtest','Medical Visit','Notes','Pathology','Prescription','Radiology','Surgery','Vaccine','Appointment'
+  ];  
+  res.render('patient/menu',{patientemail:patientemail,isAdmin:true,menuList:menuList,url:url});
 });
 
 
 // doctor profile
-adminRouter.get('/:email/doctorlist/:doctoremail/profile',authMiddleware,async(req,res)=>{
+adminRouter.get('/:email/doctorlist/:doctoremail',authMiddleware,async(req,res)=>{
   const email=req.params.email;
   const doctoremail=req.params.doctoremail;
   const data=await getUserProfile(doctoremail,'Doctor');

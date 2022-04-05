@@ -176,4 +176,6 @@ async function uploadProfileImage(media,userId){
     }
 }
 
+
+
 module.exports={uploadMediaAndDownLoadURL,getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};
