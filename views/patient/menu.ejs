@@ -362,5 +362,26 @@
    }
   }
   </script>
+
+  <%-include('../partials/navbar')%>
+  <br>
+  <br>
+
+  <%menuList.forEach((item)=>{%>
+    <a href="/<%=url%>/<%=item.toString().toLowerCase().replace(/\s/g, '')%>?patientemail=<%=patientemail%>">
+    <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto;">
+    <br>
+    <div style="width: 15%;float: left;">
+      <img src="/images/heart.png" style="width: 50px; margin-left: 2cm;" >
+    </div>
+      <div style="width: 85%;float: right;">
+          <h2 style="text-align:center;"><%=item%></h2>
+      </div>    
+    </div>
+  </a>
+  <br>
+  <%})%>
+  
+
 </body>
 </html>

@@ -114,12 +114,8 @@ body {
  
 </head>
 <body>
-    <%if(isAdmin == undefined){%>
-        <%-include('../partials/navbar_doctor',{email:data[0].email})%>
-    <%}else{%>
-        <!-- isAdmin ==true -->
-        <%-include('../partials/navbar_admin',{email:email})%>
-    <%}%>
+    <%-include('../partials/navbar')%>
+    
 <br>
 <br>
 <br>

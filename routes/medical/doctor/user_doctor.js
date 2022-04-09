@@ -110,7 +110,7 @@ doctorRouter.get('/:email/patientlist/:documentid/:category',async(req,res)=>{
   let url=`doctor/${req.params.email}/patientlist/${req.params.documentid}/${req.params.category}?patientemail=${patientemail}`;
   if(category=='about'){
     const data=await getUserProfile(patientemail,'Patient');
-    res.render('patient/profile_page',{patient:data});
+    res.render('patient/profile_page',{patient:data,isAdmin:undefined});
   }else if(category=='appointment'){
     let email=req.params.email;
     const appointments=await getPatientAppointments(patientemail);

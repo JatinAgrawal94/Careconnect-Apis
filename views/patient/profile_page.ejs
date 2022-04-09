@@ -112,13 +112,7 @@
  
 </head>
 <body>
-    <%if(isAdmin === undefined){%>
-        <%-include('../partials/navbar_doctor',{email:patient[0].email})%>
-    <%}else{%>
-        <!-- isAdmin ==true -->
-        <%-include('../partials/navbar_admin',{email:email})%>
-    <%}%>
-    
+        <%-include('../partials/navbar')%>
 <br>
 <br>
 <br>
@@ -158,7 +152,7 @@
                         <tr>
                             <td>Contact</td>
                             <td>:</td>
-                            <td><%= patient[0].phoneno %></td>
+                            <td><%= patient[0].contact %></td>
                         </tr>
                         <tr>
                             <td>Insurance</td>
