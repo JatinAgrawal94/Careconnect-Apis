@@ -41,7 +41,7 @@ async function deleteAnyPatientRecord(patientdocumentId,recordId,category,media,
     try {
         let ref=db.collection(`Patient/${patientdocumentId}/${category}`);
         await ref.doc(recordId).delete();
-        if(userid!=null){
+        if(userid!=null && userid!="null"){
             await deleteMedia(media,category,userid);
         }
         return 1;
