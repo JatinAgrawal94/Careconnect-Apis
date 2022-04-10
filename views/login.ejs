@@ -16,7 +16,6 @@
   <style type="text/css">
     body {
       color: #aa082e;
-      /* background-color: #b6bde7; */
       font-family: 'Roboto', sans-serif;
     }
 
@@ -53,11 +52,9 @@
       background: #0062cc;
       color: #fff;
     }
-    
-    
   </style>
 </head>
-<body style=" height: 25.43cm; background: -webkit-linear-gradient(top, white 98%, purple)">
+<body>
   <br>
   <br>
   <br><br>
@@ -89,30 +86,5 @@
       </div>
     </div>
   </form>
-  <br><br><br>
-  <!-- <script>
-    const email=document.getElementById('email');
-    const password=document.getElementById('password');
-    const response=document.getElementById('response');
-    const submit=document.getElementById('submitbutton');
-
-    function loginform(){
-      var xhttp=new XMLHttpRequest();
-      xhttp.open("POST", "/auth/login", true);
-      xhttp.setRequestHeader('Content-type',"application/json");
-      xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && (this.status == 200 || this.status == 302)) {
-        // response.innerHTML = xhttp.responseText;
-        window.location.href=xhttp.responseURL;
-        // console.log(xhttp.responseURL);
-        }
-        if(this.status== 404){
-          response.innerHTML=xhttp.responseText;
-        }
-      };
-      xhttp.send(JSON.stringify({'email':email.value,'password':password.value}));
-    }
-
-  </script> -->
 </body>
 </html>
