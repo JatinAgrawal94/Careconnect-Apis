@@ -312,28 +312,27 @@
       </li>
       <li>
        <a href="/doctor/<%=email%>/profile">
-         <i class='bx bx-user' ></i>
+         <i class='bx bxs-user-account' ></i>
          <span class="links_name">Profile</span>
        </a>
        <span class="tooltip">Profile</span>
      </li>
      <li>
        <a href="/doctor/<%=email%>/patientlist">
-         <i class='bx bx-chat' ></i>
+         <i class='bx bx-user' ></i>
          <span class="links_name">Patients</span>
        </a>
        <span class="tooltip">Patients</span>
      </li>
      <li>
       <a href="/doctor/<%=email%>/appointment">
-        <i class='bx bx-chat' ></i>
+        <i class='bx bx-calendar' ></i>
         <span class="links_name">Appointments</span>
       </a>
       <span class="tooltip">Appointment</span>
     </li>
      <li>
        <form method="POST" action="/auth/logout">
-         <i class='bx bx-cog' ></i>
          <button type="submit">Logout</button>
        </form>
      </li>
@@ -354,12 +353,16 @@
       <br>
       <br>
       <br>
-    </section>
+      <div>
+        <div style="width: 40cm; border-bottom: #1d1b31 solid 1px; margin-left: auto;margin-right: auto;">
+          <h2 style="margin-left: 18cm;">Summary</h2>
+        </div>
     <div class="flex-container">
-      <div style="width: 6cm; background-color: beige;">Patients:<%=patient.length%></div>
-      <div style="width: 6cm; background-color: beige;"> Appointments:
-        <br>&ensp;&ensp;&ensp;&ensp;<%=appointment.length%></div>
+      <div style="width: 8cm; background-color: beige; margin-left: auto;margin-right: auto;">Patients:<%=patient.length%></div>
+      <div style="width: 8cm; background-color: beige; margin-left: auto;margin-right: auto;"> Appointments:<%=appointment.length%></div>
     </div>
+  </div>
+  </section>
   </body>
   <script>
     let sidebar = document.querySelector(".sidebar");
