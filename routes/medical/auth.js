@@ -1,6 +1,6 @@
 const express=require('express');
 const authRouter=express();
-const {signIn,signOutUser}=require('../../Queryfunctions/medical/auth');
+const {signIn,signOutUser, signUpUser}=require('../../Queryfunctions/medical/auth');
 const {getRole,authMiddleware,checkDeviceType}=require('../../Queryfunctions/medical/general');
 
 authRouter.get('/getrole',authMiddleware,async(req,res)=>{
@@ -53,6 +53,13 @@ authRouter.post('/logout',async(req,res)=>{
     }else{
         res.status(404);
     }
+});
+
+// only for patients
+authRouter.get('/signup',async(req,res)=>{
+    let query=req.query;
+    var result=await signUpUser(query.email,query.password);
+    res.send(result);
 });
 
 module.exports=authRouter;

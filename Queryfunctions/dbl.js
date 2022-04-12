@@ -1,6 +1,6 @@
 const {initializeApp}=require('firebase/app');
 const {getStorage,ref,deleteObject,uploadBytes,getDownloadURL}=require('firebase/storage');
-const {getAuth,signInWithEmailAndPassword,signOut}=require('firebase/auth');
+const {getAuth,signInWithEmailAndPassword,signOut,createUserWithEmailAndPassword}=require('firebase/auth');
 
 
 const firebaseConfig = {
@@ -15,4 +15,4 @@ const firebaseConfig = {
 };
 const app=initializeApp(firebaseConfig);
 const storage=getStorage(app);
-module.exports={getAuth,signInWithEmailAndPassword,signOut, storage ,ref,deleteObject,uploadBytes,getDownloadURL};
+module.exports={getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut, storage ,ref,deleteObject,uploadBytes,getDownloadURL};
