@@ -84,7 +84,7 @@
 <body>
   <%-include('../../partials/navbar')%>
 
-  <div style="height: 3cm; width: 100%; border-bottom: 1px solid black;">
+  <div style="height: 3cm; width: 70%; border-bottom: 1px  solid black; margin-left: 15%;">
       <div style="float: left; margin-left: 2cm;">
         <br>
         <h2>Past Data</h2>
@@ -97,16 +97,27 @@
   <br>
   <br>
 
+    <div style="width: 75%;height: 1.3cm;margin-left: auto;margin-right: auto;">
+      <div style="width: 20%;float: left;">
+        <h3 style="margin-left: 2cm;">Date and Time</h3>
+      </div>
+      <div style="width: 20%;float: left;margin-left: 2cm;">
+        <h3>Description</h3>
+      </div> 
+    </div> 
   <%data.forEach((item)=>{%>
-  <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto;">
-  <br>
-    <div style="display: flex;">
-        <p><%=item['result']%>,</p>
-        <p><%=item['resultUnit']%>,</p>
-        <p><%=item['date']%>,</p>
-        <p><%=item['time']%>,</p>
-        <p><%=item['type']%></p>
-    </div>    
+    <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto; box-shadow: black 3px 3px;">
+      <div style="width: 20%;float: left;">
+        <br>
+        <p  style="margin-left: 2.5cm;"><%=item['date']%>,<%=item['time']%></p>
+      </div> 
+      <div style="width: 20%;float: left;margin-left: 2cm;">
+        <p><p style="font-weight: bold;">Blood Glucose Level:</p> <%=item['result']%><%=item['resultUnit']%></p>
+      </div>
+      <div style="float:left;width: 40%;">
+        <p><p style="font-weight: bold;">Diet:</p><%=item['type']%></p>
+      </div>
+  <br>    
   </div>
   <br>
   <%})%>
@@ -120,13 +131,27 @@
       </div>
       <div class="modal-body">
         <form  method=POST action="#">
-    <label for="lname">Blood Glucose measurements:</label><br>
-    <input type="text" id="lname" name="lname" ><br>
-    <label for="lname">Diet:</label><br>
-    <input type="text" id="lname" name="lname" ><br>
-    <label for="lname">Date:</label><br>
-    <input type="datetime-local"  ><br>
-    <input type="submit" value="Add">
+          <div style="float: left;width: 30%;">
+            <div>
+              <label for="lname">Date and Time:</label><br>
+            <input type="datetime-local" ><br>
+            </div>
+            <br>
+            <div>
+            <input type="submit" value="Add">
+            </div>
+          </div>
+          <div style="float: left;width: 30%;">
+            <label for="lname">Blood Glucose measurements:</label><br>
+            <input type="text"><br>
+          </div>
+          <div style="float: left;width: 30%;">
+            <label for="lname">Diet:</label><br>
+            <input type="text"><br>
+          </div>
+          <br>
+          <br>
+   
   </form> 
       </div>
     </div>
