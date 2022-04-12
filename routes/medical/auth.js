@@ -58,7 +58,7 @@ authRouter.post('/logout',async(req,res)=>{
 // only for patients
 authRouter.get('/signup',async(req,res)=>{
     let query=req.query;
-    var result=await signUpUser(query.email,query.password);
+    var result=await signUpUser(query.email,query.password,query.name,query.contact);
     res.send(result);
 });
 

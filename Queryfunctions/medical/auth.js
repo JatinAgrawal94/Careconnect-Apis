@@ -33,13 +33,15 @@ async function signOutUser(){
     return result;
 }
 
-async function signUpUser(email,password){
+async function signUpUser(email,password,name,contact){
     try {
         const result=await createUserWithEmailAndPassword(auth,email,password);
         var token=await result.user.getIdToken(true);
         let userid=await getStatsAndIncreement('patient');
         let docref=await db.collection('users');
         await docref.add({email:email,role:'patient',userid:userid});
+        docref=await db.collection('Patient');
+        await docref.add({email:email,name:name,contact:contact});
         return {result:'success',token:token};
     } catch (error) {
         if (error.code == 'auth/email-already-in-use') {
