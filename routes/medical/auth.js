@@ -1,6 +1,6 @@
 const express=require('express');
 const authRouter=express();
-const {signIn,signOutUser, signUpUser}=require('../../Queryfunctions/medical/auth');
+const {signIn,signOutUser, signUpUser, updateToken}=require('../../Queryfunctions/medical/auth');
 const {getRole,authMiddleware,checkDeviceType}=require('../../Queryfunctions/medical/general');
 
 authRouter.get('/getrole',authMiddleware,async(req,res)=>{
@@ -25,12 +25,12 @@ authRouter.post('/login',async(req,res)=>{
         const data=await getRole(email);
         if(data['role'] == 'doctor'){
             if(!checkDeviceType(req)){
-                res.cookie(email,result.token);
+                res.cookie(email,{token:result.token,refresh_token:result.refresh_token});
                 res.redirect(302,`/doctor/${email}`);
             }
         }else if(data['role'] == 'admin'){
             if(!checkDeviceType(req)){
-                res.cookie(email,result.token);
+                res.cookie(email,{token:result.token,refresh_token:result.refresh_token});
                 res.redirect(302,`/admin/${email}`);
             }
         }else if(data['role'] == 'patient'){
@@ -60,6 +60,15 @@ authRouter.get('/signup',async(req,res)=>{
     let query=req.query;
     var result=await signUpUser(query.email,query.password,query.name,query.contact);
     res.send(result);
+});
+
+authRouter.get('/updatetoken',async(req,res)=>{
+    var token=req.query.token;
+    var data=await updateToken(token);
+    if(data==0){
+        res.status(404).send({message:"Invalid Token"});
+    }
+    res.send(data);
 });
 
 module.exports=authRouter;

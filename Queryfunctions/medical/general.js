@@ -1,7 +1,8 @@
 const {db,getAuth}=require('../db');
 const {storage,ref,getDownloadURL,uploadBytes}=require('../dbl');
-// var LocalStorage=require('node-localstorage').LocalStorage;
-// localStorage = new LocalStorage('./scratch');
+// const {updateToken}=require('./auth');
+
+
 async function getDocsId(email,collection){
     try{
         var data=[];
@@ -53,26 +54,30 @@ async function getUserProfile(email,collection){
 }
 
 async function getStatsAndIncreement(role){
-    var numbers=[];
-    const ref=db.collection('stats');
-    var value;
-    let snapshot=await ref.get();
-    snapshot.docs.forEach((item)=>{
-        numbers.push({
-            'noofpatients':item.data()['noofpatients'],
-            'noofdoctors':item.data()['noofdoctors'],
-            'documentid':item.id
+    try {
+        var numbers=[];
+        const ref=db.collection('stats');
+        var value;
+        let snapshot=await ref.get();
+        snapshot.docs.forEach((item)=>{
+            numbers.push({
+                'noofpatients':item.data()['noofpatients'],
+                'noofdoctors':item.data()['noofdoctors'],
+                'documentid':item.id
+            });
         });
-    });
-    if(role == 'patient'){
-        value=parseInt(numbers[0]['noofpatients'])+1;
-        await db.collection('stats').doc(numbers[0]['documentid']).update({'noofpatients':value.toString()});
-        return 'P'+value.toString();
-    }else if(role == 'doctor'){
-        value=parseInt(numbers[0]['noofdoctors'])+1;
-        await db.collection('stats').doc(numbers[0]['documentid']).update({'noofdoctors':value.toString()});
-        return 'D'+value.toString();
-    }   
+        if(role == 'patient'){
+            value=parseInt(numbers[0]['noofpatients'])+1;
+            await db.collection('stats').doc(numbers[0]['documentid']).update({'noofpatients':value.toString()});
+            return 'P'+value.toString();
+        }else if(role == 'doctor'){
+            value=parseInt(numbers[0]['noofdoctors'])+1;
+            await db.collection('stats').doc(numbers[0]['documentid']).update({'noofdoctors':value.toString()});
+            return 'D'+value.toString();
+        }   
+    } catch (error) {       
+        console.log(error); 
+    }
 }
 
 async function addUser(collection,data){
@@ -162,7 +167,7 @@ function checkDeviceType(request){
         type=1;
     }else{
          email=request.params.email;
-         token=request.cookies[email];
+         token=request.cookies[email].token;
     }
     if (!token) {
         if(type){
@@ -183,6 +188,7 @@ function checkDeviceType(request){
         if(type){
             response.status(403).send({message:error.errorInfo.code});
         }else{
+            // for web
             response.redirect(302,'/login');
         }
     });

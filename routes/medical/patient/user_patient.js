@@ -113,6 +113,17 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
     }
   })
 
+  // get stats 
+  // only for patients.
+  patientRouter.get('/getstats',async(req,res)=>{
+    try {
+      var data=await getStatsAndIncreement('patient');
+      res.send({userid:data});
+    } catch (error) {
+      res.send({message:"error"});
+    }
+  });
+
   // add patient record data.
   patientRouter.post('/:category/create',authMiddleware,async(req,res)=>{
     try {
