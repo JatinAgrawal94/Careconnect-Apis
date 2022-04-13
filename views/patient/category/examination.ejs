@@ -85,10 +85,10 @@
 
   <%-include('../../partials/navbar')%>
 
-  <div style="height: 3cm; width: 100%; border-bottom: 1px solid black;">
+  <div style="height: 3cm; width: 70%; border-bottom: 1px  solid black; margin-left: 15%;">
       <div style="float: left; margin-left: 2cm;">
         <br>
-        <h2>Past Data</h2>
+        <h2>Patients Past Records</h2>
       </div>
       <div style="float: right;margin-right: 2cm;">
         <br>
@@ -97,24 +97,61 @@
   </div>
   <br>
   <br>
-
+  <div style="width: 75%;height: 1.3cm;margin-left: auto;margin-right: auto;">
+    <div style="width: 15%;float: left;">
+      <h3 style="margin-left: 1.5cm;">Date</h3>
+    </div>
+    <div style="width: 15%;float: left;">
+      <h3 style="margin-left: 1cm;">Doctor</h3>
+    </div>
+    <div style="width: 15%;float: left;">
+      <h3 style="margin-left: 1cm;">Place</h3>
+    </div>
+    <div style="width: 20%;float: left; margin-left: 1cm;">
+      <h3>Description</h3>
+    </div> 
+  </div> 
   <%data.forEach((item)=>{%>
-  <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto;">
-  <br>
-    <div style="display:flex;">
-        <p>Temperature: <%=item['temperature']%>,</p>
-        <p>Weight: <%=item['weight']%>,</p>
-        <p>Height: <%=item['height']%>,</p>
-        <p>Symptoms: <%=item['symptoms']%>,</p>
-        <p>Diagnosis: <%=item['diagnosis']%>,</p>
-        <p>Notes: <%=item['notes']%>,</p>
-        <p>Doctor: <%=item['doctor']%>,</p>
-        <p>Place: <%=item['place']%>,</p>
-        <p>Date: <%=item['date']%>,</p>
+    
+    <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto; box-shadow: black 3px 3px;">
+
+<div>
+  <div style="width: 13%;float: left; margin-left: 1.5cm;">
+    <br>
+    <p><%=item['date']%></p>
+  </div>
+  <div style="width: 15%;float: left;">
+    <br>
+    <p><%=item['doctor']%></p>
+  </div>
+  <div style="width: 15%;float: left;">
+    <br>
+    <p><%=item['place']%></p>
+  </div>
+  <div style="width: 8%;float: left;">
+            <p><p style="font-weight: bold;">Temperature</p><%=item['temperature']%></p>
+  </div>
+  <div style="width: 8%;float: left;">
+    <p><p style="font-weight: bold;">Weight</p><%=item['weight']%>,</p>
+  </div>
+  <div style="width: 8%;float: left;">
+    <p><p style="font-weight: bold;">Height</p><%=item['height']%>,</p>
+  </div>
+  <div style="width: 8%;float: left;">
+        <p><p style="font-weight: bold;">Symptoms</p> <%=item['symptoms']%>,</p>
+  </div>
+  <div style="width: 8%;float: left;">
+        <p><p style="font-weight: bold;">Diagnosis</p> <%=item['diagnosis']%>,</p>
+  </div>
+  <div style="width: 8%;float: left;">
+    <p><p style="font-weight: bold;">Notes</p> <%=item['notes']%>,</p>
+  </div>
+</div>
     </div>    
   </div>
   <br>
   <%})%>
+  
   <div id="myModal" class="modal">
 
     <!-- Modal content -->
@@ -125,6 +162,14 @@
       </div>
       <div class="modal-body">
         <form  method=POST action="#">
+
+          <label for="lname">Date:</label><br>
+          <input type="date"  ><br>
+          <label for="lname">Doctor:</label><br>
+          <input type="text" id="lname" name="lname" ><br>
+          <label for="lname">Place:</label><br>
+          <input type="text" id="lname" name="lname" ><br>
+
           <label for="lname">Temperature:</label><br>
           <input type="text" id="lname" name="lname" ><br>
           <label for="lname">Height:</label><br>
@@ -137,12 +182,9 @@
           <input type="text" id="lname" name="lname" ><br>
           <label for="lname">Notes:</label><br>
           <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Doctor:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Place:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Date:</label><br>
-          <input type="datetime-local"  ><br>
+          
+          
+          
           <input type="submit" value="Add">
   </form> 
       </div>
