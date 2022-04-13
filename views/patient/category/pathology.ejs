@@ -84,10 +84,11 @@
 <body>
   <%-include('../../partials/navbar')%>
 
-  <div style="height: 3cm; width: 100%; border-bottom: 1px solid black;">
+  <div style="height: 3cm; width: 70%; border-bottom: 1px  solid black; margin-left: 15%;">
+
       <div style="float: left; margin-left: 2cm;">
         <br>
-        <h2>Past Data</h2>
+        <h2>Patients Past Records</h2>
       </div>
       <div style="float: right;margin-right: 2cm;">
         <br>
@@ -96,16 +97,44 @@
   </div>
   <br>
   <br>
+  <div style="width: 75%;height: 1.3cm;margin-left: auto;margin-right: auto;">
+    <div style="width: 15%;float: left;">
+      <h3 style="margin-left: 1.5cm;">Date</h3>
+    </div>
+    <div style="width: 15%;float: left;">
+      <h3 >Doctor</h3>
+    </div>
+    <div style="width: 10%;float: left;">
+      <h3>Place</h3>
+    </div>
+    <div style="width: 40%;float: left; margin-left: 1cm;">
+      <h3>Description</h3>
+    </div> 
+  </div>
 
   <%data.forEach((item)=>{%>
-  <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto;">
-  <br>
+    <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto; box-shadow: black 3px 3px;">
     <div style="display: flex;" >
-        <p>Title: <%=item['title']%>,</p>
-        <p>Result: <%=item['result']%>,</p>
-        <p>Doctor: <%=item['doctor']%>,</p>
-        <p>Date: <%=item['date']%>,</p>
-        <p>Place: <%=item['place']%></p>
+      <div style="width: 11%;float: left; margin-left: 1.5cm;">
+        <br>
+        <p><%=item['date']%></p>
+      </div>
+      <div style="width: 14%;float: left;">
+        <br>
+        <p><%=item['doctor']%></p>
+      </div>
+      <div style="width: 15%;float: left;">
+        <br>
+        <p><%=item['place']%></p>
+      </div>
+      <div style="width: 15%;float: left;">
+        <p><p style="font-weight: bold;">Title</p><%=item['title']%></p>
+      </div>
+      <div style="width: 15%;float: left;">
+        <p><p style="font-weight: bold;">Result</p><%=item['result']%></p>
+      </div>
+        
+        
     </div>    
   </div>
   <br>

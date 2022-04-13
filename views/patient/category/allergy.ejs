@@ -84,10 +84,10 @@ body {font-family: Arial, Helvetica, sans-serif;}
 <body>
   <%-include('../../partials/navbar')%>
 
-  <div style="height: 3cm; width: 100%; border-bottom: 1px solid black;">
+  <div style="height: 3cm; width: 70%; border-bottom: 1px  solid black; margin-left: 15%;">
       <div style="float: left; margin-left: 2cm;">
         <br>
-        <h2>Past Data</h2>
+        <h2> Patients Past Records</h2>
       </div>
       <div style="float: right;margin-right: 2cm;">
         <br>
@@ -96,14 +96,23 @@ body {font-family: Arial, Helvetica, sans-serif;}
   </div>
   <br>
   <br>
-
+  <div style="width: 75%;height: 1.3cm;margin-left: auto;margin-right: auto;">
+    <div style="width: 20%;float: left;">
+      <h3 style="margin-left: 2cm;">Date</h3>
+    </div>
+    <div style="width: 20%;float: left;">
+      <h3>Description</h3>
+    </div> 
+  </div> 
   <%data.forEach((item)=>{%>
-  <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto;">
-  <br>
-    <div >
-        <p style="text-align:center;"><%=item['type']%></p>
-        <p style="text-align:center;"><%=item['date']%></p>
-    </div>    
+  <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto; box-shadow: black 3px 3px;">
+    <div style="width: 20%;float: left;">
+      <br>
+      <p  style="margin-left: 2cm; font-weight: bold;"><%=item['date']%></p>
+    </div> 
+    <div style="float:left;width: 80%;">
+      <p><p style="font-weight: bold;"> Allergy:</p><%=item['type']%></p>
+    </div>  
   </div>
   <br>
   <%})%>
@@ -117,11 +126,22 @@ body {font-family: Arial, Helvetica, sans-serif;}
       </div>
       <div class="modal-body">
         <form method="post" action="#">
-    <label for="lname">Type:</label><br>
-    <input type="text" id="lname" name="lname" ><br>
-    <label for="lname">Date:</label><br>
-    <input type="datetime-local" ><br>
-    <input type="submit" value="Add">
+          <div style="float: left;width: 30%;">
+            <div>
+              <label for="lname">Date:</label><br>
+            <input type="date" ><br>
+            </div>
+            <br>
+            <div>
+            <input type="submit" value="Add">
+            </div>
+          </div>
+          <div style="float: left;width: 30%;">
+            <label for="lname">Allergy Name:</label><br>
+            <input type="text"><br>
+          </div>
+          <br>
+          <br>
   </form> 
       </div>
     </div>

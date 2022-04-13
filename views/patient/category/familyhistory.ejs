@@ -84,10 +84,10 @@
 <body>
   <%-include('../../partials/navbar')%>
 
-  <div style="height: 3cm; width: 100%; border-bottom: 1px solid black;">
+  <div style="height: 3cm; width: 70%; border-bottom: 1px  solid black; margin-left: 15%;">
       <div style="float: left; margin-left: 2cm;">
         <br>
-        <h2>Past Data</h2>
+        <h2>Patients Past Records</h2>
       </div>
       <div style="float: right;margin-right: 2cm;">
         <br>
@@ -96,13 +96,25 @@
   </div>
   <br>
   <br>
+  <div style="width: 75%;height: 1.3cm;margin-left: auto;margin-right: auto;">
+    <div style="width: 20%;float: left;">
+      <h3 style="margin-left: 1cm;">Member Name</h3>
+    </div>
+    <div style="width: 20%;float: left;">
+      <h3>Description</h3>
+    </div> 
+  </div> 
 
   <%data.forEach((item)=>{%>
-  <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto;">
+    <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto; box-shadow: black 3px 3px;">
   <br>
     <div style="display: flex;">
-        <p>Member Name:<%=item['name']%>,</p>
-        <p>Description: <%=item['description']%></p>
+      <div style="width: 20%;float: left;">
+        <p  style="margin-left: 2cm;"><%=item['name']%></p>
+      </div>
+      <div style="float:left;width: 80%;">
+        <p><%=item['description']%></p>
+      </div>
     </div>    
   </div>
   <br>
