@@ -36,6 +36,24 @@ async function getCategoryData(category,documentId){
     }
 }
 
+async function getSubCollections(documentId){
+    try {
+        let data=[];
+        let ref=await db.collection("Patient").doc(documentId);    
+        let collections=await ref.listCollections();
+        if(collections.length==0){
+            return data;
+        }
+        collections.forEach((element)=>{
+            data.push(element._queryOptions.collectionId);
+        });
+        return data;
+    } catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
 // here we need patient user id also for the same to delete the media of the data.
 async function deleteAnyPatientRecord(patientdocumentId,recordId,category,media,userid){
     try {
@@ -178,4 +196,4 @@ async function uploadProfileImage(media,userId){
 
 
 
-module.exports={uploadMediaAndDownLoadURL,getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};
+module.exports={getSubCollections,uploadMediaAndDownLoadURL,getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};
