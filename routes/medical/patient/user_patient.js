@@ -1,7 +1,7 @@
 const express=require('express');
 const patientRouter=express();
 const {getDocsId,getUserInfo, updateUserData, addUser, createNewUser, getStatsAndIncreement, authMiddleware}=require("../../../Queryfunctions/medical/general");
-const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval, uploadMediaAndDownLoadURL, getSubCollections}=require('../../../Queryfunctions/medical/patient/user_patient');
+const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval, getSubCollections}=require('../../../Queryfunctions/medical/patient/user_patient');
 const {db}=require('../../../Queryfunctions/db');
 
 // mobile apis
@@ -113,7 +113,7 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
     }
   })
 
-  patientRouter.get("/categorystats",authMiddleware,async(req,res)=>{
+  patientRouter.get("/categorystats",async(req,res)=>{
     let documentid=req.query.documentid;
     let collections=await getSubCollections(documentid);
     res.send(collections);
