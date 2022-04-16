@@ -71,7 +71,7 @@ async function getSubCollections(documentId){
             if(r){
                 result.push({
                     field:element,
-                    index:index
+                    index:index+
                 });
             }
           });
