@@ -39,6 +39,24 @@ async function getCategoryData(category,documentId){
 async function getSubCollections(documentId){
     try {
         let data=[];
+        var originaldata= [
+            "About",
+            "Allergy",
+            "Blood Glucose",
+            "Blood Pressure",
+            "Examination",
+            "Family History",
+            "Labtest",
+            "Medical Visit",
+            "Notes",
+            "Pathology",
+            "Prescription",
+            "Radiology",
+            "Surgery",
+            "Vaccine",
+            "Appointments"
+          ];
+          var result=[];
         let ref=await db.collection("Patient").doc(documentId);    
         let collections=await ref.listCollections();
         if(collections.length==0){
@@ -47,7 +65,17 @@ async function getSubCollections(documentId){
         collections.forEach((element)=>{
             data.push(element._queryOptions.collectionId);
         });
-        return data;
+        
+        originaldata.forEach((element,index)=>{
+            var r=data.find(e=>e===element.replace(/\s/g, '').toLowerCase());
+            if(r){
+                result.push({
+                    field:element,
+                    index:index
+                });
+            }
+          });
+        return result;
     } catch (error) {
         console.log(error);
         return 0;
