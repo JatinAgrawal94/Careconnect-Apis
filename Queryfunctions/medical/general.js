@@ -56,7 +56,7 @@ async function getUserProfile(email,collection){
 async function getStatsAndIncreement(role){
     try {
         var numbers=[];
-        const ref=db.collection('stats');
+        const ref=await db.collection('stats');
         var value;
         let snapshot=await ref.get();
         snapshot.docs.forEach((item)=>{

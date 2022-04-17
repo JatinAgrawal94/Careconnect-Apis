@@ -4,7 +4,6 @@ const express = require("express");
 const cors = require('cors');
 const app = express();
 require('ejs');
-const {authMiddleware}=require('./Queryfunctions/medical/general');
 const cookieParser=require('cookie-parser');
 const adminRouter=require('./routes/medical/admin/user_admin');
 const doctorRouter=require('./routes/medical/doctor/user_doctor');
@@ -29,7 +28,7 @@ app.use(express.static('public'));
 
 app.get('/',(req,res)=>{
   res.redirect('/login');
-})
+});
 
 app.get("/about", (req, res) => {
   res.render('about');
@@ -58,6 +57,7 @@ app.get('/callback',(req,res)=>{
 //   console.log(response);
 //   res.send("OK")
 // })
+
 app.use('/zoom',zoomRouter);
 app.use('/calender',calendarRouter);
 app.use('/payment',paymentRouter);
