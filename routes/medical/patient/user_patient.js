@@ -50,7 +50,7 @@ patientRouter.get('/getdocsid',authMiddleware,async(req,res)=>{
 
 patientRouter.post('/add',authMiddleware,async(req,res)=>{
   // add feature to upload profile image of user to storage and save its link in database.
-  try {
+  try{
     let collection=req.body.collection;
     let data=JSON.parse(req.body.data);
     await addUser(collection,data);
@@ -63,7 +63,7 @@ patientRouter.post('/add',authMiddleware,async(req,res)=>{
 // route to update patient data
 patientRouter.post('/update',authMiddleware,async(req,res)=>{
   // add feature to update profile photo of the user.
-  try {
+  try{
     let documentid=req.body.documentid;
     let collection=req.body.collection;
     let data=JSON.parse(req.body.data);
