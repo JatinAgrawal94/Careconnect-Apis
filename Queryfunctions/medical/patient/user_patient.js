@@ -1,7 +1,7 @@
 const { getDownloadURL } = require('firebase/storage');
 const {db}=require('../../db.js');
 const {storage,ref,deleteObject,uploadBytes}=require('../../dbl');
-
+const {google} = require('googleapis');
 // add documentid to the all patient data.
 async function getPatientData(){
     try {
@@ -15,7 +15,6 @@ async function getPatientData(){
         });
         return data;
     } catch (error) {
-        console.log(error);
         return 0;
     }
 }
@@ -30,6 +29,14 @@ async function getCategoryData(category,documentId){
             temp['documentid']=item.id;
             data.push(temp);
         })
+        if(category.toLowerCase()=='pathology'){
+            var list=await getPathologyList();
+            return {'data':data,'fields':list};
+        }
+        if(category.toLowerCase()=='radiology'){
+            var list=await getRadiologyList();
+            return {'data':data,'fields':list};
+        }
         return data;
     } catch (error) {
         return null;
@@ -77,7 +84,6 @@ async function getSubCollections(documentId){
           });
         return result;
     } catch (error) {
-        console.log(error);
         return 0;
     }
 }
@@ -92,8 +98,52 @@ async function deleteAnyPatientRecord(patientdocumentId,recordId,category,media,
         }
         return 1;
     } catch (error) {
-        console.log(error);
         return 0;
+    }
+}
+
+
+async function getPathologyList(){
+    try {
+        var data=[];
+        const sheets=google.sheets({
+            version:'v4',
+            auth:process.env.SHEETS_API_KEY  
+            });
+        const res=await sheets.spreadsheets.get({
+            ranges:["Pathology_Test_Names!C2:C52"],
+            includeGridData:true,
+            spreadsheetId:"1v0MuJjL4JC6HgPRvTouZbQ76Tb_yef4lBIncSB1QA7E"
+        });
+        var response=res.data.sheets;
+        response[0].data[0].rowData.forEach((element)=>{
+            data.push(element.values[0].formattedValue);
+        });
+        return data;
+    } catch (error) {
+        return [];
+    }
+}
+
+async function getRadiologyList(){
+    try {
+        var data=[];
+        const sheets=google.sheets({
+            version:'v4',
+            auth:process.env.SHEETS_API_KEY  
+            });
+        const res=await sheets.spreadsheets.get({
+            ranges:["Radiology_Test_Names!A2:A12"],
+            includeGridData:true,
+            spreadsheetId:"1v0MuJjL4JC6HgPRvTouZbQ76Tb_yef4lBIncSB1QA7E"
+        });
+        var response=res.data.sheets;
+        response[0].data[0].rowData.forEach((element)=>{
+            data.push(element.values[0].formattedValue);
+        });
+        return data; 
+    } catch (error) {
+        return [];
     }
 }
 
@@ -109,11 +159,13 @@ async function updateApproval(documentId,recordId,category,value){
         await ref.doc(recordId).update({approved:newValue});
         return 1;
     } catch (error) {
-        // console.log(error);
         return 0;
     }
 }
 
+module.exports={getSubCollections,getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};
+
+/*
 // function to upload record media and receive its url.
 async function uploadMediaAndDownLoadURL(media,userId,category){
     try {
@@ -153,7 +205,6 @@ async function getMediaURL(media,category,userId){
             'videos':[],
             'files':[]
         };
-
         for(let i=0;i<images.length;i++){
             let storageRef=ref(storage,`Patient/${userId}/${category}/images/${images[i]['name']}`);
             let url=await getDownloadURL(storageRef);
@@ -207,9 +258,6 @@ async function deleteMedia(media,category,patientUserId){
         return 0;
     }
 }
-// Terminal Problems Output Debug Console
-// Go Live Redmi Note 5 Pro (android-arm64)
-// Prettier
 
 async function uploadProfileImage(media,userId){
     try {
@@ -222,6 +270,4 @@ async function uploadProfileImage(media,userId){
     }
 }
 
-
-
-module.exports={getSubCollections,uploadMediaAndDownLoadURL,getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};
+*/
