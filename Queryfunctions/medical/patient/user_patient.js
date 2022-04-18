@@ -28,7 +28,7 @@ async function getCategoryData(category,documentId){
             let temp=item.data();
             temp['documentid']=item.id;
             data.push(temp);
-        })
+        });
         if(category.toLowerCase()=='pathology'){
             var list=await getPathologyList();
             return {'data':data,'fields':list};
@@ -53,7 +53,6 @@ async function getSubCollections(documentId){
             "Blood Pressure",
             "Examination",
             "Family History",
-            "Labtest",
             "Medical Visit",
             "Notes",
             "Pathology",

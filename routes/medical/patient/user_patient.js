@@ -145,7 +145,7 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
   });
   
   // route to get all documents of a patient's particular medical field eg:allergy,medicalvisits etc.
-  patientRouter.get('/:category/all',authMiddleware,async(req,res)=>{
+  patientRouter.get('/:category/all',async(req,res)=>{
     try{
       let category=req.params.category;
       let documentid=req.query.documentid;
