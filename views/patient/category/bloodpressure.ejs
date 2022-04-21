@@ -105,6 +105,7 @@
     <div style="width: 20%;float: left;margin-left: 2cm;">
       <h3>Description</h3>
     </div> 
+    <p style="text-align: center;color:white;background-color: green;width: fit-content;margin: auto;border-radius: 10%;" id="result"></p>
   </div> 
     <%data.forEach((item)=>{%>
   <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto; box-shadow: black 3px 3px;">
@@ -119,7 +120,7 @@
       <p><p style="font-weight: bold;">Systolic</p> <%=item['systolic']%></p>
     </div>
     <div style="float:left;width: 10%;">
-      <p><p style="font-weight: bold;">Pulse rate</p><%=item['pulse']%></p>
+      <p><p style="font-weight: bold;">Pulse</p><%=item['pulse']%></p>
     </div>
 <br>    
 </div>
@@ -134,32 +135,35 @@
         <h2 style="margin-right: 22cm;">Add a record</h2>
       </div>
       <div class="modal-body">
-        <form  method=POST action="#">
           <div style="float: left;width: 20%;">
             <div>
-              <label for="lname">Date and Time:</label><br>
-            <input type="datetime-local" ><br>
+            <label for="date">Date</label><br>
+            <input type="date" id="date"><br>
             </div>
             <br>
             <div>
-            <input type="submit" value="Add">
+              <label for="time">Time</label><br>
+              <input type="time" id="time"><br>
+              </div>
+              <br>
+            <div>
+            <button type="submit" id="submitbutton">Add</button>
             </div>
           </div>
           <div style="float: left;width: 25%;">
-            <label for="lname">Blood pressure measurements(Systolic):</label><br>
-            <input type="text" style="margin-left: 1cm;"><br>
+            <label for="systolic">Systolic</label><br>
+            <input type="number" style="margin-left: 1cm;" id="systolic" required><br>
           </div>
           <div style="float: left;width: 25%;">
-            <label for="lname">Blood pressure measurements(Diastolic):</label><br>
-            <input type="text" style="margin-left: 1cm;"><br>
+            <label for="diastolic">Diastolic</label><br>
+            <input type="number" style="margin-left: 1cm;" id="diastolic" required><br>
           </div>
           <div style="float: left;width: 20%;">
-            <label for="lname">Pulse:</label><br>
-            <input type="text"><br>
+            <label for="diastolic">Pulse</label><br>
+            <input type="number" id="pulse" required><br>
           </div>
           <br>
           <br>
-  </form> 
       </div>
     </div>
   
@@ -190,6 +194,91 @@
     if (event.target == modal) {
       modal.style.display = "none";
     }
+
+    document.addEventListener('keydown',(event)=>{
+    if(event.keyCode==27){
+      event.preventDefault();
+      document.getElementsByClassName("close")[0].click();
+    }
+  })
+  
+  const submit=document.getElementById("submitbutton");
+  submit.addEventListener("click",()=>{
+    submitForm();
+  });
+
+  function submitForm(){
+      var date=document.getElementById("date");
+      var time=document.getElementById("time");
+      var systolic=document.getElementById('systolic');
+      var diastolic=document.getElementById('diastolic');
+      var pulse=document.getElementById('pulse');
+
+      let pathname=window.location.pathname;
+      pathname=pathname.split('/');
+      let documentId=pathname[pathname.length-2];
+      const useremail=window.location.pathname.split('/')[2];
+      
+      let temp=date.value.split('-').reverse();
+      temp[1]=parseInt(temp[1]).toString();
+      temp=temp.join('/');
+       
+      let timeArray=time.value.split(':');
+      let meridian;
+      if (timeArray[0]<=12){
+        meridian='AM';
+      }else{
+        meridian='PM';
+        timeArray[0]-=12;
+      }
+      timeArray=timeArray.join(':');
+      if(date.value=="" || time.value=="" || systolic.value=="" || diastolic.value==""|| pulse.value==""){
+        return;
+      }
+      if(parseInt(systolic.value)==NaN && parseInt(diastolic.value)==NaN &&parseInt(pulse.value)==NaN){
+        return;
+      }
+
+      let data={
+        'data':JSON.stringify({
+          'date':temp,
+          'time':timeArray+" "+meridian,
+          'systolic':systolic.value.toString(),
+          'diastolic':diastolic.value.toString(),
+          'pulse':pulse.value.toString(),
+          'approved':"true"
+        }),
+        'patientId':documentId
+      }
+      
+      try {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/patient/bloodpressure/create", true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.setRequestHeader('useremail',useremail);
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            modal.style.display = "none";
+              document.getElementById('result').innerHTML="Data Added";
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML=""
+              }, 3000);
+        }
+        if(this.status==400){
+          modal.style.display = "none";
+          document.getElementById('result').innerHTML="Error";
+          document.getElementById('result').style="background-color=red"
+        }
+        let item=document.getElementsByTagName('input');
+        for(let i=0;i<item.length;i++){
+          item[i].value="";
+        }
+      };
+      xhttp.send(JSON.stringify(data));
+    } catch (error) {
+    }
+   }
+    
   }
   </script>
 </body>

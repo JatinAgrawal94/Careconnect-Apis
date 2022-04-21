@@ -189,17 +189,20 @@ var modal = document.getElementById("myModal");
     submitForm();
   });
   
-  
-
   function submitForm(){
       var name=document.getElementById("name");
+      var date=document.getElementById('date');
       let pathname=window.location.pathname.split('/');
       let documentId=pathname[pathname.length-2];
       const useremail=window.location.pathname.split('/')[2];
-      var date=document.getElementById('date');
       let temp=date.value.split('-').reverse();
       temp[1]=parseInt(temp[1]).toString();
       temp=temp.join('/');
+
+      if(date.value=="" ||type.value==""){
+        return;
+      }
+
       let data={
         'data':JSON.stringify({
           'type':name.value,
@@ -216,8 +219,6 @@ var modal = document.getElementById("myModal");
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             modal.style.display = "none";
-            name.value="";
-            date.value="";
               document.getElementById('result').innerHTML="Data Added";
               setTimeout(() => {
                   document.getElementById('result').innerHTML=""
@@ -225,16 +226,16 @@ var modal = document.getElementById("myModal");
         }
         if(this.status==400){
           modal.style.display = "none";
-          name.value="";
-          date.value="";
           document.getElementById('result').innerHTML="Error";
           document.getElementById('result').style="background-color=red"
         }
+        let item=document.getElementsByTagName('input');
+        for(let i=0;i<item.length;i++){
+          item[i].value="";
+        }
       };
       xhttp.send(JSON.stringify(data));
-    } catch (error) {
-    }
-     
+    } catch (error) {}
    }
   </script>
 </body>

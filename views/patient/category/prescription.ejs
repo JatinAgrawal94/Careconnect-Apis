@@ -93,6 +93,8 @@
         <br>
         <button style="font-size: 28px;width: 3cm;" id="myBtn">+ New</button>
       </div>
+      <p style="text-align: center;color:white;background-color: green;width: fit-content;margin: auto;border-radius: 10%;" id="result"></p>
+
   </div>
   <br>
   <br>
@@ -106,9 +108,16 @@
     <div style="width: 10%;float: left;">
       <h3>Place</h3>
     </div>
-    <div style="width: 40%;float: left; margin-left: 1cm;">
-      <h3>Description</h3>
+    <div style="width: 10%;float: left; margin-left: 1cm;">
+      <h3>Drug</h3>
     </div> 
+    <div style="width: 10%;float: left; margin-left: 1cm;">
+      <h3>Dose</h3>
+    </div> 
+    <div style="width: 10%;float: left; margin-left: 1cm;">
+      <h3>Timings</h3>
+    </div> 
+    
   </div>
   <%data.forEach((item)=>{%>
     <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto; box-shadow: black 3px 3px;">
@@ -126,20 +135,15 @@
         <p><%=item['place']%></p>
       </div>
       <div style="width: 10%;float: left;">
-        <p><p style="font-weight: bold;">Drug</p><%=item['drug']%></p>
+        <p><%=item['drug']%></p>
       </div>
       <div style="width: 10%;float: left;">
-        <p><p style="font-weight: bold;">Dose</p><%=item['dose']%></p>
+        <p><%=item['dose']%></p>
 
       </div>
       <div style="width: 17%;float: left;">
-        <p><p style="font-weight: bold; margin-left: 1cm;">Timings</p> <%=item['timings']%></p>
+        <p></p> <%=item['timings']%></p>
       </div>
-      <div style="width: 15%;float: left;">
-        <p><p style="font-weight: bold;">Result</p> <%=item['result']%></p>
-      </div>
-        
-        
     </div>    
   </div>
   <br>
@@ -154,21 +158,31 @@
         <h2 style="margin-right: 22cm;">Add a record</h2>
       </div>
       <div class="modal-body">
-        <form  method=POST action="#">
-          <label for="lname">Drug:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Dose:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Result:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Doctor:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">place:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Date and Time:</label><br>
-          <input type="datetime-local"  ><br>
-          <input type="submit" value="Add">
-  </form> 
+          <label for="drug">Drug</label><br>
+          <input type="text" id="drug" name="drug"><br>
+
+          <label for="dose">Dose</label><br>
+          <input type="text" id="dose" name="dose" ><br>
+
+          <label for="doctor">Doctor</label><br>
+          <input type="text" id="doctor" name="doctor" ><br>
+
+          <label for="place">Place</label><br>
+          <input type="text" id="place" name="place" ><br>
+
+          <label for="date">Date</label><br>
+          <input type="date" id="date"><br>
+        
+          <label for="time1">Breakfast</label><br>
+          <input type="time" id="time1"><br>
+          
+          <label for="time2">Lunch</label><br>
+          <input type="time" id="time2"><br>
+
+          <label for="time3">Dinner</label><br>
+          <input type="time" id="time3"><br>
+
+          <button type="submit" id="submitbutton">Add</button>
       </div>
     </div>
   
@@ -200,6 +214,9 @@
       modal.style.display = "none";
     }
   }
+
+  
+
   </script>
 </body>
 </html>

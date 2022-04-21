@@ -94,6 +94,8 @@
         <br>
         <button style="font-size: 28px;width: 3cm;" id="myBtn">+ New</button>
       </div>
+      <p style="text-align: center;color:white;background-color: green;width: fit-content;margin: auto;border-radius: 10%;" id="result"></p>
+
   </div>
   <br>
   <br>
@@ -132,19 +134,19 @@
             <p><p style="font-weight: bold;">Temperature</p><%=item['temperature']%></p>
   </div>
   <div style="width: 8%;float: left;">
-    <p><p style="font-weight: bold;">Weight</p><%=item['weight']%>,</p>
+    <p><p style="font-weight: bold;">Weight</p><%=item['weight']%></p>
   </div>
   <div style="width: 8%;float: left;">
-    <p><p style="font-weight: bold;">Height</p><%=item['height']%>,</p>
+    <p><p style="font-weight: bold;">Height</p><%=item['height']%></p>
   </div>
   <div style="width: 8%;float: left;">
-        <p><p style="font-weight: bold;">Symptoms</p> <%=item['symptoms']%>,</p>
+        <p><p style="font-weight: bold;">Symptoms</p> <%=item['symptoms']%></p>
   </div>
   <div style="width: 8%;float: left;">
-        <p><p style="font-weight: bold;">Diagnosis</p> <%=item['diagnosis']%>,</p>
+        <p><p style="font-weight: bold;">Diagnosis</p> <%=item['diagnosis']%></p>
   </div>
   <div style="width: 8%;float: left;">
-    <p><p style="font-weight: bold;">Notes</p> <%=item['notes']%>,</p>
+    <p><p style="font-weight: bold;">Notes</p> <%=item['notes']%></p>
   </div>
 </div>
     </div>    
@@ -153,7 +155,6 @@
   <%})%>
   
   <div id="myModal" class="modal">
-
     <!-- Modal content -->
     <div class="modal-content">
       <div class="modal-header">
@@ -161,37 +162,37 @@
         <h2 style="margin-right: 22cm;">Add a record</h2>
       </div>
       <div class="modal-body">
-        <form  method=POST action="#">
+          <label for="date">Date</label><br>
+          <input type="date" id="date"><br>
 
-          <label for="lname">Date:</label><br>
-          <input type="date"  ><br>
-          <label for="lname">Doctor:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Place:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
+          <label for="doctor">Doctor</label><br>
+          <input type="text" id="doctor"><br>
 
-          <label for="lname">Temperature:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Height:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Weight:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Symptoms:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Diagnosis:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Notes:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
+          <label for="place">Place</label><br>
+          <input type="text"  name="place" id="place"><br>
+
+          <label for="temperature">Temperature(C)</label><br>
+          <input type="number" name="temperature" id="temperature"><br>
+
+          <label for="height">Height(cm)</label><br>
+          <input type="number" name="height" id="height"><br>
+
+          <label for="weight">Weight(Kg)</label><br>
+          <input type="number" name="weight" id="weight"><br>
+
+          <label for="symptoms">Symptoms</label><br>
+          <input type="text" name="symptoms" id="symptoms"><br>
+
+          <label for="dianosis">Diagnosis</label><br>
+          <input type="text" name="diagnosis" id="diagnosis"><br>
+
+          <label for="notes">Notes</label><br>
+          <input type="text" name="notes" id="notes"><br>
           
-          
-          
-          <input type="submit" value="Add">
-  </form> 
+          <button type="submit" id="submitbutton">Submit</button>
       </div>
     </div>
-  
   </div>
-  
   <script>
   // Get the modal
   var modal = document.getElementById("myModal");
@@ -218,6 +219,93 @@
       modal.style.display = "none";
     }
   }
+
+  
+  document.addEventListener('keydown',(event)=>{
+    if(event.keyCode==27){
+      event.preventDefault();
+      document.getElementsByClassName("close")[0].click();
+    }
+  })
+  
+  const submit=document.getElementById("submitbutton");
+  submit.addEventListener("click",()=>{
+    submitForm();
+  });
+
+  function submitForm(){
+      var date=document.getElementById('date');
+      var doctor=document.getElementById('doctor');
+      var place=document.getElementById('place');
+      var temperature=document.getElementById('temperature');
+      var height=document.getElementById('height');
+      var weight=document.getElementById('weight'); 
+      var symptoms=document.getElementById('symptoms');
+      var diagnosis=document.getElementById('diagnosis');
+      var notes=document.getElementById("notes");
+
+      let pathname=window.location.pathname.split('/');
+      let documentId=pathname[pathname.length-2];
+      const useremail=window.location.pathname.split('/')[2];
+      let temp=date.value.split('-').reverse();
+      temp[1]=parseInt(temp[1]).toString();
+      temp=temp.join('/');
+      
+      if(
+        date.value=="" || doctor.value=="" || temperature.value=='' || height.value=='' || weight.value=='' || symptoms.value=='' || diagnosis.value=='' || notes.value==''
+      ){
+        return;
+      }
+      if(parseInt(height.value)==NaN ||parseInt(temperature.value)==NaN || parseInt(weight.value)==NaN){
+        return;
+      }
+
+      let data={
+        'data':JSON.stringify({
+          'date':temp,
+          'doctor':doctor.value,
+          'place':place.value,
+          'temperature':temperature.value.toString(),
+          'height':height.value.toString(),
+          'weight':weight.value.toString(),
+          'symptoms':symptoms.value,
+          'diagnosis':diagnosis.value,
+          'notes':notes.value,
+          'media':{
+              'files':[],
+              'images':[],
+              'videos':[],
+            },
+          'approved':"true"
+        }),
+        'patientId':documentId
+      }
+      try {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/patient/examination/create", true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.setRequestHeader('useremail',useremail);
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            modal.style.display = "none";          
+              document.getElementById('result').innerHTML="Data Added";
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML=""
+              }, 3000);
+        }
+        if(this.status==400){
+          modal.style.display = "none";
+          document.getElementById('result').innerHTML="Error";
+          document.getElementById('result').style="background-color=red"
+        }
+        let item=document.getElementsByTagName('input');
+        for(let i=0;i<item.length;i++){
+          item[i].value="";
+        }
+      };
+      xhttp.send(JSON.stringify(data));
+    } catch (error) {}
+   }
   </script>
 </body>
 </html>

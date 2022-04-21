@@ -128,7 +128,7 @@ doctorRouter.get('/:email/patientlist/:documentid',authMiddleware,async(req,res)
     let url =`doctor/${req.params.email}/patientlist/${req.params.documentid}`;
     const menuList=[
       'About','Allergy','BloodGlucose','BloodPressure',
-      'Examination','Family History','Labtest','Medical Visit','Notes','Pathology','Prescription','Radiology','Surgery','Vaccine','Appointment'
+      'Examination','Family History','Medical Visit','Notes','Pathology','Prescription','Radiology','Surgery','Vaccine','Appointment'
     ];  
     res.render('patient/menu',{isAdmin:undefined,menuList:menuList,url:url,patientemail:patientemail});
 });

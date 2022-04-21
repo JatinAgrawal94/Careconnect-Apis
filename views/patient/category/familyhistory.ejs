@@ -103,6 +103,7 @@
     <div style="width: 20%;float: left;">
       <h3>Description</h3>
     </div> 
+    <p style="text-align: center;color:white;background-color: green;width: fit-content;margin: auto;border-radius: 10%;" id="result"></p>
   </div> 
 
   <%data.forEach((item)=>{%>
@@ -121,7 +122,6 @@
   <%})%>
 
   <div id="myModal" class="modal">
-
     <!-- Modal content -->
     <div class="modal-content">
       <div class="modal-header">
@@ -129,18 +129,17 @@
         <h2 style="margin-right: 22cm;">Add a record</h2>
       </div>
       <div class="modal-body">
-        <form  method=POST action="#">
-    <label for="lname">Member Name:</label><br>
-    <input type="text" id="lname" name="lname" ><br>
-    <label for="lname">Descripion:</label><br>
-    <input type="text" id="lname" name="lname" ><br>
-    <input type="submit" value="Add">
-  </form> 
+    <label for="name">Member Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+
+    <label for="description">Descripion:</label><br>
+    <input type="text" id="description" name="description"><br>
+
+    <button type="submit" id="submitbutton">Add</button>
+    
       </div>
     </div>
-  
   </div>
-  
   <script>
   // Get the modal
   var modal = document.getElementById("myModal");
@@ -167,6 +166,65 @@
       modal.style.display = "none";
     }
   }
+  document.addEventListener('keydown',(event)=>{
+    if(event.keyCode==27){
+      event.preventDefault();
+      document.getElementsByClassName("close")[0].click();
+    }
+  })
+  
+  const submit=document.getElementById("submitbutton");
+  submit.addEventListener("click",()=>{
+    submitForm();
+  });
+  
+  
+
+  function submitForm(){
+      var name=document.getElementById("name");
+      var description=document.getElementById("description");
+      let pathname=window.location.pathname.split('/');
+      let documentId=pathname[pathname.length-2];
+      const useremail=window.location.pathname.split('/')[2];
+  
+      if(name.value=="" ||description.value==""){
+        return;
+      }
+
+      let data={
+        'data':JSON.stringify({
+          'name':name.value,
+          'description':description.value,
+          'approved':"true"
+        }),
+        'patientId':documentId
+      }
+      try {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/patient/familyhistory/create", true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.setRequestHeader('useremail',useremail);
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            modal.style.display = "none";
+              document.getElementById('result').innerHTML="Data Added";
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML=""
+              }, 3000);
+        }
+        if(this.status==400){
+          modal.style.display = "none";
+          document.getElementById('result').innerHTML="Error";
+          document.getElementById('result').style="background-color=red"
+        }
+        let item=document.getElementsByTagName('input');
+        for(let i=0;i<item.length;i++){
+          item[i].value="";
+        }
+      };
+      xhttp.send(JSON.stringify(data));
+    } catch (error) {}
+   }
   </script>
 </body>
 </html>

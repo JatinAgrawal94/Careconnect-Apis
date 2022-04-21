@@ -94,6 +94,7 @@
         <br>
         <button style="font-size: 28px;width: 3cm;" id="myBtn">+ New</button>
       </div>
+      <p style="text-align: center;color:white;background-color: green;width: fit-content;margin: auto;border-radius: 10%;" id="result"></p>
   </div>
   <br>
   <br>
@@ -108,7 +109,7 @@
       <h3>Place</h3>
     </div>
     <div style="width: 40%;float: left; margin-left: 1cm;">
-      <h3>Description</h3>
+      <h3>Visit-Type</h3>
     </div> 
   </div>
 
@@ -128,7 +129,7 @@
         <p><%=item['place']%></p>
       </div>
       <div style="width: 15%;float: left;">
-        <p><p style="font-weight: bold;">Visit Type</p><%=item['visittype']%></p>
+        <p><%=item['visitType']%></p>
       </div>
     </div>    
   </div>
@@ -143,15 +144,26 @@
         <h2 style="margin-right: 22cm;">Add a record</h2>
       </div>
       <div class="modal-body">
-        <form  method=POST action="#">
-          <label for="lname">Doctor:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">place:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Date and Time:</label><br>
-          <input type="datetime-local"  ><br>
-          <input type="submit" value="Add">
-  </form> 
+          <label for="doctor">Doctor</label><br>
+          <input type="text" id="doctor" name="doctor"><br>
+
+          <label for="place">Place</label><br>
+          <input type="text" id="place" name="place"><br>
+
+          <label for="date">Date</label><br>
+          <input type="date" id="date"><br>
+
+          <label for="time">Time</label><br>
+          <input type="time" id="time"><br>
+
+          <label for="visitType">Visit-Type</label><br>
+          <select name="visitType" id="visitType" required>
+            <option value="New">Fasting</option>
+            <option value="Follow Up">Follow Up</option>
+          </select>
+
+          <button type="submit" id="submitbutton">Add</button>
+
       </div>
     </div>
   
@@ -183,6 +195,88 @@
       modal.style.display = "none";
     }
   }
+
+  document.addEventListener('keydown',(event)=>{
+    if(event.keyCode==27){
+      event.preventDefault();
+      document.getElementsByClassName("close")[0].click();
+    }
+  })
+  
+  const submit=document.getElementById("submitbutton");
+  submit.addEventListener("click",()=>{
+    submitForm();
+  });
+
+  function submitForm(){
+      var date=document.getElementById("date");
+      var time=document.getElementById("time");
+      var doctor=document.getElementById('doctor');
+      var place=document.getElementById('place');
+      var visitType=document.getElementById('visitType');
+
+      let pathname=window.location.pathname;
+      pathname=pathname.split('/');
+      let documentId=pathname[pathname.length-2];
+      const useremail=window.location.pathname.split('/')[2];
+      
+      let temp=date.value.split('-').reverse();
+      temp[1]=parseInt(temp[1]).toString();
+      temp=temp.join('/');
+       
+      let timeArray=time.value.split(':');
+      let meridian;
+      if (timeArray[0]<=12){
+        meridian='AM';
+      }else{
+        meridian='PM';
+        timeArray[0]-=12;
+      }
+      timeArray=timeArray.join(':');
+      if(date.value=="" || time.value=="" || doctor.value=="" || place.value==''){
+        return;
+      }
+      
+      let data={
+        'data':JSON.stringify({
+          'date':temp,
+          'time':timeArray+" "+meridian,
+          'doctor':doctor.value,
+          'place':place.value,
+          'visitType':visitType.value,
+          'approved':"true"
+        }),
+        'patientId':documentId
+      }
+      
+      try {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/patient/medicalvisit/create", true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.setRequestHeader('useremail',useremail);
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            modal.style.display = "none";
+              document.getElementById('result').innerHTML="Data Added";
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML=""
+              }, 3000);
+        }
+        if(this.status==400){
+          modal.style.display = "none";
+          document.getElementById('result').innerHTML="Error";
+          document.getElementById('result').style="background-color=red"
+        }
+        visitType.selectedIndex=0;
+        let item=document.getElementsByTagName('input');
+        for(let i=0;i<item.length;i++){
+          item[i].value="";
+        }
+      };
+      xhttp.send(JSON.stringify(data));
+    } catch (error) {
+    }
+   }
   </script>
 </body>
 </html>

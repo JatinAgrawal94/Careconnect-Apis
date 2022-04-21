@@ -94,24 +94,25 @@
         <br>
         <button style="font-size: 28px;width: 3cm;" id="myBtn">+ New</button>
       </div>
+      <p style="text-align: center;color:white;background-color: green;width: fit-content;margin: auto;border-radius: 10%;" id="result"></p>
   </div>
   <br>
   <br>
 
-  <%data.forEach((item)=>{%>
-    <div style="width: 75%;height: 1.3cm;margin-left: auto;margin-right: auto;">
-      <div style="width: 20%;float: left;">
-        <h3 style="margin-left: 2cm;">Title</h3>
-      </div>
-      <div style="width: 20%;float: left;">
-        <h3>Description</h3>
-      </div> 
+  <div style="width: 75%;height: 1.3cm;margin-left: auto;margin-right: auto;">
+    <div style="width: 20%;float: left;">
+      <h3 style="margin-left: 2cm;">Title</h3>
+    </div>
+    <div style="width: 20%;float: left;">
+      <h3>Description</h3>
     </div> 
+  </div> 
+  
+  <%data.forEach((item)=>{%>
     <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto; box-shadow: black 3px 3px;">
-  <div>
+      <div>
     <br>
       <div style="width: 17%; margin-left: 2cm; float: left;">
-     
         <p ><%=item['title']%></p>
       </div> 
       <div style="float:left;width: 70%;">
@@ -122,7 +123,6 @@
   <%})%>
 
   <div id="myModal" class="modal">
-
     <!-- Modal content -->
     <div class="modal-content">
       <div class="modal-header">
@@ -130,28 +130,22 @@
         <h2 style="margin-right: 22cm;">Add a record</h2>
       </div>
       <div class="modal-body">
-        <form method="POST" action="#">
+      
           <div>
             <div style="float: left; width: 20%;">
-              <label for="lname">Title:</label><br>
-              <input type="text" id="lname" name="lname" >
+              <label for="title">Title:</label><br>
+              <input type="text" id="title" name="name" >
               <br>
               <br>
-              <input type="submit" value="Add">
+              <button type="submit"id="submitbutton">Add</button>
             </div>
             <div style="float: left; width: 20%;">
-              <label for="lname">Description:</label><br>
-              <input type="textarea" id="lname" name="lname" ><br>
+              <label for="description">Description:</label><br>
+              <input type="textarea" id="description" name="description"><br>
             </div>
           </div>
-    
-    
-    
-    <!-- test -->
-  </form> 
       </div>
     </div>
-  
   </div>
   
   <script>
@@ -180,6 +174,76 @@
       modal.style.display = "none";
     }
   }
+
+  
+  document.addEventListener('keydown',(event)=>{
+    if(event.keyCode==27){
+      event.preventDefault();
+      document.getElementsByClassName("close")[0].click();
+    }
+  })
+  
+  const submit=document.getElementById("submitbutton");
+  submit.addEventListener("click",()=>{
+    submitForm();
+  });
+  
+  
+
+  function submitForm(){
+      var title=document.getElementById("title");
+      var description=document.getElementById('description');
+      let pathname=window.location.pathname.split('/');
+      let documentId=pathname[pathname.length-2];
+      const useremail=window.location.pathname.split('/')[2];
+
+      if(title.value=="" ||description.value==""){
+        return;
+      }
+
+      let data={
+        'data':JSON.stringify({
+          'title':title.value,
+          'description':description.value,
+          'media':{
+              'files':[],
+              'images':[],
+              'videos':[],
+            },
+          'approved':"true"
+        }),
+        'patientId':documentId
+      }
+      try {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/patient/notes/create", true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.setRequestHeader('useremail',useremail);
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            modal.style.display = "none";
+              document.getElementById('result').innerHTML="Data Added";
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML=""
+              }, 3000);
+        }
+        if(this.status==400){
+          modal.style.display = "none";
+          document.getElementById('result').innerHTML="Error";
+          document.getElementById('result').style="background-color=red"
+        }
+        let item=document.getElementsByTagName('input');
+        for(let i=0;i<item.length;i++){
+          item[i].value="";
+        }
+        let item1=document.getElementsByTagName('textarea');
+        for(let i=0;i<item1.length;i++){
+          item1[i].value="";
+        }
+      };
+      xhttp.send(JSON.stringify(data));
+    } catch (error) {}
+   }
   </script>
 </body>
 </html>

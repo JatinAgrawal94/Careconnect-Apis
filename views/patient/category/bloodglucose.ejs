@@ -158,7 +158,7 @@
             </select>
           </div>
           <div style="float: left;width: 30%;">
-            <label for="lname">Type</label><br>
+            <label for="diet">Type</label><br>
             <select name="diet" id="diet" required>
               <option value="Fasting">Fasting</option>
               <option value="Postpradial">Postpradial</option>
@@ -238,11 +238,14 @@
       if(date.value=="" || time.value=="" || glucose.value==""){
         return;
       }
+      if(parseInt(glucose.value)==NaN){
+        return;
+      }
       let data={
         'data':JSON.stringify({
           'date':temp,
           'time':timeArray+" "+meridian,
-          'result':glucose.value,
+          'result':glucose.value.toString(),
           'resultUnit':resultUnit.value,
           'type':diet.value,
           'approved':"true"
@@ -258,7 +261,6 @@
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
             modal.style.display = "none";
-            
               document.getElementById('result').innerHTML="Data Added";
               setTimeout(() => {
                   document.getElementById('result').innerHTML=""
@@ -266,9 +268,12 @@
         }
         if(this.status==400){
           modal.style.display = "none";
-          
           document.getElementById('result').innerHTML="Error";
           document.getElementById('result').style="background-color=red"
+        }
+        let item=document.getElementsByTagName('input');
+        for(let i=0;i<item.length;i++){
+          item[i].value="";
         }
       };
       xhttp.send(JSON.stringify(data));
