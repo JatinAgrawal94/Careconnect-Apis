@@ -1,7 +1,7 @@
 const {db,getAuth}=require('../db');
 const {storage,ref,getDownloadURL,uploadBytes}=require('../dbl');
 // const {updateToken}=require('./auth');
-
+const url=require('url');
 
 async function getDocsId(email,collection){
     try{
@@ -167,7 +167,11 @@ function checkDeviceType(request){
         type=1;
     }else{
          email=request.params.email;
+         if(email==undefined){
+             email=request.headers.useremail;
+         }
          token=request.cookies[email].token;
+         
     }
     if (!token) {
         if(type){

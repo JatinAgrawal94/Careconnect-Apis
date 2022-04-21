@@ -104,7 +104,7 @@ doctorRouter.get('/:email/patientlist',authMiddleware,async(req,res)=>{
     res.render('doctor/patients_list',{patient:patients,email:email});
 });
 
-doctorRouter.get('/:email/patientlist/:documentid/:category',async(req,res)=>{
+doctorRouter.get('/:email/patientlist/:documentid/:category',authMiddleware,async(req,res)=>{
   let category=req.params.category.toLowerCase().replace(/\s/g, '');
   let patientemail=req.query.patientemail;
   let url=`doctor/${req.params.email}/patientlist/${req.params.documentid}/${req.params.category}?patientemail=${patientemail}`;

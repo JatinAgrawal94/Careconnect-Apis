@@ -113,7 +113,7 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
     }
   })
 
-  patientRouter.get("/categorystats",async(req,res)=>{
+  patientRouter.get("/categorystats",authMiddleware,async(req,res)=>{
     let documentid=req.query.documentid;
     let collections=await getSubCollections(documentid);
     res.send(collections);
@@ -121,7 +121,7 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
 
   // get stats 
   // only for patients.
-  patientRouter.get('/getstats',async(req,res)=>{
+  patientRouter.get('/getstats',authMiddleware,async(req,res)=>{
     try {
       var data=await getStatsAndIncreement('patient');
       res.send({userid:data});
@@ -140,12 +140,13 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
       const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
       res.send({'status':"1"});
     } catch (error) {
+      console.log(error);
       res.send({'status':'0'});
     }
   });
   
   // route to get all documents of a patient's particular medical field eg:allergy,medicalvisits etc.
-  patientRouter.get('/:category/all',async(req,res)=>{
+  patientRouter.get('/:category/all',authMiddleware,async(req,res)=>{
     try{
       let category=req.params.category;
       let documentid=req.query.documentid;
