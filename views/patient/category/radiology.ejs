@@ -88,12 +88,14 @@
 
       <div style="float: left; margin-left: 2cm;">
         <br>
-        <h2>Patients Past Records</h2>
+        <h2>Radiology Records</h2>
       </div>
       <div style="float: right;margin-right: 2cm;">
         <br>
         <button style="font-size: 28px;width: 3cm;" id="myBtn">+ New</button>
       </div>
+      <p style="text-align: center;color:white;background-color: green;width: fit-content;margin: auto;border-radius: 10%;" id="result"></p>
+
   </div>
   <br>
   <br>
@@ -102,13 +104,16 @@
       <h3 style="margin-left: 1.5cm;">Date</h3>
     </div>
     <div style="width: 15%;float: left;">
-      <h3 >Doctor</h3>
+      <h3 >Title</h3>
     </div>
     <div style="width: 10%;float: left;">
-      <h3>Place</h3>
+      <h3>Result</h3>
     </div>
-    <div style="width: 40%;float: left; margin-left: 1cm;">
-      <h3>Description</h3>
+    <div style="width:10%;float: left; margin-left: 1cm;">
+      <h3>Doctor</h3>
+    </div> 
+    <div style="width:10%;float: left; margin-left: 1cm;">
+      <h3>Place</h3>
     </div> 
   </div>
 
@@ -119,6 +124,12 @@
         <br>
         <p><%=item['date']%></p>
       </div>
+      <div style="width: 15%;float: left;">
+        <p><%=item['title']%></p>
+      </div>
+      <div style="width: 15%;float: left;">
+        <p><%=item['result']%></p>
+      </div>
       <div style="width: 14%;float: left;">
         <br>
         <p><%=item['doctor']%></p>
@@ -127,14 +138,6 @@
         <br>
         <p><%=item['place']%></p>
       </div>
-      <div style="width: 15%;float: left;">
-        <p><p style="font-weight: bold;">Title</p><%=item['title']%></p>
-      </div>
-      <div style="width: 15%;float: left;">
-        <p><p style="font-weight: bold;">Result</p><%=item['result']%></p>
-      </div>
-        
-        
     </div>    
   </div>
   <br>
@@ -149,19 +152,27 @@
         <h2 style="margin-right: 22cm;">Add a record</h2>
       </div>
       <div class="modal-body">
-        <form  method=POST action="#">
-          <label for="lname">Title:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Result:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Doctor:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">place:</label><br>
-          <input type="text" id="lname" name="lname" ><br>
-          <label for="lname">Date and Time:</label><br>
-          <input type="datetime-local"  ><br>
-          <input type="submit" value="Add">
-  </form> 
+          <label for="title">Title</label><br>
+          <select name="title" id="title" required>
+            <%data.fields.forEach((item)=>{%>
+            <option value="<%=item%>"><%=item%></option>
+            <%})%>
+          </select>
+          <br>
+
+          <label for="testresult">Result</label><br>
+          <input type="text" id="testresult" name="testresult" ><br>
+          
+          <label for="doctor">Doctor</label><br>
+          <input type="text" id="doctor" name="doctor" ><br>
+          
+          <label for="place">Place</label><br>
+          <input type="text" id="place" name="place" ><br>
+          
+          <label for="date">Date</label><br>
+          <input type="date" id="date"><br>
+          
+          <button type="submit" id="submitbutton">Add</button> 
       </div>
     </div>
   
@@ -193,6 +204,84 @@
       modal.style.display = "none";
     }
   }
+
+  document.addEventListener('keydown',(event)=>{
+    if(event.keyCode==27){
+      event.preventDefault();
+      document.getElementsByClassName("close")[0].click();
+    }
+  })
+  
+  const submit=document.getElementById("submitbutton");
+  submit.addEventListener("click",()=>{
+    submitForm();
+  });
+
+  function submitForm(){
+      var date=document.getElementById("date");
+      var title=document.getElementById('title');
+      var testresult=document.getElementById('testresult');
+      var place=document.getElementById('place');
+      var doctor=document.getElementById('doctor');
+
+      let pathname=window.location.pathname;
+      pathname=pathname.split('/');
+      let documentId=pathname[pathname.length-2];
+      const useremail=window.location.pathname.split('/')[2];
+      
+      let temp=date.value.split('-').reverse();
+      temp[1]=parseInt(temp[1]).toString();
+      temp=temp.join('/');
+       
+      if(date.value==""  || title.value=="" || place.value=='' || testresult.value=='' || doctor.value==''){
+        return;
+      }
+
+      let data={
+        'data':JSON.stringify({
+          'date':temp,
+          'title':title.value,
+          'result':testresult.value,
+          'place':place.value,
+          'doctor':doctor.value,
+          'media':{
+              'files':[],
+              'images':[],
+              'videos':[],
+            },
+          'approved':"true"
+        }),
+        'patientId':documentId
+      }
+
+      try {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/patient/radiology/create", true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.setRequestHeader('useremail',useremail);
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            modal.style.display = "none";
+              document.getElementById('result').innerHTML="Data Added";
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML=""
+              }, 3000);
+        }
+        if(this.status==400){
+          modal.style.display = "none";
+          document.getElementById('result').innerHTML="Error";
+          document.getElementById('result').style="background-color=red"
+        }
+        title.selectedIndex=0;
+        let item=document.getElementsByTagName('input');
+        for(let i=0;i<item.length;i++){
+          item[i].value="";
+        }
+      };
+      xhttp.send(JSON.stringify(data));
+    } catch (error) {
+    }
+   }
   </script>
 </body>
 </html>

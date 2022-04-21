@@ -89,7 +89,7 @@
 
       <div style="float: left; margin-left: 2cm;">
         <br>
-        <h2>Past Data</h2>
+        <h2>BloodPressure Data</h2>
       </div>
       <div style="float: right;margin-right: 2cm;">
         <br>
@@ -99,28 +99,41 @@
   <br>
   <br>
   <div style="width: 75%;height: 1.3cm;margin-left: auto;margin-right: auto;">
-    <div style="width: 20%;float: left;">
-      <h3 style="margin-left: 2cm;">Date and Time</h3>
+    <div style="width: 10%;float: left;">
+      <h3 style="margin-left: 2cm;">Date</h3>
     </div>
-    <div style="width: 20%;float: left;margin-left: 2cm;">
-      <h3>Description</h3>
+    <div style="width: 10%;float: left;">
+      <h3 style="margin-left: 2cm;">Time</h3>
+    </div>
+    <div style="width: 10%;float: left;margin-left: 2cm;">
+      <h3>Systolic</h3>
     </div> 
+    <div style="width: 10%;float: left;margin-left: 2cm;">
+      <h3>Diastolic</h3>
+    </div> 
+    <div style="width: 10%;float: left;margin-left: 2cm;">
+      <h3>Pulse</h3>
+    </div> 
+
     <p style="text-align: center;color:white;background-color: green;width: fit-content;margin: auto;border-radius: 10%;" id="result"></p>
   </div> 
     <%data.forEach((item)=>{%>
-  <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto; box-shadow: black 3px 3px;">
-    <div style="width: 20%;float: left;">
+  <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto; box-shadow: black 3px 3px;margin-bottom: 1cm;">
+    <div style="width: 10%;float: left;">
       <br>
-      <p  style="margin-left: 2.5cm;"><%=item['date']%>,<%=item['time']%></p>
+      <p  style="margin-left: 2.5cm;"><%=item['date']%></p>
+    </div> 
+    <div style="width: 10%;float: left;">
+      <p  style="margin-left: 2.5cm;"><%=item['time']%></p>
     </div> 
     <div style="width: 10%;float: left;margin-left: 2cm;">
-      <p><p style="font-weight: bold;">Diastolic</p> <%=item['diastolic']%></p>
+      <p><%=item['diastolic']%></p>
     </div>
-    <div style="width: 10%;float: left;">
-      <p><p style="font-weight: bold;">Systolic</p> <%=item['systolic']%></p>
+    <div style="width: 10%;float: left;margin-left: 2cm;">
+      <p><%=item['systolic']%></p>
     </div>
-    <div style="float:left;width: 10%;">
-      <p><p style="font-weight: bold;">Pulse</p><%=item['pulse']%></p>
+    <div style="float:left;width: 10%;margin-left: 2cm;">
+      <p><%=item['pulse']%></p>
     </div>
 <br>    
 </div>

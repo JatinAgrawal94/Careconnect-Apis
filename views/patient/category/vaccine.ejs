@@ -87,32 +87,40 @@
   <div style="height: 3cm; width: 70%; border-bottom: 1px  solid black; margin-left: 15%;">
       <div style="float: left; margin-left: 2cm;">
         <br>
-        <h2>Patients Past Records</h2>
+        <h2>Vaccine Records</h2>
       </div>
       <div style="float: right;margin-right: 2cm;">
         <br>
         <button style="font-size: 28px;width: 3cm;" id="myBtn">+ New</button>
       </div>
+      <p style="text-align: center;color:white;background-color: green;width: fit-content;margin: auto;border-radius: 10%;" id="result"></p>
+
   </div>
   <br>
   <br>
-  <%data.forEach((item)=>{%>
-    <div style="width: 75%;height: 1.3cm;margin-left: auto;margin-right: auto;">
-      <div style="width: 20%;float: left;">
-        <h3 style="margin-left: 2cm;">Date</h3>
-      </div>
-      <div style="width: 20%;float: left;">
-        <h3>Description</h3>
-      </div> 
+  <div style="width: 75%;height: 1.3cm;margin-left: auto;margin-right: auto;">
+    <div style="width: 20%;float: left;">
+      <h3 style="margin-left: 2cm;">Date</h3>
+    </div>
+    <div style="width: 20%;float: left;">
+      <h3>Vaccine</h3>
+    </div>
+    <div style="width: 20%;float: left;">
+      <h3>Place</h3>
     </div> 
+  </div> 
+  <%data.forEach((item)=>{%>
     <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto; box-shadow: black 3px 3px;">
       <div style="width: 20%;float: left;">
     <br>
-        <p  style="margin-left: 2cm; font-weight: bold;"><%=item['date']%></p>
+        <p  style="margin-left: 2cm;"><%=item['date']%></p>
       </div> 
-      <div style="float:left;width: 80%;">
-        <p><p style="font-weight: bold;"> Vaccine:</p></p><%=item['vaccine']%></p>
+      <div style="float:left;width: 20%;">
+        <p></p><%=item['vaccine']%></p>
       </div>  
+      <div style="float:left;width: 20%;">
+        <p></p><%=item['place']%></p>
+      </div> 
     </div>
     <br>
     <%})%>
@@ -126,24 +134,26 @@
         <h2 style="margin-right: 22cm;">Add a record</h2>
       </div>
       <div class="modal-body">
-        <form method="post" action="#">
           <div style="float: left;width: 30%;">
             <div>
-              <label for="lname">Date:</label><br>
-            <input type="date" ><br>
+              <label for="date">Date</label><br>
+            <input type="date" id="date"><br>
             </div>
             <br>
             <div>
-            <input type="submit" value="Add">
+            <button type="submit" id="submitbutton">Add</button>
             </div>
           </div>
           <div style="float: left;width: 30%;">
-            <label for="lname">Vaccine Name:</label><br>
-            <input type="text"><br>
+            <label for="vaccine">Vaccine Name</label><br>
+            <input type="text" id="vaccine"><br>
+          </div>
+          <div style="float: left;width: 30%;">
+            <label for="place">Place</label><br>
+            <input type="text" id="place"><br>
           </div>
           <br>
           <br>
-  </form> 
       </div>
     </div>
   
@@ -175,6 +185,69 @@
       modal.style.display = "none";
     }
   }
+
+  document.addEventListener('keydown',(event)=>{
+    if(event.keyCode==27){
+      event.preventDefault();
+      document.getElementsByClassName("close")[0].click();
+    }
+  })
+  
+  const submit=document.getElementById("submitbutton");
+  submit.addEventListener("click",()=>{
+    submitForm();
+  });
+  
+  function submitForm(){
+      var vaccine=document.getElementById("vaccine");
+      var place=document.getElementById("place");
+      var date=document.getElementById('date');
+      let pathname=window.location.pathname.split('/');
+      let documentId=pathname[pathname.length-2];
+      const useremail=window.location.pathname.split('/')[2];
+      let temp=date.value.split('-').reverse();
+      temp[1]=parseInt(temp[1]).toString();
+      temp=temp.join('/');
+
+      if(date.value=="" ||vaccine.value=="" ||place.value==""){
+        return;
+      }
+
+      let data={
+        'data':JSON.stringify({
+          'vaccine':vaccine.value,
+          'place':place.value,
+          'date':temp,
+          'approved':"true"
+        }),
+        'patientId':documentId
+      }
+      try {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/patient/vaccine/create", true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.setRequestHeader('useremail',useremail);
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            modal.style.display = "none";
+              document.getElementById('result').innerHTML="Data Added";
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML=""
+              }, 3000);
+        }
+        if(this.status==400){
+          modal.style.display = "none";
+          document.getElementById('result').innerHTML="Error";
+          document.getElementById('result').style="background-color=red"
+        }
+        let item=document.getElementsByTagName('input');
+        for(let i=0;i<item.length;i++){
+          item[i].value="";
+        }
+      };
+      xhttp.send(JSON.stringify(data));
+    } catch (error) {}
+   }
   </script>
 </body>
 </html>

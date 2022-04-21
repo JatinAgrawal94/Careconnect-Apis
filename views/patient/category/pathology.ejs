@@ -102,18 +102,18 @@
     <div style="width: 15%;float: left;">
       <h3 style="margin-left: 1.5cm;">Date</h3>
     </div>
-    <div style="width: 15%;float: left;">
-      <h3 >Doctor</h3>
-    </div>
-    <div style="width: 10%;float: left;">
-      <h3>Place</h3>
-    </div>
     <div style="width: 10%;float: left; margin-left: 1cm;">
       <h3>Title</h3>
     </div> 
     <div style="width: 10%;float: left; margin-left: 1cm;">
       <h3>Result</h3>
     </div> 
+    <div style="width: 15%;float: left;">
+      <h3 >Doctor</h3>
+    </div>
+    <div style="width: 10%;float: left;">
+      <h3>Place</h3>
+    </div>
   </div>
 
   <%data.data.forEach((item)=>{%>
@@ -123,6 +123,12 @@
         <br>
         <p><%=item['date']%></p>
       </div>
+      <div style="width: 15%;float: left;">
+        <p><%=item['title']%></p>
+      </div>
+      <div style="width: 15%;float: left;">
+        <p><%=item['result']%></p>
+      </div>
       <div style="width: 14%;float: left;">
         <br>
         <p><%=item['doctor']%></p>
@@ -130,12 +136,6 @@
       <div style="width: 15%;float: left;">
         <br>
         <p><%=item['place']%></p>
-      </div>
-      <div style="width: 15%;float: left;">
-        <p><%=item['title']%></p>
-      </div>
-      <div style="width: 15%;float: left;">
-        <p><%=item['result']%></p>
       </div>
         
         
@@ -234,7 +234,7 @@
       temp[1]=parseInt(temp[1]).toString();
       temp=temp.join('/');
        
-      if(date.value==""  || title.value=="" || place.value=='' || result.value=='' || doctor.value==''){
+      if(date.value==""  || title.value=="" || place.value=='' ||testresult.value=='' || doctor.value==''){
         return;
       }
 

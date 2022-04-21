@@ -87,7 +87,7 @@
   <div style="height: 3cm; width: 70%; border-bottom: 1px  solid black; margin-left: 15%;">
       <div style="float: left; margin-left: 2cm;">
         <br>
-        <h2>Past Data</h2>
+        <h2>BloodGlucose Records</h2>
       </div>
       <div style="float: right;margin-right: 2cm;">
         <br>
@@ -104,7 +104,10 @@
         <h3 style="margin-left: 2cm;">Date and Time</h3>
       </div>
       <div style="width: 20%;float: left;margin-left: 2cm;">
-        <h3>Description</h3> 
+        <h3>Reading</h3> 
+      </div> 
+      <div style="width: 20%;float: left;margin-left: 2cm;">
+        <h3>Diet</h3> 
       </div> 
     </div> 
   <%data.forEach((item)=>{%>
@@ -114,10 +117,10 @@
         <p  style="margin-left: 2.5cm;"><%=item['date']%>,<%=item['time']%></p>
       </div> 
       <div style="width: 20%;float: left;margin-left: 2cm;">
-        <p><p style="font-weight: bold;">Blood Glucose Level:</p> <%=item['result']%><%=item['resultUnit']%></p>
+        <p><%=item['result']%><%=item['resultUnit']%></p>
       </div>
       <div style="float:left;width: 40%;">
-        <p><p style="font-weight: bold;">Diet:</p><%=item['type']%></p>
+        <p><%=item['type']%></p>
       </div>
   <br>    
   </div>
