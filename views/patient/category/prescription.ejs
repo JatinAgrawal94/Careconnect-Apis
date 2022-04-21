@@ -216,7 +216,127 @@
   }
 
   
+  document.addEventListener('keydown',(event)=>{
+    if(event.keyCode==27){
+      event.preventDefault();
+      document.getElementsByClassName("close")[0].click();
+    }
+  })
+  
+  const submit=document.getElementById("submitbutton");
+  submit.addEventListener("click",()=>{
+    submitForm();
+  });
 
+  function submitForm(){
+      var date=document.getElementById("date");
+      var time1=document.getElementById("time1");
+      var time2=document.getElementById("time2");
+      var time3=document.getElementById("time3");
+      var doctor=document.getElementById('doctor');
+      var place=document.getElementById('place');
+      var drug=document.getElementById('drug');
+      var dose=document.getElementById('dose');
+
+      let pathname=window.location.pathname;
+      pathname=pathname.split('/');
+      let documentId=pathname[pathname.length-2];
+      const useremail=window.location.pathname.split('/')[2];
+      
+      let temp=date.value.split('-').reverse();
+      temp[1]=parseInt(temp[1]).toString();
+      temp=temp.join('/');
+       
+      let meridian;
+      let timing=[];
+      if(time1.value!=''){
+
+        let timeArray=time1.value.split(':');
+        if (timeArray[0]<=12){
+        meridian='AM';
+        timeArray[0]=parseInt(timeArray[0]).toString();
+      }else{
+        meridian='PM';
+        timeArray[0]-=12;
+      }
+      timing.push(timeArray.join(':')+" "+meridian);
+      timeArray=[];
+    }
+      
+      if(time2.value!==""){
+        // time2
+        timeArray=time2.value.split(':');
+      if (timeArray[0]<=12){
+        meridian='AM';
+        timeArray[0]=parseInt(timeArray[0]).toString();
+      }else{
+        meridian='PM';
+        timeArray[0]-=12;
+      }
+      timing.push(timeArray.join(':')+" "+meridian);
+      timeArray=[];
+    }
+
+    if(time2.value!==""){
+      // time3
+      timeArray=time3.value.split(':');
+      if (timeArray[0]<=12){
+        meridian='AM';
+        timeArray[0]=parseInt(timeArray[0]).toString();
+      }else{
+        meridian='PM';
+        timeArray[0]-=12;
+      }
+      timing.push(timeArray.join(':')+" "+meridian); 
+    }
+      if(date.value=="" || doctor.value=="" || place.value==""){
+        return;
+      }
+     
+      let data={
+        'data':JSON.stringify({
+          'date':temp,
+          'timings':timing,
+          'doctor':doctor.value,
+          'place':place.value,
+          'drug':drug.value,
+          'dose':dose.value,
+          'media':{
+              'files':[],
+              'images':[],
+              'videos':[],
+            },
+          'approved':"true"
+        }),
+        'patientId':documentId
+      }
+
+      try {
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/patient/prescription/create", true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.setRequestHeader('useremail',useremail);
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            modal.style.display = "none";
+              document.getElementById('result').innerHTML="Data Added";
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML=""
+              }, 3000);
+        }
+        if(this.status==400){
+          modal.style.display = "none";
+          document.getElementById('result').innerHTML="Error";
+          document.getElementById('result').style="background-color=red"
+        }
+        let item=document.getElementsByTagName('input');
+        for(let i=0;i<item.length;i++){
+          item[i].value="";
+        }
+      };
+      xhttp.send(JSON.stringify(data));
+    } catch (error) {}
+   }
   </script>
 </body>
 </html>
