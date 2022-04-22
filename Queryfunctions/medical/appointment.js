@@ -149,6 +149,22 @@ async function updatepaymentamount(doctoremail,patientemail,date,paymentamount,p
     }
 }
 
+async function updatepaymentstatus(doctoremail,patientemail,date,paymentamount){
+    try {
+        var documentId;
+        const ref=db.collection('Appointment');
+       var snapshot=await ref.where('doctoremail','==',doctoremail).where('patientemail','==',patientemail).where('date','==',date).where('paymentamount','==',paymentamount).get();
+        snapshot.docs.forEach((item)=>{
+            documentId=item.id;
+        });
+        await ref.doc(documentId).update({'paymentstatus':'Paid'});
+        return 1;
+
+    } catch (error) {
+        return 0;
+    }
+}
+
 async function deleteAppointment(documentId){
     try {
         const ref=db.collection('Appointment');
@@ -159,4 +175,4 @@ async function deleteAppointment(documentId){
     }
 }
 
-module.exports={deleteAppointment,updatepaymentamount,getDoctorAppointments,getPatientAppointments,getAppointmentDates,getPatientsBasedOnDateAndDoctor,createAppointment,checkUserValidity};
+module.exports={updatepaymentstatus,deleteAppointment,updatepaymentamount,getDoctorAppointments,getPatientAppointments,getAppointmentDates,getPatientsBasedOnDateAndDoctor,createAppointment,checkUserValidity};

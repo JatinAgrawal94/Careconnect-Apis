@@ -1,7 +1,7 @@
 const express=require('express');
 const { auth } = require('google-auth-library');
 const appointmentRouter= express();
-const {getDoctorAppointments,getPatientAppointments,getAppointmentDates, getPatientsBasedOnDateAndDoctor, createAppointment, checkUserValidity, updatepaymentamount, deleteAppointment}=require('../../Queryfunctions/medical/appointment');
+const {getDoctorAppointments,getPatientAppointments,getAppointmentDates, getPatientsBasedOnDateAndDoctor, createAppointment, checkUserValidity, updatepaymentamount, deleteAppointment, updatepaymentstatus}=require('../../Queryfunctions/medical/appointment');
 const { authMiddleware } = require('../../Queryfunctions/medical/general');
 
 // get all doctor appointments
@@ -105,12 +105,25 @@ appointmentRouter.post('/updatepaymentamount',authMiddleware,async(req,res)=>{
         const paymentstatus=req.body.paymentstatus;
         const date=req.body.date;
         await updatepaymentamount(doctoremail,patientemail,date,paymentamount,paymentstatus);
-        res.send("Success");
+        res.send({'status':'1'});
     }catch(error){
-        res.send("Failed");
+        res.send({'status':'0'});
     }
 });
 
+appointmentRouter.post('/updatepaymentstatus',authMiddleware,async(req,res)=>{
+    try {
+        const doctoremail=req.body.doctoremail;
+        const patientemail=req.body.patientemail;
+        const paymentamount=req.body.paymentamount;
+        const date=req.body.date;
+        let result=await updatepaymentstatus(doctoremail,patientemail,date,paymentamount);
+        res.send({'status':result});
+         
+    } catch (error) {
+        res.send({'status':'0'});
+    }
+});
 // delete appointments
 appointmentRouter.post('/delete',authMiddleware,async(req,res)=>{
     try {

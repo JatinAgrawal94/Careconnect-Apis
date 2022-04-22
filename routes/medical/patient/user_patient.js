@@ -113,9 +113,10 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
     }
   })
 
-  patientRouter.get("/categorystats",authMiddleware,async(req,res)=>{
+  patientRouter.get("/categorystats",async(req,res)=>{
     let documentid=req.query.documentid;
     let collections=await getSubCollections(documentid);
+    console.log(collections);
     res.send(collections);
   });
 
