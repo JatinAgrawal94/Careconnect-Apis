@@ -1,8 +1,6 @@
 const {db,getAuth}=require('../db');
 const {storage,ref,getDownloadURL,uploadBytes}=require('../dbl');
 // const {updateToken}=require('./auth');
-const url=require('url');
-
 async function getDocsId(email,collection){
     try{
         var data=[];
@@ -209,5 +207,6 @@ async function uploadProfileImage(media,userId){
         return 0;
     }
 }
+
 
 module.exports={checkDeviceType,authMiddleware,getDocsId,getUserInfo,getUserProfile,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};

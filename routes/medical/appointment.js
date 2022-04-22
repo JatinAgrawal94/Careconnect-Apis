@@ -119,7 +119,6 @@ appointmentRouter.post('/updatepaymentstatus',authMiddleware,async(req,res)=>{
         const date=req.body.date;
         let result=await updatepaymentstatus(doctoremail,patientemail,date,paymentamount);
         res.send({'status':result});
-         
     } catch (error) {
         res.send({'status':'0'});
     }
@@ -138,6 +137,7 @@ appointmentRouter.post('/delete',authMiddleware,async(req,res)=>{
         res.send("Failed");
     }
 });
+
 
 // take all appointment data giving doctoremail as input.
 // store dates in a set in order to get unique dates

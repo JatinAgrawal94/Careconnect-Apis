@@ -3,7 +3,7 @@ const patientRouter=express();
 const {getDocsId,getUserInfo, updateUserData, addUser, createNewUser, getStatsAndIncreement, authMiddleware}=require("../../../Queryfunctions/medical/general");
 const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval, getSubCollections}=require('../../../Queryfunctions/medical/patient/user_patient');
 const {db}=require('../../../Queryfunctions/db');
-
+const {bookTest, getBookedTests, cancelBookedTest}=require('../../../Queryfunctions/medical/booking');
 // mobile apis
 // get list of all patients
 patientRouter.get("/allpatient",authMiddleware,async(req,res)=>{
@@ -128,6 +128,37 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
       res.send({userid:data});
     } catch (error) {
       res.send({message:"error"});
+    }
+  });
+
+  patientRouter.get('/booktest/all',async(req,res)=>{
+    let patientemail=req.query.email;
+    if(patientemail==null || patientemail==""){
+      res.send({'message':'invalid email'});
+    }
+    let data=await getBookedTests(patientemail);
+    res.send(data);
+  })
+
+  patientRouter.post('/booktest/delete',authMiddleware,async(req,res)=>{
+    let body=req.body;
+    if(body.documentid==null){
+      res.send({message:'Provide all data fields'});
+    }else{
+      let result=await cancelBookedTest(body.documentid);
+      res.send({status:result});
+    }
+  });
+  
+  patientRouter.post('/booktest/:testtype/create',authMiddleware,async(req,res)=>{
+    let testtype=req.params.testtype;
+    let body=req.body;
+    if( body.time==null ||body.testname==null || body.date==null || body.patientname==null || body.patientemail==null || testtype==null){
+      res.send({message:'Provide all data fields'});
+    }else{
+      body.delete=0;
+      let result=await bookTest(body.testname,body.date,body.patientname,body.patientemail,testtype,body.time);
+      res.send({status:result});
     }
   });
 
