@@ -5,13 +5,18 @@ const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval, 
 const {db}=require('../../../Queryfunctions/db');
 const {bookTest, getBookedTests, cancelBookedTest}=require('../../../Queryfunctions/medical/booking');
 // mobile apis
+
 // get list of all patients
 patientRouter.get("/allpatient",authMiddleware,async(req,res)=>{
-  const data=await getPatientData();
-  if(data){
+  try {  
+    const data=await getPatientData();
+    if(data){
       res.send(data);
-  }else{
+    }else{
       res.status(404).send({status:'0'});
+    }
+  } catch (error) {
+    
   }
 });
 
@@ -32,7 +37,7 @@ patientRouter.get('/info',authMiddleware,async(req,res)=>{
 })
 
 // get patient document id
-patientRouter.get('/getdocsid',authMiddleware,async(req,res)=>{
+patientRouter.get('/getdocsid',async(req,res)=>{
   try {
     const email=req.query.email;
     const role=req.query.role;
@@ -76,21 +81,29 @@ patientRouter.post('/update',authMiddleware,async(req,res)=>{
 });
 
 patientRouter.put('/approval',authMiddleware,async(req,res)=>{
-  let result=await updateApproval(req.body.documentid,req.body.recordid,req.body.category,req.body.value);
-  res.send({status:result});
+  try {  
+    let result=await updateApproval(req.body.documentid,req.body.recordid,req.body.category,req.body.value);
+    res.send({status:result});
+  } catch (error) {
+    res.send({'message':'error'});
+  }
 });
 
 
 patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
-  let email=req.body.email;
-  let password=req.body.password;
-  let bool=await createNewUser(email,password);
-  if(bool.message == "User created"){
-      var userid=await getStatsAndIncreement('patient');
-      bool['userid']=userid;
-      res.send(bool);
-    }else{
-      res.send(bool);
+    try { 
+      let email=req.body.email;
+      let password=req.body.password;
+      let bool=await createNewUser(email,password);
+      if(bool.message == "User created"){
+        var userid=await getStatsAndIncreement('patient');
+        bool['userid']=userid;
+        res.send(bool);
+      }else{
+        res.send(bool);
+      }
+    } catch (error) {
+      res.send({'message':'Error'});
     }
   });
   
@@ -113,11 +126,14 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
     }
   })
 
-  patientRouter.get("/categorystats",async(req,res)=>{ 
-    let documentid=req.query.documentid;
-    let collections=await getSubCollections(documentid);
-    console.log(collections);
-    res.send(collections);
+  patientRouter.get("/categorystats",authMiddleware,async(req,res)=>{ 
+    try {
+      let documentid=req.query.documentid;
+      let collections=await getSubCollections(documentid);
+      res.send(collections);
+    } catch (error) {
+      res.send({'message':'error'});
+    }
   });
 
   // get stats 
@@ -132,33 +148,49 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
   });
 
   patientRouter.get('/booktest/all',async(req,res)=>{
-    let patientemail=req.query.email;
-    if(patientemail==null || patientemail==""){
-      res.send({'message':'invalid email'});
+    try { 
+      if(req.query.email==null || req.query.email=="" || req.query.email==undefined){
+        res.send({'message':'invalid email'});
+      }else{
+        let patientemail=req.query.email;
+        let data=await getBookedTests(patientemail);
+        res.send(data);
+      }
+    } catch (error) {
+      res.send({'message':'error'});
     }
-    let data=await getBookedTests(patientemail);
-    res.send(data);
   })
 
   patientRouter.post('/booktest/delete',authMiddleware,async(req,res)=>{
-    let body=req.body;
-    if(body.documentid==null){
-      res.send({message:'Provide all data fields'});
-    }else{
-      let result=await cancelBookedTest(body.documentid);
-      res.send({status:result});
+    try {
+      let body=req.body;
+      if(req.body==null){
+        res.send({'message':'body is absent'});
+      }
+      if(body.documentid==null){
+        res.send({message:'Provide all data fields'});
+      }else{
+        let result=await cancelBookedTest(body.documentid);
+        res.send({status:result});
+      }
+    } catch (error) {
+       res.send({'messsage':'error'});
     }
   });
   
   patientRouter.post('/booktest/:testtype/create',authMiddleware,async(req,res)=>{
-    let testtype=req.params.testtype;
-    let body=req.body;
-    if( body.time==null ||body.testname==null || body.date==null || body.patientname==null || body.patientemail==null || testtype==null){
-      res.send({message:'Provide all data fields'});
-    }else{
-      body.delete=0;
-      let result=await bookTest(body.testname,body.date,body.patientname,body.patientemail,testtype,body.time);
-      res.send({status:result});
+    try {  
+      let testtype=req.params.testtype;
+      let body=req.body;
+      if( body.time==null ||body.testname==null || body.date==null || body.patientname==null || body.patientemail==null || testtype==null){
+        res.send({message:'Provide all data fields'});
+      }else{
+        body.delete=0;
+        let result=await bookTest(body.testname,body.date,body.patientname,body.patientemail,testtype,body.time);
+        res.send({status:result});
+      }
+    } catch (error) {
+      res.send({'message':'error'});
     }
   });
 
@@ -172,7 +204,6 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
       const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
       res.send({'status':"1"});
     } catch (error) {
-      console.log(error);
       res.send({'status':'0'});
     }
   });
