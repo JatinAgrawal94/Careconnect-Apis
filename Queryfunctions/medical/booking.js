@@ -1,18 +1,24 @@
 const {db}=require('../db');
 
 
-async function bookTest(testname,date,patientname,patientemail,testtype,time){
+async function bookTest(testtype,data){
     try {
         let ref=await db.collection('Booking');
-        await ref.doc().set({
-            testname:testname,
-            date:date,
-            patientname:patientname,
-            patientemail:patientemail,
-            testtype:testtype,
-            time:time,
-            presence:'false'
-        });
+        await ref.doc().set(
+            {
+                ...data,
+                'testtype':testtype
+            }
+        //     {
+        //     testname:testname,
+        //     date:date,
+        //     patientname:patientname,
+        //     patientemail:patientemail,
+        //     testtype:testtype,
+        //     time:time,
+        //     presence:'false'
+        // }
+        );
         return 1;
     } catch (error) {
         return 0;

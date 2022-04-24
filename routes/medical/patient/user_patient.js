@@ -16,7 +16,7 @@ patientRouter.get("/allpatient",authMiddleware,async(req,res)=>{
       res.status(404).send({status:'0'});
     }
   } catch (error) {
-    
+    res.send({'message':'error'});
   }
 });
 
@@ -182,11 +182,11 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
     try {  
       let testtype=req.params.testtype;
       let body=req.body;
-      if( body.time==null ||body.testname==null || body.date==null || body.patientname==null || body.patientemail==null || testtype==null){
+      if(body.status==null || body.presence==null || body.time==null ||body.testname==null || body.date==null || body.patientname==null || body.patientemail==null || testtype==null){
         res.send({message:'Provide all data fields'});
       }else{
         body.delete=0;
-        let result=await bookTest(body.testname,body.date,body.patientname,body.patientemail,testtype,body.time);
+        let result=await bookTest(testtype,body);
         res.send({status:result});
       }
     } catch (error) {
