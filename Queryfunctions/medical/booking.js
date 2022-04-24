@@ -9,15 +9,6 @@ async function bookTest(testtype,data){
                 ...data,
                 'testtype':testtype
             }
-        //     {
-        //     testname:testname,
-        //     date:date,
-        //     patientname:patientname,
-        //     patientemail:patientemail,
-        //     testtype:testtype,
-        //     time:time,
-        //     presence:'false'
-        // }
         );
         return 1;
     } catch (error) {
@@ -25,6 +16,19 @@ async function bookTest(testtype,data){
     }
 }
 
+async function getAllBookedTests(){
+    try{
+        let data=[];
+        let ref=await db.collection("Booking");
+        let snapshot=await ref.get();
+        data=snapshot.data;
+        return data;
+    }catch(error){
+        return {status:'0'};
+    }
+}
+
+// tests for a specific patient
 async function getBookedTests(patientemail){
     try {
         var data=[];
@@ -52,4 +56,4 @@ async function cancelBookedTest(documentid){
 }
 
 
-module.exports={getBookedTests,bookTest,cancelBookedTest};
+module.exports={getBookedTests,bookTest,cancelBookedTest,getAllBookedTests};

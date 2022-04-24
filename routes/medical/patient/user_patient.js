@@ -3,7 +3,8 @@ const patientRouter=express();
 const {getDocsId,getUserInfo, updateUserData, addUser, createNewUser, getStatsAndIncreement, authMiddleware}=require("../../../Queryfunctions/medical/general");
 const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval, getSubCollections}=require('../../../Queryfunctions/medical/patient/user_patient');
 const {db}=require('../../../Queryfunctions/db');
-const {bookTest, getBookedTests, cancelBookedTest}=require('../../../Queryfunctions/medical/booking');
+const {bookTest, getBookedTests, cancelBookedTest, getAllBookedTests}=require('../../../Queryfunctions/medical/booking');
+const { auth } = require('firebase-admin');
 // mobile apis
 
 // get list of all patients
@@ -147,7 +148,17 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
     }
   });
 
-  patientRouter.get('/booktest/all',async(req,res)=>{
+  
+  patientRouter.get('/booktest/alldata',authMiddleware,async(req,res)=>{
+    try { 
+        let data=await getAllBookedTests();
+        res.send(data);
+    } catch (error) {
+      res.send({'message':'error'});
+    }
+  })
+
+  patientRouter.get('/booktest/all',authMiddleware,async(req,res)=>{
     try { 
       if(req.query.email==null || req.query.email=="" || req.query.email==undefined){
         res.send({'message':'invalid email'});
