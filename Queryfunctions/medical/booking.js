@@ -21,7 +21,9 @@ async function getAllBookedTests(){
         let data=[];
         let ref=await db.collection("Booking");
         let snapshot=await ref.get();
-        data=snapshot.data;
+        snapshot.docs.forEach((item)=>{
+            data.push(item.data());
+        });
         return data;
     }catch(error){
         return {status:'0'};

@@ -149,7 +149,7 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
   });
 
   
-  patientRouter.get('/booktest/alldata',authMiddleware,async(req,res)=>{
+  patientRouter.get('/booktest/alldata',async(req,res)=>{
     try { 
         let data=await getAllBookedTests();
         res.send(data);
