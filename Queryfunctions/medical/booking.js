@@ -22,8 +22,10 @@ async function getAllBookedTests(){
         let ref=await db.collection("Booking");
         let snapshot=await ref.get();
         snapshot.docs.forEach((item)=>{
-            data.push(item.data());
-        });
+            let temp=item.data();
+            temp['documentid']=item.id;
+            data.push(temp);
+                });
         return data;
     }catch(error){
         return {status:'0'};
@@ -57,5 +59,19 @@ async function cancelBookedTest(documentid){
     }
 }
 
-
-module.exports={getBookedTests,bookTest,cancelBookedTest,getAllBookedTests};
+async function changePatientPresence(testdocumentId,presence){
+    try{
+        if(presence=='present'){
+            let ref=await db.collection('Booking');
+            await ref.doc(testdocumentId).update({'presence':'absent'});
+            return {status:'1'};
+        }else{
+            let ref=await db.collection('Booking');
+            await ref.doc(testdocumentId).update({'presence':'present'});
+            return {status:'1'};
+        }
+    }catch(error){
+        return {status:'0'};
+    }
+}
+module.exports={changePatientPresence,getBookedTests,bookTest,cancelBookedTest,getAllBookedTests};

@@ -3,7 +3,7 @@ const patientRouter=express();
 const {getDocsId,getUserInfo, updateUserData, addUser, createNewUser, getStatsAndIncreement, authMiddleware}=require("../../../Queryfunctions/medical/general");
 const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval, getSubCollections}=require('../../../Queryfunctions/medical/patient/user_patient');
 const {db}=require('../../../Queryfunctions/db');
-const {bookTest, getBookedTests, cancelBookedTest, getAllBookedTests}=require('../../../Queryfunctions/medical/booking');
+const {bookTest, getBookedTests, cancelBookedTest, getAllBookedTests, changePatientPresence}=require('../../../Queryfunctions/medical/booking');
 const { auth } = require('firebase-admin');
 // mobile apis
 
@@ -153,6 +153,19 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
     try { 
         let data=await getAllBookedTests();
         res.send(data);
+    } catch (error) {
+      res.send({'message':'error'});
+    }
+  })
+
+  patientRouter.post('/booktest/status',authMiddleware,async(req,res)=>{
+    try { 
+      if(req.body.presence==null ||req.body.presence=="" ||req.body.documentid==null ||req.body.documentid=="" ){
+        res.send({'message':'Invalid Query Parameter'});
+      }else{
+        let data=await changePatientPresence(req.body.documentid,req.body.presence); 
+        res.send(data);
+      }
     } catch (error) {
       res.send({'message':'error'});
     }
