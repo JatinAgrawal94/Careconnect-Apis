@@ -88,20 +88,20 @@ doctorRouter.get('/:email',authMiddleware,async(req,res)=>{
   const email=req.params.email;
     const patients=await getPatientData();
     const appointments=await getDoctorAppointments(email);
-    res.render('doctor/doctor_dashboard',{patient:patients,appointment:appointments,email:email});
+    res.render('doctor/doctor_dashboard',{patient:patients,appointment:appointments,email:email,user:'doctor'});
 });
 
 doctorRouter.get('/:email/profile',authMiddleware,async(req,res)=>{
     const email=req.params.email;
     const data=await getUserProfile(email,'Doctor');
-    res.render('doctor/doctor_profile',{data:data,isAdmin:undefined});
+    res.render('doctor/doctor_profile',{data:data,user:'doctor'});
 });
 
 // patientlist
 doctorRouter.get('/:email/patientlist',authMiddleware,async(req,res)=>{
     const email=req.params.email;
     const patients=await getPatientData();
-    res.render('doctor/patients_list',{patient:patients,email:email});
+    res.render('doctor/patients_list',{patient:patients,email:email,user:'doctor'});
 });
 
 doctorRouter.get('/:email/patientlist/:documentid/:category',authMiddleware,async(req,res)=>{
@@ -111,14 +111,14 @@ doctorRouter.get('/:email/patientlist/:documentid/:category',authMiddleware,asyn
   let email=req.params.email;
   if(category=='about'){
     const data=await getUserProfile(patientemail,'Patient');
-    res.render('patient/profile_page',{patient:data,isAdmin:undefined,email:email});
+    res.render('patient/profile_page',{patient:data,user:'doctor',email:email});
   }else if(category=='appointment'){
     const appointments=await getPatientAppointments(patientemail);
-    res.render('appointments/appointment_list',{appointment:appointments,email:email});
+    res.render('appointments/appointment_list',{appointment:appointments,email:email,user:'doctor'});
   }
   else{ 
     const data=await getCategoryData(category,req.params.documentid);
-    res.render(`patient/category/${category}`,{data:data,email:email});
+    res.render(`patient/category/${category}`,{data:data,email:email,user:'doctor'});
   }
 });
 
@@ -130,7 +130,7 @@ doctorRouter.get('/:email/patientlist/:documentid',authMiddleware,async(req,res)
       'About','Allergy','BloodGlucose','BloodPressure',
       'Examination','Family History','Medical Visit','Notes','Pathology','Prescription','Radiology','Surgery','Vaccine','Appointment'
     ];  
-    res.render('patient/menu',{isAdmin:undefined,menuList:menuList,url:url,patientemail:patientemail,email:req.params.email});
+    res.render('patient/menu',{user:'doctor',menuList:menuList,url:url,patientemail:patientemail,email:req.params.email});
 });
 
 
@@ -138,7 +138,7 @@ doctorRouter.get('/:email/patientlist/:documentid',authMiddleware,async(req,res)
 doctorRouter.get('/:email/appointment',authMiddleware,async(req,res)=>{
   const email=req.params.email;
     const appointments=await getDoctorAppointments(email);
-    res.render('appointments/appointment_list',{appointment:appointments,email:email});
+    res.render('appointments/appointment_list',{appointment:appointments,email:email,user:'doctor'});
 });
 
 module.exports=doctorRouter;

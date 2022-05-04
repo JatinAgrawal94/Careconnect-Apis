@@ -276,20 +276,25 @@
       border: none;
   }
   .logout button{
-    padding: 5px;
-    font-size:15px;
     background-color: purple;
     color:white;
-    border-color: purple;
+    border: none;
+    border-width: 0;
+    border-radius: 20%;
     box-shadow: none;
-  }
+  } 
   .logout button:hover{
-      background: white;
-      border-color: white;
-      color:purple;
-      box-shadow: none;
-  }
+  color:purple;
+  background-color: white;
+  box-shadow: none;
+}
+.logout i:hover{
+  color:purple;
+  
+  box-shadow: none;
+}
 </style>
+
 <div class="sidebar">
     <div class="logo-details">
         <br>
@@ -304,37 +309,48 @@
     </div>
     <ul class="nav-list">
       <li>
-        <a href="/doctor/<%=email%>">
-          <i class='bx bx-grid-alt'></i>
+        <a href="/<%=user%>/<%=email%>">
+          <i class='bx bx-home'></i>
           <span class="links_name">Home</span>
         </a>
          <span class="tooltip">Home</span>
       </li>
       <li>
-       <a href="/doctor/<%=email%>/profile">
+       <a href="/<%=user%>/<%=email%>/profile">
          <i class='bx bxs-user-account' ></i>
          <span class="links_name">Profile</span>
        </a>
        <span class="tooltip">Profile</span>
      </li>
+     <%if(user=="admin"){%>
      <li>
-       <a href="/doctor/<%=email%>/patientlist">
+      <a href="/<%=user%>/<%=email%>/doctorlist">
+        <i class='bx bx-plus-medical' ></i>
+        <span class="links_name">Doctors</span>
+      </a>
+      <span class="tooltip">Doctors</span>
+    </li>
+    <%}%>
+     <li>
+       <a href="/<%=user%>/<%=email%>/patientlist">
          <i class='bx bx-user' ></i>
          <span class="links_name">Patients</span>
        </a>
        <span class="tooltip">Patients</span>
      </li>
+     <%if(user == "doctor"){%>
      <li>
-      <a href="/doctor/<%=email%>/appointment">
+      <a href="/<%=user%>/<%=email%>/appointment">
         <i class='bx bx-calendar' ></i>
         <span class="links_name">Appointments</span>
       </a>
       <span class="tooltip">Appointment</span>
     </li>
+    <%}%>
      <li>
-       <form method="POST" action="/auth/logout" class="logout">
-         <button type="submit" style="text-align: center;">Logout</button>
-       </form>
+      <form method="POST" action="/auth/logout" class="logout">
+        <button type="submit" style="text-align: center;"><i class='bx bx-power-off' ></i></button>
+      </form>
      </li>
 
     </ul>
