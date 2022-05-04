@@ -139,6 +139,10 @@
     <div style="float:left;width: 10%;margin-left: 2cm;text-align: center;"><br>
       <p><%=item['pulse']%></p>
     </div>
+    <div>
+      <br>
+        <button id="deletebutton" onclick="deleteRecord(`<%=item['documentid']%>`)">Delete</button>
+    </div>
 <br>    
 </div>
   <%})%>
@@ -218,11 +222,16 @@
       document.getElementsByClassName("close")[0].click();
     }
   })
-  
+}
   const submit=document.getElementById("submitbutton");
   submit.addEventListener("click",()=>{
     submitForm();
   });
+
+  var pathname=window.location.pathname;
+  pathname=pathname.split('/');
+  var documentId=pathname[pathname.length-2];
+  const useremail=window.location.pathname.split('/')[2];
 
   function submitForm(){
       var date=document.getElementById("date");
@@ -231,10 +240,6 @@
       var diastolic=document.getElementById('diastolic');
       var pulse=document.getElementById('pulse');
 
-      let pathname=window.location.pathname;
-      pathname=pathname.split('/');
-      let documentId=pathname[pathname.length-2];
-      const useremail=window.location.pathname.split('/')[2];
       
       let temp=date.value.split('-').reverse();
       temp[1]=parseInt(temp[1]).toString();
@@ -292,11 +297,44 @@
         }
       };
       xhttp.send(JSON.stringify(data));
+    } catch (error) {}
+   }
+  
+
+  function deleteRecord(recordid){
+    // var query=new URLSearchParams(location.search);
+    // const userid=query[1];
+   const category=pathname[pathname.length-1];
+    var data=JSON.stringify({
+        'patientid':documentId,
+        'recordid':recordid,
+        'category':category,
+        'userid':null,
+        'media':null
+      });
+    try {
+      var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/patient/record/delete", true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.setRequestHeader('useremail',useremail);
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+              document.getElementById('result').innerHTML="Record Deleted";
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML=""
+              }, 3000);
+              location.reload();
+        }
+        if(this.status==400){
+          document.getElementById('result').innerHTML="Error deleting";
+          document.getElementById('result').style="background-color=red"
+        }
+      };
+      xhttp.send(data);
     } catch (error) {
+      console.log(error);
     }
    }
-    
-  }
   </script>
   <script src="/javascript/sidebar.js"></script>
 

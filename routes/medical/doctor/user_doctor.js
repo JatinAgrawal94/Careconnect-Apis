@@ -107,6 +107,7 @@ doctorRouter.get('/:email/patientlist',authMiddleware,async(req,res)=>{
 doctorRouter.get('/:email/patientlist/:documentid/:category',authMiddleware,async(req,res)=>{
   let category=req.params.category.toLowerCase().replace(/\s/g, '');
   let patientemail=req.query.patientemail;
+  let userid=req.query.userid;
   let url=`doctor/${req.params.email}/patientlist/${req.params.documentid}/${req.params.category}?patientemail=${patientemail}`;
   let email=req.params.email;
   if(category=='about'){
@@ -117,6 +118,7 @@ doctorRouter.get('/:email/patientlist/:documentid/:category',authMiddleware,asyn
     res.render('appointments/appointment_list',{appointment:appointments,email:email,user:'doctor'});
   }
   else{ 
+    // recordid,documentid,category,userid
     const data=await getCategoryData(category,req.params.documentid);
     res.render(`patient/category/${category}`,{data:data,email:email,user:'doctor'});
   }
@@ -125,12 +127,13 @@ doctorRouter.get('/:email/patientlist/:documentid/:category',authMiddleware,asyn
 // view data of a specific patient in web.
 doctorRouter.get('/:email/patientlist/:documentid',authMiddleware,async(req,res)=>{
     const patientemail=req.query.patientemail;
+    const userid=req.query.userid;
     let url =`doctor/${req.params.email}/patientlist/${req.params.documentid}`;
     const menuList=[
       'About','Allergy','BloodGlucose','BloodPressure',
       'Examination','Family History','Medical Visit','Notes','Pathology','Prescription','Radiology','Surgery','Vaccine','Appointment'
     ];  
-    res.render('patient/menu',{user:'doctor',menuList:menuList,url:url,patientemail:patientemail,email:req.params.email});
+    res.render('patient/menu',{user:'doctor',menuList:menuList,url:url,patientemail:patientemail,email:req.params.email,userid:userid});
 });
 
 

@@ -91,7 +91,7 @@ td, th {
                 <td><%=element['dateofbirth']%></td>
                 <td><%=element['bloodgroup']%></td>
                 <td><%=element['contact']%></td>
-                <td><a href="/doctor/<%=email%>/patientlist/<%=element['documentid']%>?patientemail=<%=element['email']%>">Details</a></td>
+                <td><a href="/doctor/<%=email%>/patientlist/<%=element['documentid']%>?patientemail=<%=element['email']%>&userid=<%=element['userid']%>">Details</a></td>
               </tr>
             <%})%>
         </table>

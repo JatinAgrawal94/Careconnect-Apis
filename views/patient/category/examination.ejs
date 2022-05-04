@@ -149,6 +149,10 @@
   <div style="width: 8%;float: left;word-wrap: break-word;text-align: center;">
     <p style="font-weight: bold;">Notes</p> <%=item['notes']%></p>
   </div>
+ <div>
+    <br>
+      <button id="deletebutton" onclick="deleteRecord(`<%=item['documentid']%>`,`<%=item['media']%>`)">Delete</button>
+  </div>
 </div>
     </div>    
   </div>
@@ -221,7 +225,6 @@
     }
   }
 
-  
   document.addEventListener('keydown',(event)=>{
     if(event.keyCode==27){
       event.preventDefault();
@@ -233,6 +236,10 @@
   submit.addEventListener("click",()=>{
     submitForm();
   });
+  
+  let pathname=window.location.pathname.split('/');
+  let documentId=pathname[pathname.length-2];
+  const useremail=window.location.pathname.split('/')[2];
 
   function submitForm(){
       var date=document.getElementById('date');
@@ -245,9 +252,7 @@
       var diagnosis=document.getElementById('diagnosis');
       var notes=document.getElementById("notes");
 
-      let pathname=window.location.pathname.split('/');
-      let documentId=pathname[pathname.length-2];
-      const useremail=window.location.pathname.split('/')[2];
+
       let temp=date.value.split('-').reverse();
       temp[1]=parseInt(temp[1]).toString();
       temp=temp.join('/');
@@ -307,6 +312,42 @@
       xhttp.send(JSON.stringify(data));
     } catch (error) {}
    }
+
+   function deleteRecord(recordid,media){
+    var query=new URLSearchParams(location.search);
+    const userid=query[1];
+   const category=pathname[pathname.length-1];
+    
+   var data=JSON.stringify({
+        'patientid':documentId,
+        'recordid':recordid,
+        'category':category,
+        'userid':userid,
+        'media':JSON.stringify(media)
+      });
+
+    try {
+      var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/patient/record/delete", true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.setRequestHeader('useremail',useremail);
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+              document.getElementById('result').innerHTML="Record Deleted";
+              setTimeout(() => {
+                  document.getElementById('result').innerHTML=""
+              }, 3000);
+              location.reload();
+        }
+        if(this.status==400){
+          document.getElementById('result').innerHTML="Error deleting";
+          document.getElementById('result').style="background-color=red"
+        }
+      };
+      xhttp.send(data);
+    } catch (error) {}
+   }
+
   </script>
     <script src="/javascript/sidebar.js"></script>
 </body>
