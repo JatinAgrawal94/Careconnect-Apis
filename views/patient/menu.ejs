@@ -262,61 +262,9 @@ a{
 
    </style>
 <body>
-  <div class="sidebar">
-    <div class="logo-details">
-        <br>
-        <br>
-        <br>
-        <br>
-        <div class="logo_name">
-            <br>
-            <br>
-            <h3><doctor.name></h3></div>
-        <i class='bx bx-menu' id="btn" ></i>
-    </div>
-    <ul class="nav-list">
-      <li>
-        <a href="#">
-          <i class='bx bx-grid-alt'></i>
-          <span class="links_name">Profile</span>
-        </a>
-         <span class="tooltip">Profile</span>
-      </li>
-      <li>
-       <a href="#">
-         <i class='bx bx-user' ></i>
-         <span class="links_name">Patients</span>
-       </a>
-       <span class="tooltip">Patients</span>
-     </li>
-     <li>
-       <a href="#">
-         <i class='bx bx-chat' ></i>
-         <span class="links_name">Appointments</span>
-       </a>
-       <span class="tooltip">Appointments</span>
-     </li>
-     <li>
-       <a href="#">
-         <i class='bx bx-cog' ></i>
-         <span class="links_name">Logout</span>
-       </a>
-       <span class="tooltip">Logout</span>
-     </li>
+  <%-include('../partials/sidebar_doctor',{email:email})%>
 
-    </ul>
-  </div>
   <section class="home-section">
-    <nav class="navbar navbar-expand-lg" style="background-color: purple; height: 2cm;">
-      <br>  
-      <div style="float: left; font-size: 38px; color: white;">
-      <h1>Careconnect</h1>
-      </div>
-      <div style="float: right;">
-          <!-- IMAGE OF ACCOUNT OWNER -->
-          <img src="/images/heart.png" href="#"  width="70px">
-      </div>    
-    </nav>
     <br>
     <br>
     <br>
@@ -326,9 +274,7 @@ a{
         <a href="/<%=url%>/<%=item.toString().toLowerCase().replace(/\s/g, '')%>?patientemail=<%=patientemail%>">
         <div style="border: 1px solid black; width: 75%;height: 2.5cm;margin-left: auto;margin-right: auto;">
         <br>
-        <!-- <div style="width: 15%;float: left;">
-          <img src="/images/heart.png" style="width: 50px; margin-left: 2cm;" >
-        </div> -->
+
           <div>
             <h2 style="text-align:center;color:#561c8c"><%=item%></h2> 
           </div>    
@@ -339,29 +285,6 @@ a{
     </div>
      
   </section>
-  <script>
-  let sidebar = document.querySelector(".sidebar");
-  let closeBtn = document.querySelector("#btn");
-  let searchBtn = document.querySelector(".bx-search");
-
-  closeBtn.addEventListener("click", ()=>{
-    sidebar.classList.toggle("open");
-    menuBtnChange();//calling the function(optional)
-  });
-
-  searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
-    sidebar.classList.toggle("open");
-    menuBtnChange(); //calling the function(optional)
-  });
-
-  // following are the code to change sidebar button(optional)
-  function menuBtnChange() {
-   if(sidebar.classList.contains("open")){
-     closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
-   }else {
-     closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
-   }
-  }
-  </script>
+  <script src="/javascript/sidebar.js"></script>
 </body>
 </html>

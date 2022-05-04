@@ -129,12 +129,12 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
 
   patientRouter.get("/categorystats",authMiddleware,async(req,res)=>{ 
     try {
-      let documentid=req.query.documentid;
+      let documentid=req.query.documentid;  
       let collections=await getSubCollections(documentid);
       res.send(collections);
     } catch (error) {
       res.send({'message':'error'});
-    }
+    }   
   });
 
   // get stats 

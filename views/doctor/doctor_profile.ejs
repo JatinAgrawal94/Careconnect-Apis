@@ -7,70 +7,26 @@
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     </head>
     <style>
-    body {
-        font-family: Arial;
-    }
-    .icon-count {
-        background-color: #ff0000;
-        color: #fff;
-        float: right;
-        font-size: 11px;
-        left: -25px;
-        padding: 2px;
-        position: relative;
-    }
-    .profile {
-        margin-bottom: 20px;
-        margin-top: -12px;
-        text-align: center;
-    }
-
-    .profile img {
-        border-radius: 50%;
-        box-shadow: 0px 0px 5px 1px grey;
-    }
-
-    .name {
-        font-size: 20px;
-        font-weight: bold;
-        padding-top: 20px;
-    }
-
-    .job {
-        font-size: 16px;
-        font-weight: bold;
-        padding-top: 10px;
-    }
-
-    .url, hr {
-        text-align: center;
-    }
-
-    .url hr {
-        margin-left: 20%;
-        width: 60%;
-    }
-
-    .url a {
-        color: #818181;
-        display: block;
-        font-size: 20px;
-        margin: 10px 0;
-        padding: 6px 8px;
+    a{
         text-decoration: none;
     }
-
-    .url a:hover, .url .active {
-        background-color: #e8f5ff;
-        border-radius: 28px;
-        color: #000;
-        margin-left: 14%;
-        width: 65%;
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins" , sans-serif;
     }
-
-    /* End */
-
-    /* Main */
+    html{
+        width: 100%;
+    }
+    body{
+        width: 100%;
+        padding:0;
+        font-family: Arial;
+    }
+    ul{
+        padding-left: 0;
+    }
     .main {
         margin-left: auto;
     margin-right: auto;
@@ -176,27 +132,6 @@
             </div>
         </div>
         </div>
-        <script>
-            let sidebar = document.querySelector(".sidebar");
-            let closeBtn = document.querySelector("#btn");
-            let searchBtn = document.querySelector(".bx-search");
-            closeBtn.addEventListener("click", ()=>{
-              sidebar.classList.toggle("open");
-              menuBtnChange();//calling the function(optional)
-            });
-            searchBtn.addEventListener("click", ()=>{ // Sidebar open when you click on the search iocn
-              sidebar.classList.toggle("open");
-              menuBtnChange(); //calling the function(optional)
-            }); 
-          // following are the code to change sidebar button(optional)
-          function menuBtnChange() {
-           if(sidebar.classList.contains("open")){
-             closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
-           }else {
-             closeBtn.classList.replace("bx-menu-alt-right","bx-menu");//replacing the iocns class
-           }
-          }
-        
-          </script>
+        <script src="/javascript/sidebar.js"></script>
 </body>
 </html>

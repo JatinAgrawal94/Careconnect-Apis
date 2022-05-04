@@ -59,10 +59,9 @@ async function getSubCollections(documentId){
             "Prescription",
             "Radiology",
             "Surgery",
-            "Vaccine",
-            "Appointments"
+            "Vaccine"
           ];
-          var result=[];
+        var result=[];
         let ref=await db.collection("Patient").doc(documentId);    
         let collections=await ref.listCollections();
         if(collections.length==0){
@@ -71,7 +70,6 @@ async function getSubCollections(documentId){
         collections.forEach((element)=>{
             data.push(element._queryOptions.collectionId);
         });
-        
         originaldata.forEach((element,index)=>{
             var r=data.find(e=>e===element.replace(/\s/g, '').toLowerCase());
             if(r){

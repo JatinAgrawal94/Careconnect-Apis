@@ -108,17 +108,17 @@ doctorRouter.get('/:email/patientlist/:documentid/:category',authMiddleware,asyn
   let category=req.params.category.toLowerCase().replace(/\s/g, '');
   let patientemail=req.query.patientemail;
   let url=`doctor/${req.params.email}/patientlist/${req.params.documentid}/${req.params.category}?patientemail=${patientemail}`;
+  let email=req.params.email;
   if(category=='about'){
     const data=await getUserProfile(patientemail,'Patient');
-    res.render('patient/profile_page',{patient:data,isAdmin:undefined});
+    res.render('patient/profile_page',{patient:data,isAdmin:undefined,email:email});
   }else if(category=='appointment'){
-    let email=req.params.email;
     const appointments=await getPatientAppointments(patientemail);
     res.render('appointments/appointment_list',{appointment:appointments,email:email});
   }
   else{ 
     const data=await getCategoryData(category,req.params.documentid);
-    res.render(`patient/category/${category}`,{data:data});
+    res.render(`patient/category/${category}`,{data:data,email:email});
   }
 });
 
@@ -130,7 +130,7 @@ doctorRouter.get('/:email/patientlist/:documentid',authMiddleware,async(req,res)
       'About','Allergy','BloodGlucose','BloodPressure',
       'Examination','Family History','Medical Visit','Notes','Pathology','Prescription','Radiology','Surgery','Vaccine','Appointment'
     ];  
-    res.render('patient/menu',{isAdmin:undefined,menuList:menuList,url:url,patientemail:patientemail});
+    res.render('patient/menu',{isAdmin:undefined,menuList:menuList,url:url,patientemail:patientemail,email:req.params.email});
 });
 
 

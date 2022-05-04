@@ -2,77 +2,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="/images/heart.png" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+ 
+</head>
 <style>
-       
+    ul{
+        padding-left: 0;
+    }
     body {
-        background-color: #e8f5ff;
         font-family: Arial;
         overflow: hidden;
     }
-
-    .icon-count {
-        background-color: #ff0000;
-        color: #fff;
-        float: right;
-        font-size: 11px;
-        left: -25px;
-        padding: 2px;
-        position: relative;
-    }
-
-    /* End */
-    .profile {
-        margin-bottom: 20px;
-        margin-top: -12px;
-        text-align: center;
-    }
-
-    .profile img {
-        border-radius: 50%;
-        box-shadow: 0px 0px 5px 1px grey;
-    }
-
-    .name {
-        font-size: 20px;
-        font-weight: bold;
-        padding-top: 20px;
-    }
-
-    .job {
-        font-size: 16px;
-        font-weight: bold;
-        padding-top: 10px;
-    }
-
-    .url, hr {
-        text-align: center;
-    }
-
-    .url hr {
-        margin-left: 20%;
-        width: 60%;
-    }
-
-    .url a {
-        color: #818181;
-        display: block;
-        font-size: 20px;
-        margin: 10px 0;
-        padding: 6px 8px;
-        text-decoration: none;
-    }
-
-    .url a:hover, .url .active {
-        background-color: #e8f5ff;
-        border-radius: 28px;
-        color: #000;
-        margin-left: 14%;
-        width: 65%;
-    }
-
-    /* End */
-
-    /* Main */
     .main {
         margin-left: auto;
     margin-right: auto;
@@ -106,20 +49,15 @@
 
 /* End */
 </style>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href="/images/heart.png" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
- 
-</head>
 <body>
-        <%-include('../partials/navbar')%>
+        <%-include('../partials/sidebar_doctor',{email:email})%>
 <br>
 <br>
 <br>
 <br>
     <!-- Main -->
     <div class="main">
-        <h2>Patient Profile</h2>
+        <h2 >Patient Profile</h2>
         <div class="card">
             <div class="card-body">
                 <table>
@@ -168,7 +106,6 @@
                 </table>
             </div>
         </div>
-
-       
+        <script src="/javascript/sidebar.js"></script>
 </body>
 </html>
