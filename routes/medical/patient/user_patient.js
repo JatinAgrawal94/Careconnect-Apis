@@ -206,7 +206,7 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
     try {  
       let testtype=req.params.testtype;
       let body=req.body;
-      if(body.status==null || body.presence==null || body.time==null ||body.testname==null || body.date==null || body.patientname==null || body.patientemail==null || testtype==null){
+      if(body.presence==null || body.time==null ||body.testname==null || body.date==null || body.patientname==null || body.patientemail==null || testtype==null){
         res.send({message:'Provide all data fields'});
       }else{
         body.delete=0;
