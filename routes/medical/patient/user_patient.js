@@ -1,7 +1,7 @@
 const express=require('express');
 const patientRouter=express();
 const {getDocsId,getUserInfo, updateUserData, addUser, createNewUser, getStatsAndIncreement, authMiddleware}=require("../../../Queryfunctions/medical/general");
-const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval, getSubCollections}=require('../../../Queryfunctions/medical/patient/user_patient');
+const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval, getSubCollections, sendDirectionsToAmbulance}=require('../../../Queryfunctions/medical/patient/user_patient');
 const {db}=require('../../../Queryfunctions/db');
 const {bookTest, getBookedTests, cancelBookedTest, getAllBookedTests, changePatientPresence}=require('../../../Queryfunctions/medical/booking');
 const { auth } = require('firebase-admin');
@@ -139,7 +139,7 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
 
   // get stats 
   // only for patients.
-  patientRouter.get('/getstats',authMiddleware,async(req,res)=>{
+  patientRouter.get('/getstats',async(req,res)=>{
     try {
       var data=await getStatsAndIncreement('patient');
       res.send({userid:data});

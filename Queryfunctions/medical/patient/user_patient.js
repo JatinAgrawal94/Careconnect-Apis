@@ -160,7 +160,21 @@ async function updateApproval(documentId,recordId,category,value){
     }
 }
 
-module.exports={getSubCollections,getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};
+async function sendDirectionsToAmbulance(data,contact){
+    const accountSid = 'ACba492605fa68a3db400bf0613b3141d7'; 
+    const authToken = '[Redacted]'; 
+    const client = require('twilio')(accountSid, authToken); 
+    client.messages 
+        .create({ 
+            body: 'Your appointment is coming up on July 21 at 3PM', 
+            from: 'whatsapp:+14155238886',       
+            to: `whatsapp:+91${contact}` 
+        }) 
+        .then(message => console.log(message.sid)) 
+        .done();
+}
+
+module.exports={sendDirectionsToAmbulance,getSubCollections,getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};
 
 /*
 // function to upload record media and receive its url.
