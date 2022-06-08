@@ -1,10 +1,10 @@
 const express=require('express');
 const patientRouter=express();
 const {getDocsId,getUserInfo, updateUserData, addUser, createNewUser, getStatsAndIncreement, authMiddleware}=require("../../../Queryfunctions/medical/general");
-const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval, getSubCollections, sendDirectionsToAmbulance}=require('../../../Queryfunctions/medical/patient/user_patient');
+const {getPatientData, getCategoryData, deleteAnyPatientRecord, updateApproval, getSubCollections, sendDirectionsToAmbulance,uploadMedia, createRecord}=require('../../../Queryfunctions/medical/patient/user_patient');
 const {db}=require('../../../Queryfunctions/db');
 const {bookTest, getBookedTests, cancelBookedTest, getAllBookedTests, changePatientPresence}=require('../../../Queryfunctions/medical/booking');
-const { auth } = require('firebase-admin');
+
 // mobile apis
 
 // get list of all patients
@@ -74,7 +74,6 @@ patientRouter.post('/update',authMiddleware,async(req,res)=>{
     let collection=req.body.collection;
     let data=JSON.parse(req.body.data);
     await updateUserData(documentid,data,collection);
-    // await updatePatientData(documentid,data);
     res.send({status:'1'});
   } catch (error) {
     res.status(404).send({status:'0'});
@@ -223,9 +222,31 @@ patientRouter.post('/createuser',authMiddleware,async(req,res)=>{
     try {
       const category=req.params.category;
       const patientId=req.body.patientId;
-      const data=JSON.parse(req.body.data);
+      const data=req.body;
+      const files=req.files;
+      delete data.patientId;
+      const info=await getUserInfo(patientId,'Patient');
+      let keys=Object.keys(req.files);
+      var media={
+        images:[],
+        videos:[],
+        files:[]
+      }
+      for(let i=0;i<keys.length;i++){
+        let url=await  uploadMedia(info['userid'],'Patient',files[keys[i]],category);
+        let temp=files[keys[i]]['mimetype'].split('/')[0];
+        let type=temp == 'application'?'file':temp=='image'?'image':'video';
+        if(type=='file'){
+          media['files'].push(url);
+        }else if(type=='image'){
+          media['images'].push(url);
+        }else{
+          media['videos'].push(url);
+        }
+      }
       data.delete=0;
-      const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
+      data.media=media;
+      let result=await createRecord(patientId,category,data);
       res.send({'status':"1"});
     } catch (error) {
       res.send({'status':'0'});

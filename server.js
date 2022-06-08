@@ -15,16 +15,16 @@ const calendarRouter=require('./routes/google-calender.js');
 const paymentRouter=require('./routes/paymentRouter');
 const mapRouter=require('./routes/map');
 const authRouter=require('./routes/medical/auth');
-// var date=new Date();
-// var currentTime=`${date.getHours()}:${date.getMinutes()}`;
+const fileupload=require('express-fileupload');
 
 const PORT = process.env.PORT || 4000;
 app.use(express.urlencoded({extended: true}));
-app.use(express.json());
+app.use(express.json({limit:'100mb'}));
 app.use(cors());
 app.use(cookieParser());
 app.set('view engine','ejs');
 app.use(express.static('public'));
+app.use(fileupload());
 
 app.get('/',(req,res)=>{
   res.redirect('/login');

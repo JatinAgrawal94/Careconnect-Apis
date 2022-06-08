@@ -176,7 +176,18 @@
           
           <label for="date">Date</label><br>
           <input type="date" id="date" required><br>
-           <br>
+          <br>
+          
+          <label for="file">Files</label><br>
+          <input type="file" name="file" id="files" multiple accept=".pdf,.docx"><br>
+
+          <label for="video">Videos</label><br>
+          <input type="file" name="video" id="videos" multiple accept="video/*"><br>
+
+          <label for="image">Images</label><br>
+          <input type="file" name="image" id="images" multiple accept="image/*"><br>
+          <br>
+
           <button type="submit" id="submitbutton">Add</button>
       </div>
     </div>
@@ -227,13 +238,16 @@
   let documentId=pathname[pathname.length-2];
   const useremail=window.location.pathname.split('/')[2];
 
-  function submitForm(){
+  async function submitForm(){
       var date=document.getElementById("date");
       var title=document.getElementById('title');
       var testresult=document.getElementById('testresult');
       var place=document.getElementById('place');
       var doctor=document.getElementById('doctor');
-      
+      var files=document.getElementById('files');
+      var images=document.getElementById('images');
+      var videos=document.getElementById('videos');
+
       let temp=date.value.split('-').reverse();
       temp[1]=parseInt(temp[1]).toString();
       temp=temp.join('/');
@@ -241,51 +255,99 @@
       if(date.value==""  || title.value=="" || place.value=='' ||testresult.value=='' || doctor.value==''){
         return;
       }
-
-      let data={
-        'data':JSON.stringify({
-          'date':temp,
-          'title':title.value,
-          'result':testresult.value,
-          'place':place.value,
-          'doctor':doctor.value,
-          'media':{
-              'files':[],
-              'images':[],
-              'videos':[],
-            },
-          'approved':"true"
-        }),
-        'patientId':documentId
+      var formdata=new FormData();
+      formdata.append('date',temp);
+      formdata.append('title',title.value);
+      formdata.append('result',testresult.value);
+      formdata.append('place',place.value);
+      formdata.append('doctor',doctor.value);
+      formdata.append('approved','true');
+      formdata.append('patientId',documentId);
+      if(files.files.length!==0){
+        for(let i=0;i<files.files.length;i++){
+          formdata.append(`file${i+1}`,files.files[i]);
+        }
+      }
+      if(images.files.length!==0){
+        for(let i=0;i<images.files.length;i++){
+        formdata.append(`image${i+1}`,images.files[i]);
+      }}
+      
+      if(videos.files.length!==0){
+        for(let i=0;i<videos.files.length;i++){
+          formdata.append(`video${i+1}`,videos.files[i]);
+        }
       }
 
-      try {
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "/patient/pathology/create", true);
-        xhttp.setRequestHeader('Content-type', 'application/json');
-        xhttp.setRequestHeader('useremail',useremail);
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
+      
+        fetch('/patient/pathology/create',{
+          'method':'POST',
+          'headers':{
+            'useremail':useremail
+          },
+          'body':formdata,
+        }).then((response)=>{
+          modal.style.display = "none";          
+          document.getElementById('result').innerHTML="Data Added";
+          setTimeout(() => {
+              document.getElementById('result').innerHTML=""
+          }, 3000);
+        }).catch((error)=>{
+            console.log(error);
             modal.style.display = "none";
-              document.getElementById('result').innerHTML="Data Added";
-              setTimeout(() => {
-                  document.getElementById('result').innerHTML=""
-              }, 3000);
-        }
-        if(this.status==400){
-          modal.style.display = "none";
-          document.getElementById('result').innerHTML="Error";
-          document.getElementById('result').style="background-color=red"
-        }
-        title.selectedIndex=0;
+            document.getElementById('result').innerHTML="Error";
+            document.getElementById('result').style="background-color=red"
+        })
+        modal.style.display = "none"; 
         let item=document.getElementsByTagName('input');
         for(let i=0;i<item.length;i++){
           item[i].value="";
         }
-      };
-      xhttp.send(JSON.stringify(data));
-    } catch (error) {
-    }
+
+    //   let data={
+    //     'data':JSON.stringify({
+    //       'date':temp,
+    //       'title':title.value,
+    //       'result':testresult.value,
+    //       'place':place.value,
+    //       'doctor':doctor.value,
+    //       'media':{
+    //           'files':[],
+    //           'images':[],
+    //           'videos':[],
+    //         },
+    //       'approved':"true"
+    //     }),
+    //     'patientId':documentId
+    //   }
+
+    //   try {
+    //     var xhttp = new XMLHttpRequest();
+    //     xhttp.open("POST", "/patient/pathology/create", true);
+    //     xhttp.setRequestHeader('Content-type', 'application/json');
+    //     xhttp.setRequestHeader('useremail',useremail);
+    //     xhttp.onreadystatechange = function() {
+    //       if (this.readyState == 4 && this.status == 200) {
+    //         modal.style.display = "none";
+    //           document.getElementById('result').innerHTML="Data Added";
+    //           setTimeout(() => {
+    //               document.getElementById('result').innerHTML=""
+    //           }, 3000);
+    //     }
+    //     if(this.status==400){
+    //       modal.style.display = "none";
+    //       document.getElementById('result').innerHTML="Error";
+    //       document.getElementById('result').style="background-color=red"
+    //     }
+    //     title.selectedIndex=0;
+    //     let item=document.getElementsByTagName('input');
+    //     for(let i=0;i<item.length;i++){
+    //       item[i].value="";
+    //     }
+    //   };
+    //   xhttp.send(JSON.stringify(data));
+    // } catch (error) {
+    // }
    }
 
    function deleteRecord(recordid,media){

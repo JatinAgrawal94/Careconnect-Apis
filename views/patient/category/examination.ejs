@@ -155,7 +155,6 @@
   </div>
 </div>
     </div>    
-  </div>
   <br>
   <%})%>
   
@@ -167,6 +166,8 @@
         <h2 style="margin-right: 22cm;">Add a record</h2>
       </div>
       <div class="modal-body">
+
+        
           <label for="date">Date</label><br>
           <input type="date" id="date"><br>
 
@@ -194,7 +195,18 @@
           <label for="notes">Notes</label><br>
           <input type="text" name="notes" id="notes"><br>
           
+          <label for="file">Files</label><br>
+          <input type="file" name="file" id="files" multiple accept=".pdf,.docx"><br>
+
+          <label for="video">Videos</label><br>
+          <input type="file" name="video" id="videos" multiple accept="video/*"><br>
+
+          <label for="image">Images</label><br>
+          <input type="file" name="image" id="images" multiple accept="image/*"><br>
+          <br>
+
           <button type="submit" id="submitbutton">Submit</button>
+        
       </div>
     </div>
   </div>
@@ -240,8 +252,11 @@
   let pathname=window.location.pathname.split('/');
   let documentId=pathname[pathname.length-2];
   const useremail=window.location.pathname.split('/')[2];
+  var files=document.getElementById('files');
+  var images=document.getElementById('images');
+  var videos=document.getElementById('videos');
 
-  function submitForm(){
+ async function submitForm(){
       var date=document.getElementById('date');
       var doctor=document.getElementById('doctor');
       var place=document.getElementById('place');
@@ -251,7 +266,6 @@
       var symptoms=document.getElementById('symptoms');
       var diagnosis=document.getElementById('diagnosis');
       var notes=document.getElementById("notes");
-
 
       let temp=date.value.split('-').reverse();
       temp[1]=parseInt(temp[1]).toString();
@@ -265,52 +279,60 @@
       if(parseInt(height.value)==NaN ||parseInt(temperature.value)==NaN || parseInt(weight.value)==NaN){
         return;
       }
+      
+      const formdata=new FormData();
+      formdata.append('date',temp.toString());
+      formdata.append('doctor',doctor.value);
+      formdata.append('place',place.value);
+      formdata.append('temperature',temperature.value.toString());
+      formdata.append('height',height.value.toString());
+      formdata.append('weight',weight.value.toString());
+      formdata.append('symptoms',symptoms.value);
+      formdata.append('diagnosis',diagnosis.value);
+      formdata.append('notes',notes.value);
+      formdata.append('approved','true');
+      formdata.append('patientId',documentId);
 
-      let data={
-        'data':JSON.stringify({
-          'date':temp,
-          'doctor':doctor.value,
-          'place':place.value,
-          'temperature':temperature.value.toString(),
-          'height':height.value.toString(),
-          'weight':weight.value.toString(),
-          'symptoms':symptoms.value,
-          'diagnosis':diagnosis.value,
-          'notes':notes.value,
-          'media':{
-              'files':[],
-              'images':[],
-              'videos':[],
-            },
-          'approved':"true"
-        }),
-        'patientId':documentId
+      if(files.files.length!==0){
+        for(let i=0;i<files.files.length;i++){
+          formdata.append(`file${i+1}`,files.files[i]);
+        }
       }
-      try {
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "/patient/examination/create", true);
-        xhttp.setRequestHeader('Content-type', 'application/json');
-        xhttp.setRequestHeader('useremail',useremail);
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            modal.style.display = "none";          
-              document.getElementById('result').innerHTML="Data Added";
-              setTimeout(() => {
-                  document.getElementById('result').innerHTML=""
-              }, 3000);
+      if(images.files.length!==0){
+        for(let i=0;i<images.files.length;i++){
+        formdata.append(`image${i+1}`,images.files[i]);
+      }}
+      
+      if(videos.files.length!==0){
+        for(let i=0;i<videos.files.length;i++){
+          formdata.append(`video${i+1}`,videos.files[i]);
         }
-        if(this.status==400){
-          modal.style.display = "none";
-          document.getElementById('result').innerHTML="Error";
-          document.getElementById('result').style="background-color=red"
-        }
-        let item=document.getElementsByTagName('input');
-        for(let i=0;i<item.length;i++){
-          item[i].value="";
-        }
-      };
-      xhttp.send(JSON.stringify(data));
-    } catch (error) {}
+      }
+      
+        
+        fetch('/patient/examination/create',{
+          'method':'POST',
+          'headers':{
+            'useremail':useremail
+          },
+          'body':formdata,
+        }).then((response)=>{
+          modal.style.display = "none";          
+          document.getElementById('result').innerHTML="Data Added";
+          setTimeout(() => {
+              document.getElementById('result').innerHTML=""
+          }, 3000);
+        }).catch((error)=>{
+            console.log(error);
+            modal.style.display = "none";
+            document.getElementById('result').innerHTML="Error";
+            document.getElementById('result').style="background-color=red"
+        })
+          modal.style.display = "none"; 
+          let item=document.getElementsByTagName('input');
+          for(let i=0;i<item.length;i++){
+            item[i].value="";
+          }
    }
 
    function deleteRecord(recordid,media){

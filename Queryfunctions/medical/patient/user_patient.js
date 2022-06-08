@@ -99,6 +99,14 @@ async function deleteAnyPatientRecord(patientdocumentId,recordId,category,media,
     }
 }
 
+async function createRecord(patientId,category,data){
+    try {
+        const ref=await db.collection(`Patient/${patientId}/${category}`).doc().set(data);
+        return {'status':'1'};
+    } catch (error) {
+        return {'status':'0'};
+    }
+}
 
 async function getPathologyList(){
     try {
@@ -174,111 +182,24 @@ async function sendDirectionsToAmbulance(data,contact){
         .done();
 }
 
-module.exports={sendDirectionsToAmbulance,getSubCollections,getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};
-
-/*
-// function to upload record media and receive its url.
-async function uploadMediaAndDownLoadURL(media,userId,category){
+async function uploadMedia(userid,collection,media,category){
     try {
-        let images=media.data.images;
-        let videos=media.data.videos;
-        let files=media.data.files;
-        console.log(`images are ${images}`);
-        for(let i=0;i<images.length;i++){
-            let storageRef=ref(storage,`Patient/${userId}/${category}/images/${images[i]['name']}`);
-            await uploadBytes(storageRef,images[i]['filename']);
-        }
-        for(let i=0;i<videos.length;i++){
-            let storageRef=ref(storage,`Patient/${userId}/${category}/videos/${videos[i]['name']}`);
-            await uploadBytes(storageRef,videos[i]['filename']);
-        }
-        for(let i=0;i<files.length;i++){
-            let storageRef=ref(storage,`Patient/${userId}/${category}/files/${files[i]['name']}`);
-            await uploadBytes(storageRef,files[i]['filename']);
-        }
-        var data=await getMediaURL(media,category,userId);
-        return data;
-    } catch (error) {
-        console.log("Error in upload function");
-        console.log(error);
-        return 0;
-    }
-}
-
-// sub function to get mediaURL of uploaded data.
-async function getMediaURL(media,category,userId){
-    try {
-        const images=media.images;
-        const videos=media.videos;
-        const files=media.files;
-        var data={
-            'images':[],
-            'videos':[],
-            'files':[]
+        let temp=media['mimetype'].split('/')[0];
+        let type;
+        type=temp == 'application'?'files':temp=='image'?'images':'videos';
+        const storageRef=ref(storage,`${collection}/${userid}/${category}/${type}/${media['name']}`);
+        await  uploadBytes(storageRef,media.data).then((snapshot)=>{        });
+        let url=await getDownloadURL(storageRef);
+        return {
+            'name':media.name.toString(),
+            'url':url.toString()
         };
-        for(let i=0;i<images.length;i++){
-            let storageRef=ref(storage,`Patient/${userId}/${category}/images/${images[i]['name']}`);
-            let url=await getDownloadURL(storageRef);
-            data.images.push(url);
-        }
-        for(let i=0;i<videos.length;i++){
-            let storageRef=ref(storage,`Patient/${userId}/${category}/videos/${videos[i]['name']}`);
-            let url=await getDownloadURL(storageRef);
-            data.videos.push(url);
-        }
-        for(let i=0;i<files.length;i++){
-            let storageRef=ref(storage,`Patient/${userId}/${category}/files/${files[i]['name']}`);
-            let url=await getDownloadURL(storageRef);
-            data.files.push(url);
-        }
-        return data;
     } catch (error) {
-        console.log("Error in download function");
-        console.log(erorr);
-        return 0;         
+        return null;
     }
 }
 
-async function deleteMedia(media,category,patientUserId){
-    try {
-        const images=media['images'];
-        const videos=media['videos'];
-        const files=media['files'];
-        if(images.length!==0){
-            for(let i=0;i<images.length;i++){
-                let mediaref=ref(storage,`Patient/${patientUserId}/${category}/images/${images[i]['name']}`);
-                await deleteObject(mediaref);
-            }
-        }
-        if(videos.length!==0){
-            for(let i=0;i<videos.length;i++){
-                let mediaref=ref(storage,`Patient/${patientUserId}/${category}/videos/${videos[i]['name']}`);
-                await deleteObject(mediaref);
-            }
-        }
-        if(files.length!==0){
-            for(let i=0;i<files.length;i++){
-                let mediaref=ref(storage,`Patient/${patientUserId}/${category}/files/${files[i]['name']}`);
-                await deleteObject(mediaref);
-            }
-        }
-        return 1;
-    } catch (error) {
-        console.log("Error in delete record function");
-        console.log(error);
-        return 0;
-    }
-}
 
-async function uploadProfileImage(media,userId){
-    try {
-        let storageRef=ref(storage,`profile_images/${userId}`);
-        await uploadBytes(storageRef,media.file);
-        var url=await getDownloadURL(storageRef);
-        return url;
-    } catch (error) {
-        return 0;
-    }
-}
 
-*/
+module.exports={createRecord,uploadMedia,sendDirectionsToAmbulance,getSubCollections,getPatientData,getCategoryData,deleteAnyPatientRecord,updateApproval};
+

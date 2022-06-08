@@ -18,6 +18,7 @@
     "dotenv": "^16.0.0",
     "ejs": "^3.0.2",
     "express": "^4.17.2",
+    "express-fileupload": "^1.4.0",
     "express-session": "^1.17.2",
     "express-useragent": "^1.0.15",
     "firebase": "^9.6.6",

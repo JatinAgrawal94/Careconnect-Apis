@@ -155,8 +155,10 @@ function checkDeviceType(request){
 
  function authMiddleware(request,response,next){
     // Only for flutter app
+    
     var email;
     let isMobile=checkDeviceType(request);
+    
     var token;
     var type=0;
      if(isMobile){
@@ -164,12 +166,12 @@ function checkDeviceType(request){
         token=temp.split(" ")[1];
         type=1;
     }else{
-         email=request.params.email;
-         if(email==undefined){
-             email=request.headers.useremail;
-         }
-         token=request.cookies[email].token;
-         
+        email=request.params.email;
+        if(email==undefined){
+            email=request.headers.useremail;
+        }
+        token=request.cookies[email].token;
+            
     }
     if (!token) {
         if(type){
@@ -197,10 +199,9 @@ function checkDeviceType(request){
 }
 
 async function uploadProfileImage(media,userId){
-    // object media={file:File()}
     try {
         let storageRef=ref(storage,`profile_images/${userId}`);
-        await uploadBytes(storageRef,media.file);
+        await uploadBytes(storageRef,media.data);
         var url=await getDownloadURL(storageRef);
         return url;
     } catch (error) {
@@ -209,4 +210,5 @@ async function uploadProfileImage(media,userId){
 }
 
 
-module.exports={checkDeviceType,authMiddleware,getDocsId,getUserInfo,getUserProfile,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};
+
+module.exports={uploadProfileImage,checkDeviceType,authMiddleware,getDocsId,getUserInfo,getUserProfile,updateUserData,addUser,createNewUser,getStatsAndIncreement,getRole};
